@@ -48,5 +48,6 @@ public class Servidor
         	System.out.println("Ingrese: <host> <operador>");
     	}
         new Servidor(args[0],args[1]);
+        System.out.println("Corrio el server");
     }
 }
