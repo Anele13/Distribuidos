@@ -28,6 +28,10 @@ import java.rmi.server.UnicastRemoteObject;
 	@Override
 	public int division(int a, int b) throws RemoteException {
 		// TODO Auto-generated method stub
+		if (b == 0) {
+			System.out.println("no se puede dividir por cero.");
+			return 0;
+		}
 		System.out.println("Resolviendo division "+a + " / "+b+" = ...");
 		
 		return a/b;
