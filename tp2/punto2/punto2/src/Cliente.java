@@ -139,8 +139,9 @@ public class Cliente implements ActionListener{
 				}
 				this._cerrar(fd, host, port);
 				fos.close();
+				Calendar cal2 = Calendar.getInstance();
 				System.out.println("Hora de finalizacion lectura");
-		        System.out.println( sdf.format(cal.getTime()) );
+		        System.out.println( sdf.format(cal2.getTime()) );
 			
 			} 
 			catch (FileNotFoundException e1) {
