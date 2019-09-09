@@ -2,42 +2,48 @@
  * ObjetoRemoto.java
  */
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.TimeUnit;
 
-/**
- * Objeto que implementa la interfaz remota
- */
-public class ORSumaResta extends UnicastRemoteObject 
-    implements IRSumaResta
-{
-    /**
-	 * 
-	 */
+
+public class ORSumaResta extends UnicastRemoteObject implements IRSumaResta {
+
 	private static final long serialVersionUID = 1L;
 
-	/**
-     * Construye una instancia de ObjetoRemoto
-     * @throws RemoteException
-     */
-    protected ORSumaResta () throws RemoteException
-    {
+
+    protected ORSumaResta (String host) throws RemoteException, MalformedURLException {
         super();
+        String rname = "//"+ host +":" + Registry.REGISTRY_PORT  + "/ORSumaResta";
+		Naming.rebind(rname, this);
     }
 
-    /**
-     * Obtiene la suma de los sumandos que le pasan y la devuelve.
-     */
-    public int suma(int a, int b) 
-    {
+    public int suma(int a, int b) {
 	    System.out.println ("Sumando " + a + " + " + b +"...");
+	    System.out.println("Waiting..");
+		try {
+			TimeUnit.SECONDS.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
         return a+b;
     }
     
-    public int resta(int a, int b) 
-    {
+    public int resta(int a, int b) {
 	    System.out.println ("Restando " + a + " - " + b +"...");
+	    System.out.println("Waiting..");
+		try {
+			TimeUnit.SECONDS.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
         return a-b;
     }
     
+    public static void main(String[] args) throws RemoteException, MalformedURLException {
+        new ORSumaResta(args[0]);
+	}
 }
