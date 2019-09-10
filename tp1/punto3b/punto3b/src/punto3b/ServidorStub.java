@@ -28,7 +28,8 @@ public class ServidorStub {
 		
 		else if (request instanceof WriteArgument) {
 			WriteArgument argumento = (WriteArgument)request;
-			WriteRespuesta resp = this.server.escribir(argumento.getFd(), argumento.getBuf());
+			int status = this.server.escribir(argumento.getFd(), argumento.getBuf());
+			WriteRespuesta resp = new WriteRespuesta(status);
 			this.respuesta = resp;
 		}
 		

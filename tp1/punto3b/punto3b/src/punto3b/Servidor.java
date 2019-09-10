@@ -11,32 +11,36 @@ public class Servidor {
 	private ManejadorArchivos manejador = new ManejadorArchivos();
 	
 	//Abrir
-	
-	public int abrir(String filename, String permisos) throws IOException {
-
-		File file = new File(filename);
-		OpenedFile of = new OpenedFile(file);
-		this.manejador.setOpenedFile(of);
-		return of.getId();
+	public int abrir(String filename, String permisos) {
+		int fd;
+		
+		try {
+			OpenedFile of = new OpenedFile(new File(filename));
+			this.manejador.setOpenedFile(of);
+			fd = of.getId();
+		} 
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+			fd = -1;
+		}
+		return fd;
 	}
 	
 	
 	//Leer
-	public ReadRespuesta leer(int fd, int cantidadALeer) throws FileNotFoundException {
-
+	public ReadRespuesta leer(int fd, int cantidadALeer) {
 		OpenedFile of = this.manejador.getOpenedFileById(fd);
-		FileInputStream fis = of.getFileInputStream();
-		
 		ReadRespuesta resp = null;
 		StringBuffer buf = new StringBuffer("");
 		boolean hayMasDatos = true;
+
 		try {
 			int i;
 			int contador = 0;
 			
 			while (contador < cantidadALeer) {
 				++contador;
-				i = fis.read();
+				i = of.getFileInputStream().read();
 				if (i == -1) {
 					hayMasDatos = false;
 					break;
@@ -56,15 +60,15 @@ public class Servidor {
 	
 	
 	//Escribir
-	public WriteRespuesta escribir(int fd, byte[] buffer) throws FileNotFoundException {
+	public int escribir(int fd, byte[] buffer){
 		OpenedFile of = this.manejador.getOpenedFileById(fd);
-		FileOutputStream fos = of.getFileOutputStream();		
-		WriteRespuesta resp = null;
+		int resp;
+		
 		try {
-			fos.write(buffer);
-			resp = new WriteRespuesta(0);
+			of.getFileOutputStream().write(buffer);
+			resp = buffer.length;
 		} catch (IOException e) {
-			resp = new WriteRespuesta(1);
+			resp = -1;
 			e.printStackTrace();
 		}
 		return resp;
@@ -72,17 +76,23 @@ public class Servidor {
 	
 	
 	//Cerrar
-	public int cerrar(int fd) throws IOException {
+	public int cerrar(int fd){
 		OpenedFile of = this.manejador.getOpenedFileById(fd);
 		FileInputStream fis = of.dameFis();
 		FileOutputStream fos = of.dameFos();
-				
-		if (fis != null) {
-			fis.close();
-		}
 		
-		if (fos != null) {
-			fos.close();
+		try {				
+			if (fis != null) {
+				fis.close();
+			}
+			
+			if (fos != null) {
+				fos.close();
+			}
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+			return 1;
 		}
 		return 0;
 	}
