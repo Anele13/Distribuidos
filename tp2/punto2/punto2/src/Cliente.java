@@ -52,46 +52,7 @@ public class Cliente implements ActionListener{
 	}
     
 	
-	/* ---------- METODOS STUB ----------------*/
-	
-	public int _abrir(String filename,String host, int port) throws RemoteException, IOException {
-		OpenArgument argumento = new OpenArgument("777", filename);
-		InterfaceRemota s = this.getObjetoRemoto();
-		OpenRespuesta respuesta = (OpenRespuesta)s.abrir(argumento);
-		return respuesta.getFd();
-	}
-	
-	
-	public ReadRespuesta _leer(int cantidad, int fd,String host, int port) throws RemoteException, FileNotFoundException {
-		ReadArgument argumento = new ReadArgument(fd, cantidad);
-		InterfaceRemota s = this.getObjetoRemoto();
-		ReadRespuesta respuesta = (ReadRespuesta)s.leer(argumento);
-		return respuesta;		
-	}
-	
-	
-	public int _escribir(byte[] arreglo, int fd,String host,int port) throws RemoteException, FileNotFoundException {
-		WriteArgument argumento = new WriteArgument(arreglo, fd);
-		InterfaceRemota servidor = this.getObjetoRemoto();
-		WriteRespuesta respuesta = (WriteRespuesta)servidor.escribir(argumento);
-		return respuesta.getStatus();
-	}
-	
-	
-	public int _cerrar(int fd,String host,int port) throws RemoteException, IOException {
-		CloseArgument argumento = new CloseArgument(fd);
-		InterfaceRemota servidor = this.getObjetoRemoto();
-		CloseRespuesta respuesta = (CloseRespuesta)servidor.cerrar(argumento);
-		return respuesta.getStatus();
-	}
-	
-	
-	
-	
-	
-	
-    
-    
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -125,10 +86,10 @@ public class Cliente implements ActionListener{
 			
 			try {
 				fos = new FileOutputStream(new File(fileLocal));
-				fd = this._abrir(fileServer,host, port);
+				fd = this.servidor.abrir(fileServer, "777");
 				textAreaBox.setText("");
 				while(cosa) {
-					ReadRespuesta resp = this._leer(50, fd, host, port);
+					ReadRespuesta resp = this.servidor.leer(fd,50);
 					textAreaBox.append(resp.getBuffer());
 					try {
 						fos.write(resp.getBuffer().getBytes());
@@ -137,7 +98,7 @@ public class Cliente implements ActionListener{
 					}
 					cosa = resp.hayMasDatos;
 				}
-				this._cerrar(fd, host, port);
+				this.servidor.cerrar(fd);
 				fos.close();
 				Calendar cal2 = Calendar.getInstance();
 				System.out.println("Hora de finalizacion lectura");
@@ -165,7 +126,7 @@ public class Cliente implements ActionListener{
 			
 			try {
 				fis = new FileInputStream(new File(fileLocal));
-				fd = this._abrir(fileServer,host, port);
+				fd = this.servidor.abrir(fileServer,"777");
 				while (true) {
 					i = fis.read();
 					if (i == -1) {
@@ -173,11 +134,11 @@ public class Cliente implements ActionListener{
 					}
 					buf.append((char)i);
 					if (buf.length() == maxCaracteres) {
-						this._escribir(new String(buf).getBytes(), fd, host, port);
+						this.servidor.escribir(fd, new String(buf).getBytes());
 						buf.delete(0, buf.length());
 					}
 				}
-				this._cerrar(fd, host, port);
+				this.servidor.cerrar(fd);
 			
 			} catch (FileNotFoundException e2) {
 				e2.printStackTrace();

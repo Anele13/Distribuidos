@@ -14,7 +14,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 
-
 public class Servidor extends UnicastRemoteObject implements InterfaceRemota {
 	
 	private static final long serialVersionUID = 1L;
@@ -28,23 +27,39 @@ public class Servidor extends UnicastRemoteObject implements InterfaceRemota {
     }
 
 	
-	private File _abrir(String filename) throws IOException {
-		File file = new File(filename);
-		return file;
+	// Abrir
+	// Si pudo abrir el archivo devuelve el file descriptor. caso contrario devuelve -1
+	public int abrir(String filename, String permisos) {
+		int fd;
+		
+		try {
+			OpenedFile of = new OpenedFile(new File(filename));
+			this.manejador.setOpenedFile(of);
+			fd = of.getId();
+		} 
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+			fd = -1;
+		}
+		return fd;
 	}
 	
 	
-	private ReadRespuesta _leer(int cantidadALeer, FileInputStream fis) {
+	// Leer
+	// Devuelve una estructura indicando buffer y flag si hay mas datos.
+	public ReadRespuesta leer(int fd, int cantidadALeer) {
+		OpenedFile of = this.manejador.getOpenedFileById(fd);
 		ReadRespuesta resp = null;
 		StringBuffer buf = new StringBuffer("");
 		boolean hayMasDatos = true;
+
 		try {
 			int i;
 			int contador = 0;
 			
 			while (contador < cantidadALeer) {
 				++contador;
-				i = fis.read();
+				i = of.getFileInputStream().read();
 				if (i == -1) {
 					hayMasDatos = false;
 					break;
@@ -63,62 +78,44 @@ public class Servidor extends UnicastRemoteObject implements InterfaceRemota {
 	
 	
 	
-	private WriteRespuesta _escribir(byte[] buffer, FileOutputStream fos) {
-		WriteRespuesta resp = null;
+	// Escribir
+	// Devuelve la cantidad de datos escritos. en caso de error -1
+	public int escribir(int fd, byte[] buffer){
+		OpenedFile of = this.manejador.getOpenedFileById(fd);
+		int resp;
+		
 		try {
-			fos.write(buffer);
-			resp = new WriteRespuesta(0);
+			of.getFileOutputStream().write(buffer);
+			resp = buffer.length;
 		} catch (IOException e) {
-			resp = new WriteRespuesta(1);
+			resp = -1;
 			e.printStackTrace();
 		}
 		return resp;
 	}
 	
 	
-	private int _cerrar(FileInputStream fis, FileOutputStream fos) throws IOException {
-		if (fis != null) {
-			fis.close();
-		}
-		if (fos != null) {
-			fos.close();
+	// Cerrar
+	// Devuelve 0 si pudo cerrar el archivo, 1 en caso contrario.
+	public int cerrar(int fd){
+		OpenedFile of = this.manejador.getOpenedFileById(fd);
+		FileInputStream fis = of.dameFis();
+		FileOutputStream fos = of.dameFos();
+		
+		try {				
+			if (fis != null) {
+				fis.close();
+			}
+			
+			if (fos != null) {
+				fos.close();
+			}
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+			return 1;
 		}
 		return 0;
-	}
-	
-	
-	
-	
-/* ------------------- METODOS PUBLICOS ------------------ */
-	
-	public OpenRespuesta abrir(OpenArgument request) throws IOException {
-		OpenArgument argumento = (OpenArgument)request;
-		File file = _abrir(argumento.getFilename());
-		OpenedFile of = new OpenedFile(file);
-		manejador.setOpenedFile(of);
-		return new OpenRespuesta(of.getId());
-	}
-	
-	public ReadRespuesta leer(ReadArgument request) throws FileNotFoundException {
-		ReadArgument argumento = (ReadArgument)request;
-		OpenedFile of = manejador.getOpenedFileById(argumento.getFd());
-		ReadRespuesta resp = _leer(argumento.getCantidadALeer(),of.getFileInputStream());
-		return resp;
-	}
-	
-	public WriteRespuesta escribir(WriteArgument request) throws FileNotFoundException {
-		WriteArgument argumento = (WriteArgument)request;
-		OpenedFile of = manejador.getOpenedFileById(argumento.getFd());	
-		WriteRespuesta resp = _escribir(argumento.getBuf(), of.getFileOutputStream());
-		return resp;
-	}
-	
-	public CloseRespuesta cerrar(CloseArgument request) throws IOException {
-		CloseArgument argumento = (CloseArgument)request;
-		OpenedFile of = manejador.getOpenedFileById(argumento.getFd());
-		int resultado = _cerrar(of.dameFis(), of.dameFos());
-		manejador.deleteOpenedFileById(of.getId());
-		return new CloseRespuesta(resultado);
 	}
 	
 
