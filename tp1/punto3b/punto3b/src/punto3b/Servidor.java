@@ -12,26 +12,20 @@ public class Servidor {
 	
 	//Abrir
 	
-	public int abrir(String filename,Argument request,String host, int port) throws IOException {
-//No usamos host ni port, pero están para que los prototipos de 
-//los metodos a nivel aplicacion sean iguales.
+	public int abrir(String filename, String permisos) throws IOException {
+
 		File file = new File(filename);
 		OpenedFile of = new OpenedFile(file);
 		this.manejador.setOpenedFile(of);
-		
 		return of.getId();
 	}
 	
 	
 	//Leer
-	public ReadRespuesta leer(int fd, String host, int port,Argument request) throws FileNotFoundException {
-//No usamos host, port ni fd, pero están para que los prototipos de 
-//los metodos a nivel aplicacion sean iguales.
-		ReadArgument argumento = (ReadArgument)request;
-		OpenedFile of = this.manejador.getOpenedFileById(argumento.getFd());
-		int cantidadALeer = argumento.getCantidadALeer();
+	public ReadRespuesta leer(int fd, int cantidadALeer) throws FileNotFoundException {
+
+		OpenedFile of = this.manejador.getOpenedFileById(fd);
 		FileInputStream fis = of.getFileInputStream();
-				
 		
 		ReadRespuesta resp = null;
 		StringBuffer buf = new StringBuffer("");
@@ -62,15 +56,9 @@ public class Servidor {
 	
 	
 	//Escribir
-	public WriteRespuesta escribir(int fd, String host, int port,Argument request) throws FileNotFoundException {
-	//No usamos host, port ni fd, pero están para que los prototipos de 
-	//los metodos a nivel aplicacion.
-		WriteArgument argumento = (WriteArgument)request;
-		OpenedFile of = this.manejador.getOpenedFileById(argumento.getFd());
-		FileOutputStream fos = of.getFileOutputStream();
-		byte[] buffer = argumento.getBuf();
-		
-		
+	public WriteRespuesta escribir(int fd, byte[] buffer) throws FileNotFoundException {
+		OpenedFile of = this.manejador.getOpenedFileById(fd);
+		FileOutputStream fos = of.getFileOutputStream();		
 		WriteRespuesta resp = null;
 		try {
 			fos.write(buffer);
@@ -82,16 +70,13 @@ public class Servidor {
 		return resp;
 	}
 	
+	
 	//Cerrar
-	public int cerrar(String host, int port,Argument request) throws IOException {
-//No usamos host ni port pero están para que los prototipos de 
-//los metodos a nivel aplicacion sean iguales.
-		CloseArgument argumento = (CloseArgument)request;
-		OpenedFile of = this.manejador.getOpenedFileById(argumento.getFd());
+	public int cerrar(int fd) throws IOException {
+		OpenedFile of = this.manejador.getOpenedFileById(fd);
 		FileInputStream fis = of.dameFis();
 		FileOutputStream fos = of.dameFos();
-		
-		
+				
 		if (fis != null) {
 			fis.close();
 		}
