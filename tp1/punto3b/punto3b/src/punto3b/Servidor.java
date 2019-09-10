@@ -10,7 +10,8 @@ import java.io.IOException;
 public class Servidor {
 	private ManejadorArchivos manejador = new ManejadorArchivos();
 	
-	//Abrir
+	// Abrir
+	// Si pudo abrir el archivo devuelve el file descriptor. caso contrario devuelve -1
 	public int abrir(String filename, String permisos) {
 		int fd;
 		
@@ -27,7 +28,8 @@ public class Servidor {
 	}
 	
 	
-	//Leer
+	// Leer
+	// Devuelve una escructura indicando buffer y flag si hay mas datos.
 	public ReadRespuesta leer(int fd, int cantidadALeer) {
 		OpenedFile of = this.manejador.getOpenedFileById(fd);
 		ReadRespuesta resp = null;
@@ -59,7 +61,8 @@ public class Servidor {
 	
 	
 	
-	//Escribir
+	// Escribir
+	// Devuelve la cantidad de datos escritos. en caso de error -1
 	public int escribir(int fd, byte[] buffer){
 		OpenedFile of = this.manejador.getOpenedFileById(fd);
 		int resp;
@@ -75,7 +78,8 @@ public class Servidor {
 	}
 	
 	
-	//Cerrar
+	// Cerrar
+	// Devuelve 0 si pudo cerrar el archivo, 1 en caso contrario.
 	public int cerrar(int fd){
 		OpenedFile of = this.manejador.getOpenedFileById(fd);
 		FileInputStream fis = of.dameFis();
