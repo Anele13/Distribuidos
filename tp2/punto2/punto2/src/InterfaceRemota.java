@@ -14,9 +14,9 @@ import java.rmi.RemoteException;
  */
 public interface InterfaceRemota extends Remote {
 	
-	public OpenRespuesta abrir(OpenArgument request) throws RemoteException, IOException; 
-	public ReadRespuesta leer(ReadArgument request) throws RemoteException, FileNotFoundException; 
-	public WriteRespuesta escribir(WriteArgument request) throws RemoteException, FileNotFoundException; 
-	public CloseRespuesta cerrar(CloseArgument request) throws RemoteException, IOException; 
+	public int abrir(String filename, String permisos) throws RemoteException; 
+	public ReadRespuesta leer(int fd, int cantidadALeer) throws RemoteException; 
+	public int escribir(int fd, byte[] buffer) throws RemoteException; 
+	public int cerrar(int fd) throws RemoteException; 
 
 }

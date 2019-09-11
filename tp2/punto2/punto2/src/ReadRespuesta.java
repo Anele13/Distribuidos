@@ -1,7 +1,9 @@
+import java.io.Serializable;
 
 
-public class ReadRespuesta extends Respuesta {
+public class ReadRespuesta implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	byte[] buf;
 	boolean hayMasDatos;
 
