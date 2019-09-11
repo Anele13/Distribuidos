@@ -19,7 +19,6 @@ import javax.swing.SwingUtilities;
 public class Cliente  implements ActionListener{
 	
 	public static void main(String[] args) {
-//		Ventana v = new Ventana();
 	}
 	
 	public Cliente() {
@@ -44,8 +43,7 @@ public class Cliente  implements ActionListener{
 		fileServer = fileServerTextBox.getText();
 		
 		if (e.getActionCommand() == "Leer") {
-			//agregar escribir
-			
+
 			Calendar cal = Calendar.getInstance();
 	        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 	        System.out.println("Hora de inicio lectura");
@@ -65,6 +63,8 @@ public class Cliente  implements ActionListener{
 			fd = stub.abrir(fileServer);
 			textAreaBox.setText("");
 			while(cosa) {
+				
+				
 				ReadRespuesta resp = stub.leer(50, fd);
 				textAreaBox.append(resp.getBuffer());
 				try {

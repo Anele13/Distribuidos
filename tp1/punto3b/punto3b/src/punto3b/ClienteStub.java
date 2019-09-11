@@ -5,34 +5,13 @@ public class ClienteStub {
 	private String host;
 	private int port;
 	
-	
-	
-	public String getHost() {
-		return host;
-	}
-
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-
-	public int getPort() {
-		return port;
-	}
-
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	
-	
+//Constructor 
 	public ClienteStub (String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
 
+//Métodos para comunicación.
 	public int abrir(String filename) {
 		OpenArgument argumento = new OpenArgument("777", filename);
 		SocketClient s = new SocketClient(this.host, this.port);
@@ -63,4 +42,26 @@ public class ClienteStub {
 		CloseRespuesta respuesta = (CloseRespuesta)s.run(argumento);
 		return respuesta.getStatus();
 	}
+	
+//Getters & Setters
+	public String getHost() {
+		return host;
+	}
+
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+
+	public int getPort() {
+		return port;
+	}
+
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+
 }

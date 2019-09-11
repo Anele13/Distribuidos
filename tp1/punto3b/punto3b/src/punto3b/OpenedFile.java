@@ -32,7 +32,7 @@ public class OpenedFile {
 	
 	public FileInputStream getFileInputStream() throws FileNotFoundException {
 		if (this.fileInputStream != null) {
-			System.out.println("abierto entonces devuelvo");
+//			System.out.println("abierto entonces devuelvo");
 			return this.fileInputStream;
 		}
 		else {

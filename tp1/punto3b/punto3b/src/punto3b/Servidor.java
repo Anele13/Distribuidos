@@ -8,8 +8,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Servidor {
+	private Respuesta respuesta = null;
 	private ManejadorArchivos manejador = new ManejadorArchivos();
 	
+	public Respuesta getRespuesta() {
+		return respuesta;
+	}
+
+
+	public void setRespuesta(Respuesta respuesta) {
+		this.respuesta = respuesta;
+	}
+
+
+	public ManejadorArchivos getManejador() {
+		return manejador;
+	}
+
+
+	public void setManejador(ManejadorArchivos manejador) {
+		this.manejador = manejador;
+	}
+
+
 	// Abrir
 	// Si pudo abrir el archivo devuelve el file descriptor. caso contrario devuelve -1
 	public int abrir(String filename, String permisos) {
@@ -30,7 +51,8 @@ public class Servidor {
 	
 	// Leer
 	// Devuelve una escructura indicando buffer y flag si hay mas datos.
-	public ReadRespuesta leer(int fd, int cantidadALeer) {
+	//[TODO] NO TIENE QUE DEVOLVER UN READRESPUESTA, TIENE QUE DEVOLVER UN INT, EL TAMAÑO LEIDO.
+	public int leer(int fd, int cantidadALeer) {
 		OpenedFile of = this.manejador.getOpenedFileById(fd);
 		ReadRespuesta resp = null;
 		StringBuffer buf = new StringBuffer("");
@@ -51,12 +73,12 @@ public class Servidor {
 					buf.append((char) i);
 				}
 			}
-			resp = new ReadRespuesta((new String(buf)).getBytes(), hayMasDatos);
+			this.respuesta = new ReadRespuesta((new String(buf)).getBytes(), hayMasDatos);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		return resp;
+		return buf.length();
 	}
 	
 	

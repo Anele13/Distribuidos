@@ -22,8 +22,9 @@ public class ServidorStub {
 		
 		else if (request instanceof ReadArgument) {
 			ReadArgument argumento = (ReadArgument)request;
-			ReadRespuesta resp = this.server.leer(argumento.getFd(), argumento.getCantidadALeer());//que leer devuelva entero o en su defecto el buffer y se arme al respuesta aca.
-			this.respuesta = resp;
+			int cantidadLeida= this.server.leer(argumento.getFd(), argumento.getCantidadALeer());//que leer devuelva entero o en su defecto el buffer y se arme al respuesta aca.
+			System.out.println("Desde stub - Cantidad leida: "+cantidadLeida);
+			this.respuesta = this.server.getRespuesta();
 		}
 		
 		else if (request instanceof WriteArgument) {
