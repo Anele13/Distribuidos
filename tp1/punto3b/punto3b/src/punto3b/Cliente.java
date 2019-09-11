@@ -61,11 +61,11 @@ public class Cliente  implements ActionListener{
 
 			boolean cosa = true;
 			int fd;
-			ClienteStub stub = new ClienteStub();
-			fd = stub.abrir(fileServer,host, port);
+			ClienteStub stub = new ClienteStub(host, port);
+			fd = stub.abrir(fileServer);
 			textAreaBox.setText("");
 			while(cosa) {
-				ReadRespuesta resp = stub.leer(50, fd, host, port);
+				ReadRespuesta resp = stub.leer(50, fd);
 				textAreaBox.append(resp.getBuffer());
 				try {
 					fos.write(resp.getBuffer().getBytes());
@@ -74,7 +74,7 @@ public class Cliente  implements ActionListener{
 				}
 				cosa = resp.hayMasDatos;
 			}
-			stub.cerrar(fd, host, port);
+			stub.cerrar(fd);
 			try {
 				fos.close();
 			} catch (IOException e1) {
@@ -87,34 +87,34 @@ public class Cliente  implements ActionListener{
 		
 		
 		if (e.getActionCommand() == "Escribir") {
+			System.out.println("Voy a comenzar una escritura");
+
 			FileInputStream fis = null;
 			try {
 				fis = new FileInputStream(new File(fileLocal));
+				
 			} catch (FileNotFoundException e2) {
 				e2.printStackTrace();
 			}
-			StringBuffer buf = new StringBuffer("");
 			int fd;
 			int i;
-			int maxCaracteres = 1;
+			ClienteStub stub = new ClienteStub(host,port);
+			fd = stub.abrir(fileServer);
 			
-			ClienteStub stub = new ClienteStub();
-			fd = stub.abrir(fileServer,host, port);
-
-			try {
-				
+			try {		
+		
 				while (true) {
-					i = fis.read();
+					byte [] buffer = new byte[50];//Lo inicializo dentro del bucle para limpiarlo en cada lectura.
+					i = fis.read(buffer);
 					if (i == -1) {
 						break;
 					}
-					buf.append((char)i);
-					if (buf.length() == maxCaracteres) {
-						stub.escribir(new String(buf).getBytes(), fd, host, port);
-						buf.delete(0, buf.length());
-					}
+					String buf = new String(buffer);
+					System.out.println("Escribiendo ... \n" + buf);
+//					System.out.println(buffer);
+					stub.escribir(buffer, fd);
 				}
-				stub.cerrar(fd, host, port);
+				stub.cerrar(fd);
 			}
 			catch (IOException e1) {
 				e1.printStackTrace();
@@ -126,6 +126,7 @@ public class Cliente  implements ActionListener{
 			}
 		}
 	}
+	
 	
 	private Component[] getComponentes(ActionEvent e) { //Funcion que obtiene la lista de componentes del jpanel.
 		Component component = (Component) e.getSource();
