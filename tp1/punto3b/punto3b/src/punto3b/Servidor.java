@@ -29,7 +29,7 @@ public class Servidor {
 	
 	
 	// Leer
-	// Devuelve una escructura indicando buffer y flag si hay mas datos.
+	// Devuelve una estructura indicando buffer y flag si hay mas datos.
 	public ReadRespuesta leer(int fd, int cantidadALeer) {
 		OpenedFile of = this.manejador.getOpenedFileById(fd);
 		ReadRespuesta resp = null;
