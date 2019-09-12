@@ -22,14 +22,16 @@ public class ServidorStub {
 		
 		else if (request instanceof ReadArgument) {
 			ReadArgument argumento = (ReadArgument)request;
-			int cantidadLeida= this.server.leer(argumento.getFd(), argumento.getCantidadALeer());//que leer devuelva entero o en su defecto el buffer y se arme al respuesta aca.
-			System.out.println("Desde stub - Cantidad leida: "+cantidadLeida);
-			this.respuesta = this.server.getRespuesta();
+			ReadRespuesta resp = new ReadRespuesta();
+			int cantidadLeida;
+			cantidadLeida = this.server.leer(argumento.getFd(), resp.getBuffer(), argumento.getCantidadALeer());//que leer devuelva entero o en su defecto el buffer y se arme al respuesta aca.
+			resp.setCantidadLeida(cantidadLeida);
+			this.respuesta = resp;
 		}
 		
 		else if (request instanceof WriteArgument) {
 			WriteArgument argumento = (WriteArgument)request;
-			int status = this.server.escribir(argumento.getFd(), argumento.getBuf());
+			int status = this.server.escribir(argumento.getFd(), argumento.getBuf(), argumento.getCantidadAEscribir());
 			WriteRespuesta resp = new WriteRespuesta(status);
 			this.respuesta = resp;
 		}

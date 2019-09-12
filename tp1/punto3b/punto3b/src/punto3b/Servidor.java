@@ -8,29 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Servidor {
-	private Respuesta respuesta = null;
 	private ManejadorArchivos manejador = new ManejadorArchivos();
 	
-	public Respuesta getRespuesta() {
-		return respuesta;
-	}
-
-
-	public void setRespuesta(Respuesta respuesta) {
-		this.respuesta = respuesta;
-	}
-
-
-	public ManejadorArchivos getManejador() {
-		return manejador;
-	}
-
-
-	public void setManejador(ManejadorArchivos manejador) {
-		this.manejador = manejador;
-	}
-
-
 	// Abrir
 	// Si pudo abrir el archivo devuelve el file descriptor. caso contrario devuelve -1
 	public int abrir(String filename, String permisos) {
@@ -52,51 +31,31 @@ public class Servidor {
 	// Leer
 	// Devuelve una escructura indicando buffer y flag si hay mas datos.
 	//[TODO] NO TIENE QUE DEVOLVER UN READRESPUESTA, TIENE QUE DEVOLVER UN INT, EL TAMAÑO LEIDO.
-	public int leer(int fd, int cantidadALeer) {
+	public int leer(int fd, byte[] buffer, int cantidadALeer) {
 		OpenedFile of = this.manejador.getOpenedFileById(fd);
-		ReadRespuesta resp = null;
-		StringBuffer buf = new StringBuffer("");
-		boolean hayMasDatos = true;
 
 		try {
-			int i;
-			int contador = 0;
-			
-			while (contador < cantidadALeer) {
-				++contador;
-				i = of.getFileInputStream().read();
-				if (i == -1) {
-					hayMasDatos = false;
-					break;
-				}
-				else {
-					buf.append((char) i);
-				}
-			}
-			this.respuesta = new ReadRespuesta((new String(buf)).getBytes(), hayMasDatos);
-		}
-		catch (IOException e) {
+			return of.getFileInputStream().read(buffer,0,cantidadALeer);
+		} catch (IOException e) {
 			e.printStackTrace();
+			return -1;
 		}
-		return buf.length();
 	}
 	
 	
 	
 	// Escribir
 	// Devuelve la cantidad de datos escritos. en caso de error -1
-	public int escribir(int fd, byte[] buffer){
+	public int escribir(int fd, byte[] buffer, int cantidadAEscribir){
 		OpenedFile of = this.manejador.getOpenedFileById(fd);
-		int resp;
 		
 		try {
-			of.getFileOutputStream().write(buffer);
-			resp = buffer.length;
+			of.getFileOutputStream().write(buffer,0,cantidadAEscribir);
+			return buffer.length;
 		} catch (IOException e) {
-			resp = -1;
 			e.printStackTrace();
+			return -1;
 		}
-		return resp;
 	}
 	
 	

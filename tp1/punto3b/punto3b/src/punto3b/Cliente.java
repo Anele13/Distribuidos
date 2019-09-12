@@ -18,6 +18,7 @@ import javax.swing.SwingUtilities;
 
 public class Cliente  implements ActionListener{
 	
+
 	public static void main(String[] args) {
 	}
 	
@@ -49,36 +50,40 @@ public class Cliente  implements ActionListener{
 	        System.out.println("Hora de inicio lectura");
 	        System.out.println( sdf.format(cal.getTime()) );
 			
-	       
-	        FileOutputStream fos = null;
-			try {
-				fos = new FileOutputStream(new File(fileLocal));
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			}
+	             
 
-			boolean cosa = true;
+			int max = 50;
 			int fd;
+			int cantidadLeida;
+			byte[] buffer = new byte[max];
+			FileOutputStream fos = null;
+			
 			ClienteStub stub = new ClienteStub(host, port);
-			fd = stub.abrir(fileServer);
+			fd = stub.abrir(fileServer, "777");
 			textAreaBox.setText("");
-			while(cosa) {
+			cantidadLeida = stub.leer(fd, buffer, max);
+			if (cantidadLeida != -1) {
 				
 				
-				ReadRespuesta resp = stub.leer(50, fd);
-				textAreaBox.append(resp.getBuffer());
 				try {
-					fos.write(resp.getBuffer().getBytes());
-				} catch (IOException a) {
-					a.printStackTrace();
+					fos = new FileOutputStream(new File(fileLocal));
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
 				}
-				cosa = resp.hayMasDatos;
-			}
-			stub.cerrar(fd);
+				
+			
 			try {
+				while(cantidadLeida != -1) {
+					textAreaBox.append(new String(buffer));
+					fos.write(buffer,0,cantidadLeida);
+					cantidadLeida = stub.leer(fd, buffer, max);
+				}
+				stub.cerrar(fd);
 				fos.close();
-			} catch (IOException e1) {
+			} 
+			catch (IOException e1) {
 				e1.printStackTrace();
+			}
 			}
 	        System.out.println("Hora de finalizacion lectura");
 	        System.out.println( sdf.format(cal.getTime()) );
@@ -92,36 +97,28 @@ public class Cliente  implements ActionListener{
 			FileInputStream fis = null;
 			try {
 				fis = new FileInputStream(new File(fileLocal));
-				
 			} catch (FileNotFoundException e2) {
 				e2.printStackTrace();
 			}
+			
 			int fd;
 			int i;
-			ClienteStub stub = new ClienteStub(host,port);
-			fd = stub.abrir(fileServer);
+			int max = 50;
+			byte[] buffer = new byte[max];
 			
+			ClienteStub stub = new ClienteStub(host,port);
+			fd = stub.abrir(fileServer,"777");
 			try {		
-		
 				while (true) {
-					byte [] buffer = new byte[50];//Lo inicializo dentro del bucle para limpiarlo en cada lectura.
-					i = fis.read(buffer);
+					i = fis.read(buffer,0,max);
 					if (i == -1) {
 						break;
 					}
-					String buf = new String(buffer);
-					System.out.println("Escribiendo ... \n" + buf);
-//					System.out.println(buffer);
-					stub.escribir(buffer, fd);
+					stub.escribir(fd,buffer, i);
 				}
 				stub.cerrar(fd);
 			}
 			catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			try {
-				fis.close();
-			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}

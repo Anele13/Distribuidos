@@ -4,7 +4,15 @@ public class WriteArgument extends Argument{
 
 	byte[] buf;
 	int	 fd;
+	int cantidadAEscribir;
 	
+	public int getCantidadAEscribir() {
+		return this.cantidadAEscribir;
+	}
+	
+	public void setCantidadAEscribir(int cantidad) {
+		this.cantidadAEscribir = cantidad;
+	}
 	public byte[] getBuf() {
 		return buf;
 	}
@@ -18,9 +26,10 @@ public class WriteArgument extends Argument{
 		this.fd = fd;
 	}
 	
-	public WriteArgument(byte[] arreglo, int fd) {
+	public WriteArgument(byte[] arreglo, int fd, int cantidad) {
 		this.setBuf(arreglo);
 		this.setFd(fd);
+		this.setCantidadAEscribir(cantidad);
 	}
 	
 }
