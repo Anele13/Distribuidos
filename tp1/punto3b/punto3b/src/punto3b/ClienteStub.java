@@ -4,15 +4,14 @@ package punto3b;
 public class ClienteStub {
 	private String host;
 	private int port;
+
 	
-//Constructor 
 	public ClienteStub (String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
 
-//Métodos para comunicación.
-	public int abrir(String filename) {
+	public int abrir(String filename, String permisos) {
 		OpenArgument argumento = new OpenArgument("777", filename);
 		SocketClient s = new SocketClient(this.host, this.port);
 		OpenRespuesta respuesta = (OpenRespuesta)s.run(argumento);
@@ -20,16 +19,19 @@ public class ClienteStub {
 	}
 	
 	
-	public ReadRespuesta leer(int cantidad, int fd) {
-		ReadArgument argumento = new ReadArgument(fd, cantidad);
+	public int leer(int fd, byte[]buffer, int cantidadALeer) {
+		ReadArgument argumento = new ReadArgument(fd, cantidadALeer);
 		SocketClient s = new SocketClient(this.host, this.port);
 		ReadRespuesta respuesta = (ReadRespuesta)s.run(argumento);
-		return respuesta;		
+		if (respuesta.getCantidadLeida() != -1) {
+			System.arraycopy(respuesta.getBuffer(),0,buffer, 0, respuesta.getCantidadLeida());
+		}		
+		return respuesta.getCantidadLeida();		
 	}
 	
 	
-	public int escribir(byte[] arreglo, int fd) {
-		WriteArgument argumento = new WriteArgument(arreglo, fd);
+	public int escribir(int fd, byte[] arreglo, int cantidadAEscribir) {
+		WriteArgument argumento = new WriteArgument(arreglo, fd, cantidadAEscribir);
 		SocketClient s = new SocketClient(this.host, this.port);
 		WriteRespuesta respuesta = (WriteRespuesta)s.run(argumento);
 		return respuesta.getStatus();
@@ -42,26 +44,5 @@ public class ClienteStub {
 		CloseRespuesta respuesta = (CloseRespuesta)s.run(argumento);
 		return respuesta.getStatus();
 	}
-	
-//Getters & Setters
-	public String getHost() {
-		return host;
-	}
-
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-
-	public int getPort() {
-		return port;
-	}
-
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
 
 }
