@@ -1,22 +1,12 @@
 package punto5;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Timer;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
-import com.sun.jdi.event.EventQueue;
 
 public class Ventana {
 	private JFrame frame;
@@ -27,6 +17,9 @@ public class Ventana {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		System.out.println("Hora de inicintio timer");
 		System.out.println( sdf.format(cal.getTime()) );
+		
+		
+		
 
 		this.frame = new JFrame("Reloj");
 		this.frame.setSize(300, 300);
@@ -34,8 +27,8 @@ public class Ventana {
 		cp.setLayout(null);
 		
 		Boton botonSincronizar = new Boton("Sincronizar",10,100,120);
-		cp.add(botonSincronizar);
 		botonSincronizar.addActionListener(cliente);
+		cp.add(botonSincronizar);
 		cp.add(new Texto(sdf.format(cal.getTime()),10,10,100,cp.getBackground()));
 		
 		//Muestro el frame.
@@ -44,15 +37,14 @@ public class Ventana {
 		
 	}
 	
-	public void imprimir_timer(Date tiempo) {//Metodo público para llamar desde el cliente para setear el timer en la GUI.
+	public void imprimir_timer(String tiempo) {//Metodo público para llamar desde el cliente para setear el timer en la GUI.
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		Container cp = this.frame.getContentPane();
 		cp.setLayout(null);
 		
 		Component textBox = cp.getComponent(1);
 		Texto texto = (Texto)textBox;
-		texto.setText(sdf.format(tiempo));
+		texto.setText(tiempo);
 		
 		
 		
