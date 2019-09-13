@@ -18,8 +18,8 @@ public class Ventana{
 
 		//		ingrese un archivo local
 		//		ingrese un archivo remoto	
-		cp.add(new Texto ("/home/anele/Escritorio/vacio.txt",10,40,300));
-		cp.add(new Texto ("/home/anele/Escritorio/vacio2.txt",10,70,300));
+		cp.add(new Texto ("path archivo local",10,40,300));
+		cp.add(new Texto ("path archivo remoto",10,70,300));
 		
 		JTextArea textArea =new JTextArea();
 		textArea.setBounds(new Rectangle(330,0,300,600));
