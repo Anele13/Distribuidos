@@ -12,16 +12,14 @@ import java.net.Socket;
 public class ServidorStub extends Thread {
 	
 
-	 //Servidor server = new Servidor();
-	 ManejadorArchivos manejador = new ManejadorArchivos();
-	
+	 private Servidor server = new Servidor();
 
 	public void run() {
 		try {
 			ServerSocket escuchandoSocket = new ServerSocket(7896);
       		while (true) {
     		    Socket socketCliente = escuchandoSocket.accept();
-		    	HiloServidor hilo = new HiloServidor(socketCliente, this.manejador);
+		    	HiloServidor hilo = new HiloServidor(socketCliente, this.server);
       	   	}
 		}
      	catch(Exception e) {

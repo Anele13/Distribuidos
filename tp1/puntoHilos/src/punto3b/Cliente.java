@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -18,8 +17,8 @@ import javax.swing.SwingUtilities;
 
 public class Cliente  implements ActionListener{
 	
+
 	public static void main(String[] args) {
-//		Ventana v = new Ventana();
 	}
 	
 	public Cliente() {
@@ -44,40 +43,46 @@ public class Cliente  implements ActionListener{
 		fileServer = fileServerTextBox.getText();
 		
 		if (e.getActionCommand() == "Leer") {
-			
+
 			Calendar cal = Calendar.getInstance();
 	        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 	        System.out.println("Hora de inicio lectura");
 	        System.out.println( sdf.format(cal.getTime()) );
 			
-	       
-	        FileOutputStream fos = null;
-			try {
-				fos = new FileOutputStream(new File(fileLocal));
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			}
+	             
 
-			boolean cosa = true;
+			int max = 50;
 			int fd;
-			ClienteStub stub = new ClienteStub();
-			fd = stub.abrir(fileServer,host, port);
+			int cantidadLeida;
+			byte[] buffer = new byte[max];
+			FileOutputStream fos = null;
+			
+			ClienteStub stub = new ClienteStub(host, port);
+			fd = stub.abrir(fileServer, "777");
 			textAreaBox.setText("");
-			while(cosa) {
-				ReadRespuesta resp = stub.leer(50, fd, host, port);
-				textAreaBox.append(resp.getBuffer());
+			cantidadLeida = stub.leer(fd, buffer, max);
+			if (cantidadLeida != -1) {
+				
+				
 				try {
-					fos.write(resp.getBuffer().getBytes());
-				} catch (IOException a) {
-					a.printStackTrace();
+					fos = new FileOutputStream(new File(fileLocal));
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
 				}
-				cosa = resp.hayMasDatos;
-			}
-			stub.cerrar(fd, host, port);
+				
+			
 			try {
+				while(cantidadLeida != -1) {
+					textAreaBox.append(new String(buffer));
+					fos.write(buffer,0,cantidadLeida);
+					cantidadLeida = stub.leer(fd, buffer, max);
+				}
+				stub.cerrar(fd);
 				fos.close();
-			} catch (IOException e1) {
+			} 
+			catch (IOException e1) {
 				e1.printStackTrace();
+			}
 			}
 	        System.out.println("Hora de finalizacion lectura");
 	        System.out.println( sdf.format(cal.getTime()) );
@@ -86,45 +91,38 @@ public class Cliente  implements ActionListener{
 		
 		
 		if (e.getActionCommand() == "Escribir") {
+			System.out.println("Voy a comenzar una escritura");
+
 			FileInputStream fis = null;
 			try {
 				fis = new FileInputStream(new File(fileLocal));
 			} catch (FileNotFoundException e2) {
 				e2.printStackTrace();
 			}
-			StringBuffer buf = new StringBuffer("");
+			
 			int fd;
 			int i;
-			int maxCaracteres = 1;
+			int max = 50;
+			byte[] buffer = new byte[max];
 			
-			ClienteStub stub = new ClienteStub();
-			fd = stub.abrir(fileServer,host, port);
-
-			try {
-				
+			ClienteStub stub = new ClienteStub(host,port);
+			fd = stub.abrir(fileServer,"777");
+			try {		
 				while (true) {
-					i = fis.read();
+					i = fis.read(buffer,0,max);
 					if (i == -1) {
 						break;
 					}
-					buf.append((char)i);
-					if (buf.length() == maxCaracteres) {
-						stub.escribir(new String(buf).getBytes(), fd, host, port);
-						buf.delete(0, buf.length());
-					}
+					stub.escribir(fd,buffer, i);
 				}
-				stub.cerrar(fd, host, port);
+				stub.cerrar(fd);
 			}
 			catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			try {
-				fis.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
 		}
 	}
+	
 	
 	private Component[] getComponentes(ActionEvent e) { //Funcion que obtiene la lista de componentes del jpanel.
 		Component component = (Component) e.getSource();

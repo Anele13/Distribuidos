@@ -14,9 +14,7 @@ import java.util.concurrent.Executors;
 public class ServidorStub extends Thread {
 	
 
-	 //Servidor server = new Servidor();
-	 ManejadorArchivos manejador = new ManejadorArchivos();
-	
+	 Servidor server = new Servidor();
 
 	public void run() {
 		try {
@@ -25,7 +23,7 @@ public class ServidorStub extends Thread {
 			ServerSocket escuchandoSocket = new ServerSocket(7896);
       		while (true) {
     		    Socket socketCliente = escuchandoSocket.accept();
-		    	HiloServidor runnable = new HiloServidor(socketCliente, this.manejador);
+		    	HiloServidor runnable = new HiloServidor(socketCliente, this.server);
 		    	pool.execute(runnable);
       	   	}
 		}

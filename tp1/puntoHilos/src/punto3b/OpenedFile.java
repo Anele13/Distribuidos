@@ -32,11 +32,9 @@ public class OpenedFile {
 	
 	public FileInputStream getFileInputStream() throws FileNotFoundException {
 		if (this.fileInputStream != null) {
-			System.out.println("abierto entonces devuelvo");
 			return this.fileInputStream;
 		}
 		else {
-			System.out.println("CERRDO ENTONCES ABRO");
 			this.setFileInputStream(new FileInputStream(this.getFile()));
 			return this.fileInputStream;
 		}
