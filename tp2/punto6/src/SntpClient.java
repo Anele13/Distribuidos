@@ -35,25 +35,14 @@ import java.util.Iterator;
  */
 public class SntpClient
 {
-	public static void main(String[] args) throws IOException
+	public String requestNTP(String server) throws IOException
 	{
 		String serverName = "2.ar.pool.ntp.org";
 		
-		/*
-		// Process command-line args
-		if(args.length==1)
-		{
-			serverName = args[0];
-		}
-		else
-		{
-			printUsage();
-			return;
-		}
-		*/
-		
 		// Send request
 		DatagramSocket socket = new DatagramSocket();
+		
+	
 		InetAddress address = InetAddress.getByName(serverName);
 		byte[] buf = new NtpMessage().toByteArray();
 		DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 123);
@@ -151,6 +140,7 @@ public class SntpClient
 		
 		
 		socket.close();
+		return msg.toString();
 	}
 	
 	

@@ -13,8 +13,10 @@ import javax.swing.JFrame;
 public class Tabla extends JFrame {
  
 	JFrame f;
+	private String[][] data;
+	private String[] columnas;
 	
-    public Tabla(String[] column, String[][] data) {
+    public Tabla() {
   
 	    f=new JFrame();
 
@@ -35,15 +37,25 @@ public class Tabla extends JFrame {
 	    data1[0] = Arrays.copyOfRange(data[0], 0, (data[0].length + 1)/2);
 	    JTable jt2 =new JTable(data1, columnas1);
 	    
-	    JScrollPane js2 = new JScrollPane(jt2);
-	    js2.setMaximumSize(new Dimension(10, 50));
+	    
 	    
 
 	    
-	    f.add(js2, BorderLayout.CENTER);
-	    f.add(js, BorderLayout.AFTER_LAST_LINE);
-	    
-	    f.setSize(2000,600);    
-	    f.setVisible(true);    
-	} 
+	           
+	}
+    
+    public void setColumnas(String[] columnas) {
+    	
+    }
+    
+    public void mostrar() {
+    	JTable jt2 =new JTable(this.data, this.columnas);
+ 	    JScrollPane js2 = new JScrollPane(jt2);
+	    js2.setMaximumSize(new Dimension(10, 50));
+ 	    f.add(js2, BorderLayout.CENTER);
+	    //f.add(js, BorderLayout.AFTER_LAST_LINE);
+	    f.setSize(600,600);
+    	this.setVisible(true);
+    }
+    
 }
