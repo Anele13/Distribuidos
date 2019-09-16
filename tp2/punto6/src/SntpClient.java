@@ -35,9 +35,9 @@ import java.util.Iterator;
  */
 public class SntpClient
 {
-	public String requestNTP(String server) throws IOException
+	public ArrayList<String> requestNTP(String server) throws IOException
 	{
-		String serverName = "2.ar.pool.ntp.org";
+		String serverName = server;
 		
 		// Send request
 		DatagramSocket socket = new DatagramSocket();
@@ -133,14 +133,14 @@ public class SntpClient
 	    ultimo[0] = str ;
 	    
 	    
-		Tabla t = new Tabla(column, ultimo ) ;
+		//Tabla t = new Tabla(column, ultimo ) ;
 		
 		
 		
 		
 		
 		socket.close();
-		return msg.toString();
+		return list;
 	}
 	
 	
@@ -166,5 +166,28 @@ public class SntpClient
 			"General Public License available at http://www.gnu.org/licenses/gpl.html for\n" +
 			"more details.");
 					
+	}
+	
+	
+	public static void main(String[] args) throws IOException {
+		String[] servers = {
+	            "pool.ntp.org",
+	            "asia.pool.ntp.org",
+	            "europe.pool.ntp.org",
+	            "north-america.pool.ntp.org",
+	            "oceania.pool.ntp.org",
+	            "south-america.pool.ntp.org",
+	        	};
+		String[] columnas = {"Servidor", "Local clock offset"};	
+		String[][] datos = new String[servers.length][columnas.length];
+		SntpClient cliente = new SntpClient();
+				
+		for (int i = 0; i < servers.length; i++) {
+			ArrayList<String> mensaje = cliente.requestNTP(servers[i]);
+			String[] aux = {mensaje.get(0), mensaje.get(15)};
+			datos[i] = aux;
+		}
+
+		Tabla t = new Tabla(columnas, datos);
 	}
 }
