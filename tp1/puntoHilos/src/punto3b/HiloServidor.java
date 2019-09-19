@@ -11,21 +11,17 @@ public class HiloServidor extends Thread{
 	Socket socketCliente;
 	ObjectInputStream entrada;
 	ObjectOutputStream salida;
-	
-	Servidor server = new Servidor();
-	ManejadorArchivos manejador;
+	Servidor server;
 	Respuesta respuesta = null;
-	ServidorStub stub;
 		
 	
-	public HiloServidor(Socket unSocketCliente, ManejadorArchivos manejador) {
+	public HiloServidor(Socket unSocketCliente, Servidor servidor) {
 		try {
 			/* Ya hay una conexion con un cliente, streams de I/O */
 			this.socketCliente = unSocketCliente;
 			this.entrada= new ObjectInputStream(socketCliente.getInputStream());
 			this.salida = new ObjectOutputStream(socketCliente.getOutputStream());
-			
-			this.manejador = manejador;
+			this.server = servidor;
 			this.start();
 		}
 		catch(Exception e){
@@ -38,8 +34,6 @@ public class HiloServidor extends Thread{
 		try{
 			Argument request = (Argument)this.entrada.readObject();
 			this.handleClient(request);
-		    
-			//Respuesta r = new Respuesta();
 			this.salida.writeObject(this.respuesta);
 		    this.socketCliente.close();
 		}
@@ -53,31 +47,29 @@ public class HiloServidor extends Thread{
 
 		if (request instanceof OpenArgument) {
 			OpenArgument argumento = (OpenArgument)request;
-			File file = this.server.abrir(argumento.getFilename());
-			OpenedFile of = new OpenedFile(file);
-			manejador.setOpenedFile(of);		
-			this.respuesta = new OpenRespuesta(of.getId());
+			int fd = this.server.abrir(argumento.getFilename(),argumento.getPermisos());
+			this.respuesta = new OpenRespuesta(fd);
 		}
 		
 		else if (request instanceof ReadArgument) {
 			ReadArgument argumento = (ReadArgument)request;
-			OpenedFile of = manejador.getOpenedFileById(argumento.getFd());
-			ReadRespuesta resp = this.server.leer(argumento.getCantidadALeer(),of.getFileInputStream());
+			ReadRespuesta resp = new ReadRespuesta();
+			int cantidadLeida;
+			cantidadLeida = this.server.leer(argumento.getFd(), resp.getBuffer(), argumento.getCantidadALeer());//que leer devuelva entero o en su defecto el buffer y se arme al respuesta aca.
+			resp.setCantidadLeida(cantidadLeida);
 			this.respuesta = resp;
 		}
 		
 		else if (request instanceof WriteArgument) {
 			WriteArgument argumento = (WriteArgument)request;
-			OpenedFile of = manejador.getOpenedFileById(argumento.getFd());	
-			WriteRespuesta resp = this.server.escribir(argumento.getBuf(), of.getFileOutputStream());
+			int status = this.server.escribir(argumento.getFd(), argumento.getBuf(), argumento.getCantidadAEscribir());
+			WriteRespuesta resp = new WriteRespuesta(status);
 			this.respuesta = resp;
 		}
 		
 		else {
 			CloseArgument argumento = (CloseArgument)request;
-			OpenedFile of = manejador.getOpenedFileById(argumento.getFd());
-			int resultado = this.server.cerrar(of.dameFis(), of.dameFos());
-			manejador.deleteOpenedFileById(of.getId());
+			int resultado = this.server.cerrar(argumento.getFd());
 			this.respuesta = new CloseRespuesta(resultado);
 		}
 	}

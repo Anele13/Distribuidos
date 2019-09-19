@@ -2,12 +2,12 @@ package punto3b;
 
 public class ReadRespuesta extends Respuesta {
 
-	byte[] buf;
-	boolean hayMasDatos;
+	byte[] buf = new byte[50];
+	int cantidadLeida;
 
 	
-	public String getBuffer() {
-		return new String (this.buf);
+	public byte[] getBuffer() {
+		return this.buf;
 	}
 	
 	
@@ -16,18 +16,13 @@ public class ReadRespuesta extends Respuesta {
 	}
 	
 	
-	public boolean isHayMasDatos() {
-		return hayMasDatos;
+	public int getCantidadLeida() {
+		return cantidadLeida;
 	}
 	
 	
-	public void setHayMasDatos(boolean hayMasDatos) {
-		this.hayMasDatos = hayMasDatos;
+	public void setCantidadLeida(int cantidad) {
+		this.cantidadLeida = cantidad;
 	}
 	
-	
-	public ReadRespuesta(byte[] buffer, boolean hayMasDatos) {
-		this.setBuffer(buffer);
-		this.setHayMasDatos(hayMasDatos);
-	}
 }

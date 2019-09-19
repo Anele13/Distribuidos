@@ -28,8 +28,12 @@ public class Cliente implements ActionListener{
     JButton b1,b2,b3,b4;  
 	
 	public Cliente() throws MalformedURLException, RemoteException, NotBoundException {
+		
+		// Objeto Remoto Suma-Resta
     	String rname = "//" + "localhost" + ":" + Registry.REGISTRY_PORT + "/ORSumaResta";
 		IRSumaResta objetoRemoto =  (IRSumaResta)Naming.lookup (rname);
+		
+		// Objeto Remoto Multiplicacion-Division
 		String rname2 = "//" + "localhost" + ":" + Registry.REGISTRY_PORT + "/ORMultiplicacionDivision";
 		IRMultiplicacionDivision objetoRemoto2 =  (IRMultiplicacionDivision)Naming.lookup (rname2);
 		this.setMulDivision(objetoRemoto2);
@@ -125,6 +129,5 @@ public class Cliente implements ActionListener{
 	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
 		Cliente c = new Cliente();
 		c.runVentana();
-       
     }
 }

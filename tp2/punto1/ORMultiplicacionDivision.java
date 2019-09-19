@@ -33,6 +33,10 @@ import java.util.concurrent.TimeUnit;
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		if (b == 0) {
+			System.out.println("ERROR - No se permiten divisiones por cero, se devuelve valor 0");
+			return 0;
+		}
 		return a/b;
 	}
 
