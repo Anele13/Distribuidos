@@ -9,6 +9,7 @@ import java.rmi.registry.Registry;         /* REGISTRY_PORT  */
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
@@ -28,7 +29,7 @@ public class Cliente implements ActionListener{
     JButton b1,b2,b3,b4;  
 	
 	public Cliente() throws MalformedURLException, RemoteException, NotBoundException {
-    	String rname = "//" + "localhost" + ":" + Registry.REGISTRY_PORT + "/ORSumaResta";
+		String rname = "//" + "localhost" + ":" + Registry.REGISTRY_PORT + "/ORSumaResta";
 		IRSumaResta objetoRemoto =  (IRSumaResta)Naming.lookup (rname);
 		String rname2 = "//" + "localhost" + ":" + Registry.REGISTRY_PORT + "/ORMultiplicacionDivision";
 		IRMultiplicacionDivision objetoRemoto2 =  (IRMultiplicacionDivision)Naming.lookup (rname2);
@@ -55,12 +56,23 @@ public class Cliente implements ActionListener{
 	
 	public void runVentana() {
 		JFrame f= new JFrame();  
+		
+		JLabel tagText1 = new JLabel();
+		tagText1.setBounds(10, 50, 200, 20);
+		tagText1.setText("Primer operador:");
+		JLabel tagText2 = new JLabel();
+		tagText2.setBounds(10, 100, 200, 20);
+		tagText2.setText("Segundo operador:");
+		JLabel tagText3 = new JLabel();
+		tagText3.setBounds(10, 150, 200, 20);
+		tagText3.setText("Resultado: ");
+		
         tf1=new JTextField();  
-        tf1.setBounds(50,50,150,20);  
+        tf1.setBounds(150,50,150,20);  
         tf2=new JTextField();  
-        tf2.setBounds(50,100,150,20);  
+        tf2.setBounds(150,100,150,20);  
         tf3=new JTextField();  
-        tf3.setBounds(50,150,150,20);  
+        tf3.setBounds(150,150,150,20);  
         tf3.setEditable(false);   
         
         b1=new JButton("+");  
@@ -79,7 +91,8 @@ public class Cliente implements ActionListener{
         b3.addActionListener(this);  
         b4.addActionListener(this); 
         
-        f.add(tf1);f.add(tf2);f.add(tf3);f.add(b1);f.add(b2);f.add(b3);f.add(b4);  
+        f.add(tf1);f.add(tf2);f.add(tf3);f.add(b1);f.add(b2);f.add(b3);f.add(b4);
+        f.add(tagText1);f.add(tagText2);f.add(tagText3);  
         
         
         f.setSize(400,400);  
@@ -91,10 +104,11 @@ public class Cliente implements ActionListener{
 	@Override
 	  public void actionPerformed(ActionEvent e) {
     	String s1=tf1.getText();  
-        String s2=tf2.getText();  
+        String s2=tf2.getText();   
         int a=Integer.parseInt(s1);  
         int b=Integer.parseInt(s2);
         int c=0; 
+        
         
         try {
 	    	if (e.getActionCommand() == "+") {
@@ -119,10 +133,9 @@ public class Cliente implements ActionListener{
         String result=String.valueOf(c);  
         tf3.setText(result);  
     }  
-    
-	
 	
 	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
+		System.out.println("Cliente corriendo");
 		Cliente c = new Cliente();
 		c.runVentana();
        
