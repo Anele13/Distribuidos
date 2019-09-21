@@ -48,15 +48,24 @@ public class ejemplo1 {
 		 	  xid = new MyXid(101, new byte[]{0x01}, new byte[]{0x02});
 		 
 			  xaRes.start(xid, XAResource.TMNOFLAGS);
-		 	  stmt.executeUpdate("insert into cuentas (id, titular, bloqueada, saldo) values (100, 'nueva cuenta', False, 100000)");
+		 	  	stmt.executeUpdate("insert into cuentas (id, titular, bloqueada, saldo) values (100, 'nueva cuenta', False, 100000)");
 			  xaRes.end(xid, XAResource.TMSUCCESS);
 			
 			  ret = xaRes.prepare(xid);
+			  
 			  if (ret == XAResource.XA_OK) {
 			      /*ret2 = xaRes2.prepare(xid);*/
-				  
+				  //primero preguntar por la transaccion de arriba, luego si da OK que se prepararon todas pregunto 
+				  // si la segunda esta OK tambien o sea la preparacion de todos los clientes recieb ahi debo consultar 
+				  // al cliente si quiero commitear o rollback de todo. 
+				  // ademas es interesante que hagamos un select igual al de arriba
+				  // para ver el como estan los datos, si me deja verlos (saldos de las cuentas por ejemplo) y tambien
+				  // en postgres.
+				  // y luego segun la decision del cliente.
 			      xaRes.commit(xid, false);
 			  }
+			  
+			  
 			  stmt.close();
 			  con.close();
 			  xaCon.close();

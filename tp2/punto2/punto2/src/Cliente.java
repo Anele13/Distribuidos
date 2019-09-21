@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
-
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,13 +46,6 @@ public class Cliente implements ActionListener{
 		return componentes;
 	}
 	
-	public InterfaceRemota getObjetoRemoto() {
-		return this.servidor;
-	}
-    
-	
-
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String host,fileLocal,fileServer;
@@ -71,7 +63,7 @@ public class Cliente implements ActionListener{
 		fileLocal = fileLocalTextBox.getText();
 		fileServer = fileServerTextBox.getText();
 		
-		
+		/*
 		if (e.getActionCommand() == "Leer") {
 			
 			Calendar cal = Calendar.getInstance();
@@ -147,6 +139,102 @@ public class Cliente implements ActionListener{
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
+		}
+		*/
+		
+		
+		if (e.getActionCommand() == "Leer") {
+
+			Calendar cal = Calendar.getInstance();
+	        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+	        System.out.println("Hora de inicio lectura");
+	        System.out.println( sdf.format(cal.getTime()) );
+			
+	             
+
+			int max = 50;
+			int fd;
+			int cantidadLeida;
+			byte[] buffer = null;
+			FileOutputStream fos = null;
+			
+			try {
+				fd = this.servidor.abrir(fileServer, "777");
+				textAreaBox.setText("");
+				buffer = this.servidor.leer(fd, max);
+				if (buffer != null) {
+					
+					
+					try {
+						fos = new FileOutputStream(new File(fileLocal));
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					}
+					
+				
+					try {
+						while(buffer != null) {
+							String _buf = new String(buffer);
+							textAreaBox.append(_buf.trim());
+							fos.write(buffer, 0, _buf.trim().length());
+							buffer = this.servidor.leer(fd, max);
+							}
+						this.servidor.cerrar(fd);
+						fos.close();
+					} 
+					catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+				
+			} catch (RemoteException e2) {
+				e2.printStackTrace();
+			}
+
+			
+	        System.out.println("Hora de finalizacion lectura");
+	        System.out.println( sdf.format(cal.getTime()) );
+		}
+
+		
+		
+		if (e.getActionCommand() == "Escribir") {
+			System.out.println("Voy a comenzar una escritura");
+
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(new File(fileLocal));
+			} catch (FileNotFoundException e2) {
+				e2.printStackTrace();
+			}
+			
+			int fd;
+			int i;
+			int max = 50;
+			byte[] buffer = new byte[max];
+			
+			try {
+				fd = this.servidor.abrir(fileServer,"777");
+				try {		
+					while (true) {
+						i = fis.read(buffer,0,max);
+						if (i == -1) {
+							break;
+						}
+						this.servidor.escribir(fd,buffer, i);
+					}
+					this.servidor.cerrar(fd);
+				}
+				catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			
+			
+			} catch (RemoteException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
 		}
 	}
 	

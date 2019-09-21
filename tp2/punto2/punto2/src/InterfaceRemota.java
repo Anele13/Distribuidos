@@ -15,8 +15,8 @@ import java.rmi.RemoteException;
 public interface InterfaceRemota extends Remote {
 	
 	public int abrir(String filename, String permisos) throws RemoteException; 
-	public ReadRespuesta leer(int fd, int cantidadALeer) throws RemoteException; 
-	public int escribir(int fd, byte[] buffer) throws RemoteException; 
+	public byte[] leer(int fd, int cantidadALeer) throws RemoteException; 
+	public int escribir(int fd, byte[] buffer, int cantidadAEscribir) throws RemoteException; 
 	public int cerrar(int fd) throws RemoteException; 
 
 }

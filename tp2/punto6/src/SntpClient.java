@@ -184,7 +184,7 @@ public class SntpClient
 				
 		for (int i = 0; i < servers.length; i++) {
 			ArrayList<String> mensaje = cliente.requestNTP(servers[i]);
-			String[] aux = {mensaje.get(0), mensaje.get(15)};
+			String[] aux = {mensaje.get(0), mensaje.get(16)};
 			datos[i] = aux;
 		}
 
