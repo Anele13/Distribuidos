@@ -29,7 +29,7 @@ public class ejemplo1 {
 		 XADataSource xaDS;
 		 XAConnection xaCon;
 		 XAResource xaRes;
-		 Xid xid;
+		 Xid xid, xid2;
 		 Connection con;
 		 Statement stmt;
 		 int ret;
@@ -43,14 +43,13 @@ public class ejemplo1 {
 		
 			  con = xaCon.getConnection();
 			  stmt = con.createStatement();
-		
-		
 		 	  xid = new MyXid(101, new byte[]{0x01}, new byte[]{0x02});
-		 
 			  xaRes.start(xid, XAResource.TMNOFLAGS);
 		 	  	stmt.executeUpdate("insert into cuentas (id, titular, bloqueada, saldo) values (100, 'nueva cuenta', False, 100000)");
 			  xaRes.end(xid, XAResource.TMSUCCESS);
-			
+		
+			  
+			  
 			  ret = xaRes.prepare(xid);
 			  
 			  if (ret == XAResource.XA_OK) {

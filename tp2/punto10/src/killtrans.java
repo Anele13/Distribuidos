@@ -16,8 +16,7 @@ import org.postgresql.xa.*;
 public class killtrans {
 
 
-	public static PGXADataSource getDataSource()
-	throws SQLException
+	public static PGXADataSource getDataSource() throws SQLException
 	{
 	 PGXADataSource xaDS = new PGXADataSource();
 

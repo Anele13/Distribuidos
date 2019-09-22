@@ -1,6 +1,6 @@
 import javax.transaction.xa.*;
-public class MyXid implements Xid
-{
+
+public class MyXid implements Xid {
  protected int formatId;
  protected byte gtrid[];
  protected byte bqual[];
