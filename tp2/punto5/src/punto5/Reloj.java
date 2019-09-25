@@ -1,5 +1,8 @@
 package punto5;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class Reloj extends Thread{
@@ -10,26 +13,35 @@ public class Reloj extends Thread{
 	private int segundos;
 	
 	
-	public Reloj(long desface,Cliente cliente) {
-		this.setTiempoPorSegundo(1000 +desface);
+	public Reloj(int deriva,Cliente cliente) {
+		this.setTiempoPorSegundo(1000 + deriva);
 		this.setCliente(cliente);
-		this.setHoras(0);
-		this.setMinutos(0);
-		this.setSegundos(0);
+	
+	}
+	
+	public void setTime(int desface) {
+		long milis = System.currentTimeMillis();
+		System.out.println(milis);
+		milis = milis + (60 *1000 * desface);
+		//[TODO] ESTÁ HACIENDO LA RESTA PERO LA HORA DA IGUAL. VER COMO RESTAR EN MINUTOS EL DESFACE.
+		System.out.println(milis);
+		Date resultdate = new Date(milis);
+		int horas = resultdate.getHours();
+		int minutos = resultdate.getMinutes();
+		int segundos = resultdate.getSeconds();
+		
+		this.setHoras(horas);
+		this.setMinutos(minutos);
+		this.setSegundos(segundos);
 		
 	}
+	
 	
 	public void run() {
 		System.out.println("Reloj corriendo");
 		Cliente cliente = this.getCliente();
 		Ventana ventana = cliente.getVentana();
-//		
-//		long millis = System.currentTimeMillis();
-//		String hms =String.format("%02d:%02d:%02d", 
-//				TimeUnit.MILLISECONDS.toHours(millis),
-//				TimeUnit.MILLISECONDS.toMinutes(millis) -  TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), // The change is in this line
-//				TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-//		System.out.println(hms);
+
 		String stringTimer;
 		while (true) {
 			while(this.getHoras()<24) {
