@@ -28,97 +28,83 @@ public class Servidor extends UnicastRemoteObject implements InterfaceRemota {
 
 	
 	// Abrir
-	// Si pudo abrir el archivo devuelve el file descriptor. caso contrario devuelve -1
-	public int abrir(String filename, String permisos) {
-		int fd;
-		
-		try {
-			OpenedFile of = new OpenedFile(new File(filename));
-			this.manejador.setOpenedFile(of);
-			fd = of.getId();
-		} 
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-			fd = -1;
-		}
-		return fd;
-	}
-	
-	
-	// Leer
-	// Devuelve una estructura indicando buffer y flag si hay mas datos.
-	public ReadRespuesta leer(int fd, int cantidadALeer) {
-		OpenedFile of = this.manejador.getOpenedFileById(fd);
-		ReadRespuesta resp = null;
-		StringBuffer buf = new StringBuffer("");
-		boolean hayMasDatos = true;
-
-		try {
-			int i;
-			int contador = 0;
+		// Si pudo abrir el archivo devuelve el file descriptor. caso contrario devuelve -1
+		public int abrir(String filename, String permisos) {
+			int fd;
 			
-			while (contador < cantidadALeer) {
-				++contador;
-				i = of.getFileInputStream().read();
-				if (i == -1) {
-					hayMasDatos = false;
-					break;
-				}
-				else {
-					buf.append((char) i);
-				}
+			try {
+				OpenedFile of = new OpenedFile(new File(filename));
+				this.manejador.setOpenedFile(of);
+				fd = of.getId();
+			} 
+			catch (FileNotFoundException e) {
+				e.printStackTrace();
+				fd = -1;
 			}
-			resp = new ReadRespuesta((new String(buf)).getBytes(), hayMasDatos);
+			return fd;
 		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		return resp;
-	}
-	
-	
-	
-	// Escribir
-	// Devuelve la cantidad de datos escritos. en caso de error -1
-	public int escribir(int fd, byte[] buffer){
-		OpenedFile of = this.manejador.getOpenedFileById(fd);
-		int resp;
 		
-		try {
-			of.getFileOutputStream().write(buffer);
-			resp = buffer.length;
-		} catch (IOException e) {
-			resp = -1;
-			e.printStackTrace();
-		}
-		return resp;
-	}
-	
-	
-	// Cerrar
-	// Devuelve 0 si pudo cerrar el archivo, 1 en caso contrario.
-	public int cerrar(int fd){
-		OpenedFile of = this.manejador.getOpenedFileById(fd);
-		FileInputStream fis = of.dameFis();
-		FileOutputStream fos = of.dameFos();
 		
-		try {				
-			if (fis != null) {
-				fis.close();
-			}
-			
-			if (fos != null) {
-				fos.close();
-			}
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
-			return 1;
-		}
-		return 0;
-	}
-	
+		// Leer
+		// Devuelve una escructura indicando buffer y flag si hay mas datos.
+		//[TODO] NO TIENE QUE DEVOLVER UN READRESPUESTA, TIENE QUE DEVOLVER UN INT, EL TAMAÑO LEIDO.
+		public byte[] leer(int fd, int cantidadALeer) {
+			OpenedFile of = this.manejador.getOpenedFileById(fd);
+            byte[] buffer = new byte[cantidadALeer];
+			int cantidad;
 
+			try {
+				cantidad = of.getFileInputStream().read(buffer,0,cantidadALeer);
+	            if (cantidad == -1) {
+	            	return null;
+	            }
+	            return buffer;
+			} catch (FileNotFoundException e) {
+				return null;
+			} catch (IOException e) {
+				return null;
+			}			
+		}
+		
+		
+		
+		// Escribir
+		// Devuelve la cantidad de datos escritos. en caso de error -1
+		public int escribir(int fd, byte[] buffer, int cantidadAEscribir){
+			OpenedFile of = this.manejador.getOpenedFileById(fd);
+			
+			try {
+				of.getFileOutputStream().write(buffer,0,cantidadAEscribir);
+				return buffer.length;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+		
+		
+		// Cerrar
+		// Devuelve 0 si pudo cerrar el archivo, 1 en caso contrario.
+		public int cerrar(int fd){
+			OpenedFile of = this.manejador.getOpenedFileById(fd);
+			FileInputStream fis = of.dameFis();
+			FileOutputStream fos = of.dameFos();
+			
+			try {				
+				if (fis != null) {
+					fis.close();
+				}
+				
+				if (fos != null) {
+					fos.close();
+				}
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+				return 1;
+			}
+			return 0;
+		}
 	
 /* ------------------- MAIN PRINCIPAL ------------------ */  
     
