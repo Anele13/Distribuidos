@@ -59,7 +59,7 @@ public class Ventana {
 		cp.setLayout(null);
 		
 		Component textBox = cp.getComponent(4);
-		System.out.println(textBox);
+//		System.out.println(textBox);
 		Texto texto = (Texto)textBox;
 		texto.setText(tiempo);
 	}
@@ -78,7 +78,7 @@ public class Ventana {
 		
 		
 		Component textBox = cp.getComponent(4);
-		System.out.println(textBox);
+//		System.out.println(textBox);
 		Texto texto = (Texto)textBox;
 		texto.setText(df.format(currentDate));
 		

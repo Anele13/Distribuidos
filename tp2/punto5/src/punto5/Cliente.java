@@ -32,45 +32,102 @@ public class Cliente implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		boolean continua = true;
 		long milis = 0;
+		long milisEnvio= 0;
+		long milisRecepcion = 0;
 		
 		if (e.getActionCommand() == "Sincronizar") {		
 			System.out.println("Atiendo el boton sincronizar\n");
-					
+			HiloSincronizacion hiloSincronizacion = new HiloSincronizacion(this);
+			System.out.println("Levante el hilo de sincronizacion.");
+			/*		
 			DateFormat tiempoEnvio = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			System.out.println("Obtengo el tiempo de ida.");
+//			System.out.println("Obtengo el tiempo de ida.");
 			Calendar calendario = Calendar.getInstance();
-			System.out.println("Obtengo el calendario");
+//			System.out.println("Obtengo el calendario");
 
-			//INICIO ALGORITMO DE CRISTIAN.
-			//PASO 1. TOMO EL TIEMPO ACTUAL.
-			Date tiempo1 = calendario.getTime();
-			System.out.println("Tiempo de envio en date: " + tiempoEnvio.format(tiempo1));
-			System.out.println("Tiempo de envio en milis: "+ System.currentTimeMillis());
-			//PASO 2. SE TOMA LA HORA DE CUANDO RECIBIMOS LA HORA DEL SERVIDOR PARA CALCULAR EL TIEMPO DE IDA Y VUELTA (timestream o algo asi se le llama).			
-			try {
-				System.out.println("Voy a pedir el tiempo en el OR.");
-				milis = this.getIr().getTiempo();
-				Date tiempoRecepcion = calendario.getTime();
-				System.out.println("Obtuve el tiempo del OR en date, este es: "+ tiempoRecepcion);
-				System.out.println("Obtuve el tiempo del OR en milis, este es: " + milis);
-			} catch (RemoteException e1) {
-				e1.printStackTrace();
+			
+			int i = 0;
+			long tRoundMenor = 999999;//Valor inicializado alto para que pase por alto la primer vez en if para obtener el menor tround. asi no se hace, no recomendable.
+
+			while (i< 5) {
+
+				System.out.println("*********");
+				i++;
+				//INICIO ALGORITMO DE CRISTIAN.
+				//PASO 1. TOMO EL TIEMPO ACTUAL.
+				Date tiempo1 = calendario.getTime();
+//				System.out.println("Tiempo de envio en date desde el cliente: " + tiempoEnvio.format(tiempo1));
+				milisEnvio = System.currentTimeMillis();
+//				System.out.println("Tiempo de envio en milis desde el cliente: "+ milisEnvio);
+				
+				//PASO 2. SE TOMA LA HORA DE CUANDO RECIBIMOS LA HORA DEL SERVIDOR PARA CALCULAR EL TIEMPO DE IDA Y VUELTA (timestream o algo asi se le llama).			
+				try {
+					System.out.println("Voy a pedir el tiempo en el OR.");
+					milis = this.getIr().getTiempo();
+					Date tiempoRecepcion = calendario.getTime();
+//					System.out.println("Obtuve el tiempo del OR en date, este es: "+ tiempoRecepcion);
+//					System.out.println("Obtuve el tiempo del OR en milis, este es: " + milis);
+				} catch (RemoteException e1) {
+					e1.printStackTrace();
+				}
+				DateFormat tiempoVuelta = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//				System.out.println("Obtengo el tiempo de vuelta.");
+				Date tiempo2 = calendario.getTime();
+//				System.out.println("Obtengo el tiempo de vuelta en date a las: "+tiempoVuelta.format(tiempo2));
+				milisRecepcion = System.currentTimeMillis();
+//				System.out.println("Obtengo el tiempod e vuelta en milis a las: "+ milisRecepcion);
+
+				//T3 ==> milis.
+				//T4 ==> milisRecepcion.
+				//T1 ==> milisEnvio.
+				// Tround/2 = [C(T4)-C(T1)]/2  ==> (milisRecepcion - milisEnvio)/2
+				long tRoundNuevo = (milisRecepcion - milisEnvio)/2;
+				if (tRoundNuevo <= tRoundMenor) {
+					tRoundMenor = tRoundNuevo;
+				}
+//				System.out.println(tRoundMenor);
 			}
-			DateFormat tiempoVuelta = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			System.out.println("Obtengo el tiempo de vuelta.");
-			Date tiempo2 = calendario.getTime();
-			System.out.println(tiempoVuelta.format(tiempo2));
+//			System.out.println(milis + tRoundMenor);
+			
+			long milisReal = milis + tRoundMenor;
+			
+			DateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
+			Date horaReal = new Date(milisReal);
+			
+			System.out.println("la hora real es: "+formatoHora.format(horaReal)  );
+			
+			Reloj reloj = this.getReloj();
+			
+			
+			
+			while(continua) {
+//				reloj.setTime(milisReal);
+				
+				
+				if (continua == true) {
+					continua = false;
+				}
+			}
+			
+			
+			
+			
+			
+			
 			
 			
 			Ventana ventana = this.getVentana();
 			ventana.imprimir_timer2(milis);
 			
+			
+		*/
 		}
 		if (e.getActionCommand() == "Iniciar") {
 			System.out.println("Atiendo el boton iniciar");
 			Ventana ventana = this.getVentana();
-			
+
 //			JFrame frame = ventana.getFrame();
 //			Container cp = frame.getContentPane();
 //			cp.setLayout(null);

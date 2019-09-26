@@ -27,21 +27,26 @@ public class ORServidor extends UnicastRemoteObject implements InterfazRemota{
 	@Override
 	public long getTiempo() throws RemoteException {
 		System.out.println("Me pidieron mi tiempo.");
-		
+		//CONTINUACION DEL ALGORITMO DE CRISTIAN.
+		//PASO 3. TOMO EL TIEMPO DE RECEPCION.
 		DateFormat tiempoRecepcion = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Calendar calendario = Calendar.getInstance();
-		Date dateRecepcion = calendario.getTime();
-		System.out.println("Tiempo de envio en date: " + tiempoRecepcion.format(dateRecepcion));
+		System.out.println("Inicie el sdf");
+		Calendar calendario1 = Calendar.getInstance();
+		System.out.println("Inicie el calendario");
+		Date dateRecepcion = calendario1.getTime();
+		System.out.println("Tiempo de envio en date desde el OR: " + tiempoRecepcion.format(dateRecepcion));
+		System.out.println("Tiempo de recepcion en milis desde el OR: "+ System.currentTimeMillis());
 
-		System.out.println("Tiempo de recepcion en milis: "+ System.currentTimeMillis());
-
-		try {
-			TimeUnit.SECONDS.sleep(10);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		Date dateEnvio = calendario.getTime();
-		System.out.println("Estoy entregando el tiempoa la hora: "+ dateEnvio);
+//		try {
+//			TimeUnit.SECONDS.sleep(3);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+		Calendar calendario2 = Calendar.getInstance();
+		Date dateEnvio = calendario2.getTime();
+		//PASO 4. TOMO EL TIEMPO DE ENVIO DE LA RESPUESTA.
+		System.out.println("Estoy entregando el tiempo en la hora (date): "+ dateEnvio);
+		System.out.println("Estoy entregando el tiempo en la hora (milis)"+ System.currentTimeMillis());
 		return System.currentTimeMillis();
 	}
 	
