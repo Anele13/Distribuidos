@@ -18,7 +18,7 @@ public class Ventana {
 //Constructor.
 	public Ventana(Cliente cliente) {
 		this.frame = new JFrame("Reloj");
-		this.frame.setSize(300, 300);
+		this.frame.setSize(320, 300);
 		Container cp = this.frame.getContentPane();
 		cp.setLayout(null);
 		
@@ -28,7 +28,7 @@ public class Ventana {
 		cp.add(jl1);
 		JLabel jl2 = new JLabel();
 		jl2.setBounds(new Rectangle(10,50,100,20));
-		jl2.setText("Desface");
+		jl2.setText("Desface (mins)");
 		cp.add(jl2);
 		
 		
@@ -38,8 +38,12 @@ public class Ventana {
 		
 		Boton botonSincronizar = new Boton("Sincronizar",10,100,120);
 		botonSincronizar.addActionListener(cliente);
-		
 		cp.add(botonSincronizar);
+		
+		Boton botonActualizar = new Boton("Actualizar",180,50,120);
+		botonActualizar.addActionListener(cliente);
+		cp.add(botonActualizar);
+
 		Texto texto =new Texto(70,10,100,cp.getBackground());
 		texto.setText("0");
 		cp.add(texto);
@@ -58,7 +62,7 @@ public class Ventana {
 		Container cp = this.frame.getContentPane();
 		cp.setLayout(null);
 		
-		Component textBox = cp.getComponent(4);
+		Component textBox = cp.getComponent(5);
 //		System.out.println(textBox);
 		Texto texto = (Texto)textBox;
 		texto.setText(tiempo);
@@ -77,7 +81,7 @@ public class Ventana {
 		System.out.println("Milliseconds to Date: " + df.format(currentDate));
 		
 		
-		Component textBox = cp.getComponent(4);
+		Component textBox = cp.getComponent(5);
 //		System.out.println(textBox);
 		Texto texto = (Texto)textBox;
 		texto.setText(df.format(currentDate));
@@ -89,8 +93,8 @@ public class Ventana {
 		Container cp = this.frame.getContentPane();
 		cp.setLayout(null);
 		
-		Component textBox = cp.getComponent(5);
-		System.out.println(textBox);
+		Component textBox = cp.getComponent(6);
+//		System.out.println(textBox);
 		JTextField texto = (JTextField)textBox;
 
 		if(texto != null) {

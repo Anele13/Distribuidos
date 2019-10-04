@@ -1,11 +1,8 @@
 package punto5;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class Reloj extends Thread{
 	Cliente cliente;
@@ -68,25 +65,22 @@ public class Reloj extends Thread{
 	}
 
 	public void run() {
+		
 		System.out.println("Reloj corriendo");
 		Cliente cliente = this.getCliente();
 		Ventana ventana = cliente.getVentana();
-
 		String stringTimer;
+		
 		while (true) {
 			while(this.getHoras()<24) {
 				stringTimer = String.format("%02d:%02d:%02d", this.getHoras(),this.getMinutos(),this.getSegundos());
-//				System.out.println(stringTimer);
 				ventana.imprimir_timer(stringTimer);
 				while(this.getMinutos()<60) {
 					stringTimer = String.format("%02d:%02d:%02d", this.getHoras(),this.getMinutos(),this.getSegundos());
-//					System.out.println(stringTimer);	
 					ventana.imprimir_timer(stringTimer);
 					while(this.getSegundos()<60) {
 						stringTimer = String.format("%02d:%02d:%02d", this.getHoras(),this.getMinutos(),this.getSegundos());
-//						System.out.println(stringTimer);
 						ventana.imprimir_timer(stringTimer);
-						//DUERMO UN SEGUNDO.
 						try {
 							this.sleep(this.getTiempoPorSegundo());
 						} catch (InterruptedException e) {
@@ -123,7 +117,7 @@ public class Reloj extends Thread{
 
 	
 	public void setTiempoPorSegundo(long tiempoPorSegundo) {
-		System.out.println(tiempoPorSegundo);
+		System.out.println("DESDE RELOJ - Seteo mi tiempo por segundo en: " + tiempoPorSegundo + " milis");
 		this.tiempoPorSegundo = tiempoPorSegundo;
 	}
 
