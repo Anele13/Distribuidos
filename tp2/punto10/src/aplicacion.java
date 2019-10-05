@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -21,28 +22,39 @@ public class aplicacion {
 		 return xaDS;
 	}
 	
-
+	
 	
 	public static void main(String[] args) {
          
 		try { 
+			 
 			 XADataSource xaDS = getDataSourceBanco("localhost", "banco1", "postgres");
-			 
-			 
 			 XAConnection xaCon = xaDS.getXAConnection("jtatest", "jtatest");
+	
 			 XAResource xaRes = xaCon.getXAResource();
 			 Connection con = xaCon.getConnection();
 			 Statement stmt = con.createStatement();
+			 
 			 Xid transaccionBanco1 = new MyXid(101, new byte[]{0x01}, new byte[]{0x02});
 			 
+			 // Solicitar un monto
+			 // Solicitar una cuenta en banco1 para depositar
+			 // SOlicitar una cuenta en banco2 para extraer
+			 int monto= 100;
+			 ResultSet resul = stmt.executeQuery("select * from cuentas where id = 11");
 			 
+			 while(resul.next()) {
+				 System.out.println(resul.getString(1));
+			 }
 			 
 			 //Inicio una transaccion con el banco 1
 			 xaRes.start(transaccionBanco1, XAResource.TMNOFLAGS);
-			 	stmt.executeUpdate("insert into cuentas (id, titular, bloqueada, saldo) values (100, 'nueva cuenta', False, 100000)");
-			 xaRes.end(transaccionBanco1, XAResource.TMSUCCESS);
+			 	//stmt.executeUpdate("insert into cuentas (id	, titular, bloqueada, saldo) values (20, 'nueva cuenta', False, 100000)");
+			 	//stmt.execute("select * from cuentas where id = 11");
+			 
+		 	xaRes.end(transaccionBanco1, XAResource.TMSUCCESS);
 
-			  
+			  System.out.println("holaaa");
 			  
 			  
 			 if (xaRes.prepare(transaccionBanco1) == XAResource.XA_OK) {

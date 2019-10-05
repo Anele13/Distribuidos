@@ -29,9 +29,9 @@ public class Cliente implements ActionListener{
     JButton b1,b2,b3,b4;  
 	
 	public Cliente() throws MalformedURLException, RemoteException, NotBoundException {
-		String rname = "//" + "localhost" + ":" + Registry.REGISTRY_PORT + "/ORSumaResta";
+		String rname = "//" + "192.168.2.148" + ":" + Registry.REGISTRY_PORT + "/ORSumaResta";
 		IRSumaResta objetoRemoto =  (IRSumaResta)Naming.lookup (rname);
-		String rname2 = "//" + "localhost" + ":" + Registry.REGISTRY_PORT + "/ORMultiplicacionDivision";
+		String rname2 = "//" + "192.168.2.148" + ":" + Registry.REGISTRY_PORT + "/ORMultiplicacionDivision";
 		IRMultiplicacionDivision objetoRemoto2 =  (IRMultiplicacionDivision)Naming.lookup (rname2);
 		this.setMulDivision(objetoRemoto2);
 		this.setSumaResta(objetoRemoto);
@@ -135,6 +135,7 @@ public class Cliente implements ActionListener{
     }  
 	
 	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
+		System.setProperty("java.rmi.server.hostname","192.168.2.148");
 		System.out.println("Cliente corriendo");
 		Cliente c = new Cliente();
 		c.runVentana();

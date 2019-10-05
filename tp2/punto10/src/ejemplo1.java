@@ -1,7 +1,5 @@
 import javax.transaction.xa.*;
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.sql.SQLException;
+
 import java.sql.*;
 
  
@@ -29,7 +27,7 @@ public class ejemplo1 {
 		 XADataSource xaDS;
 		 XAConnection xaCon;
 		 XAResource xaRes;
-		 Xid xid, xid2;
+		 Xid xid;
 		 Connection con;
 		 Statement stmt;
 		 int ret;
@@ -37,23 +35,50 @@ public class ejemplo1 {
 		 try { 
 			  xaDS = getDataSource();
 			  xaCon = xaDS.getXAConnection("jtatest", "jtatest");
-			  xaRes = xaCon.getXAResource();
-		
-		 	  System.out.println("Conect!!");
-		
+			  
 			  con = xaCon.getConnection();
 			  stmt = con.createStatement();
-		 	  xid = new MyXid(101, new byte[]{0x01}, new byte[]{0x02});
-			  xaRes.start(xid, XAResource.TMNOFLAGS);
-		 	  	stmt.executeUpdate("insert into cuentas (id, titular, bloqueada, saldo) values (100, 'nueva cuenta', False, 100000)");
+			  
+			  xaRes = xaCon.getXAResource();
+			  xid = new MyXid(101, new byte[]{0x01}, new byte[]{0x02});
+			  
+			  
+			  ResultSet resul2 = stmt.executeQuery("select * from cuentas");
+				 
+			 while(resul2.next()) {
+				 System.out.println(resul2.getString(1));
+			 }
+				 
+			  
+			  
+			  
+			  
+			  
+			  /*
+		 	  xaRes.start(xid, XAResource.TMNOFLAGS);
+		 	  
+			  	ResultSet resul = stmt.executeQuery("select * from cuentas where id=150");
+			  	//stmt.executeUpdate("insert into cuentas (id, titular, bloqueada, saldo) values (100, 'nueva cuenta', False, 100000)");
+			  	
+			  	while(resul.next()) {
+			  		System.out.println(resul.getObject(3));
+			  	}
+			  	
+			  	//System.out.println();
 			  xaRes.end(xid, XAResource.TMSUCCESS);
-		
+		*/
+			  
+			  
+			  
+			  //------------------------------
+			  
 			  
 			  
 			  ret = xaRes.prepare(xid);
 			  
 			  if (ret == XAResource.XA_OK) {
 			      /*ret2 = xaRes2.prepare(xid);*/
+				  // banco1.depostis(
 				  //primero preguntar por la transaccion de arriba, luego si da OK que se prepararon todas pregunto 
 				  // si la segunda esta OK tambien o sea la preparacion de todos los clientes recieb ahi debo consultar 
 				  // al cliente si quiero commitear o rollback de todo. 
