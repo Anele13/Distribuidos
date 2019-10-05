@@ -1,6 +1,8 @@
 package punto5;
 
-import java.util.concurrent.TimeUnit;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Reloj extends Thread{
 	Cliente cliente;
@@ -10,41 +12,75 @@ public class Reloj extends Thread{
 	private int segundos;
 	
 	
-	public Reloj(long desface,Cliente cliente) {
-		this.setTiempoPorSegundo(1000 +desface);
+	public Reloj(int deriva,Cliente cliente) {
+		this.setTiempoPorSegundo(1000 + deriva);
 		this.setCliente(cliente);
-		this.setHoras(0);
-		this.setMinutos(0);
-		this.setSegundos(0);
+	
+	}
 		
+	
+	//SET TIME SE USA PARA SETEAR LA HORA SEGUN EL RELOJ LOCAL.
+	public void setTime(int desface) {
+		long milis = System.currentTimeMillis();
+//		System.out.println(milis);
+		milis = milis + (60 *1000 * desface);
+		//[TODO] ESTÁ HACIENDO LA RESTA PERO LA HORA DA IGUAL. VER COMO RESTAR EN MINUTOS EL DESFACE.
+//		System.out.println(milis);
+		Date resultDate = new Date(milis);
+		int horas = resultDate.getHours();
+		int minutos = resultDate.getMinutes();
+		int segundos = resultDate.getSeconds();
+		
+		this.setHoras(horas);
+		this.setMinutos(minutos);
+		this.setSegundos(segundos);	
 	}
 	
+	
+	//SOBRECARGA AL METODO SET TIME PARA LLAMARLO CON UN LONG QUE USE PARA SETEAR LA HORA, ES USADO PARA SINCRONIZACION.
+	public void setTime(long milis) {
+		Date resultDate = new Date(milis);
+		int horas = resultDate.getHours();
+		int minutos = resultDate.getMinutes();
+		int segundos = resultDate.getSeconds();
+		
+		this.setHoras(horas);
+		this.setMinutos(minutos);
+		this.setSegundos(segundos);		
+	}
+
+	
+	public long getMilis() throws ParseException {
+		long longTiempo = 0;
+		int horas = this.getHoras();
+		int minutos = this.getMinutos();
+		int segundos = this.getSegundos();
+
+		
+		String cadenaHora = String.format("%02d:%02d:%02d", horas, minutos, segundos);
+		Date dateHora=new SimpleDateFormat("HH:mm:ss").parse(cadenaHora);  
+		
+		longTiempo = dateHora.getTime();		
+		return longTiempo;
+	}
+
 	public void run() {
+		
 		System.out.println("Reloj corriendo");
 		Cliente cliente = this.getCliente();
 		Ventana ventana = cliente.getVentana();
-//		
-//		long millis = System.currentTimeMillis();
-//		String hms =String.format("%02d:%02d:%02d", 
-//				TimeUnit.MILLISECONDS.toHours(millis),
-//				TimeUnit.MILLISECONDS.toMinutes(millis) -  TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), // The change is in this line
-//				TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-//		System.out.println(hms);
 		String stringTimer;
+		
 		while (true) {
 			while(this.getHoras()<24) {
 				stringTimer = String.format("%02d:%02d:%02d", this.getHoras(),this.getMinutos(),this.getSegundos());
-				System.out.println(stringTimer);
 				ventana.imprimir_timer(stringTimer);
 				while(this.getMinutos()<60) {
 					stringTimer = String.format("%02d:%02d:%02d", this.getHoras(),this.getMinutos(),this.getSegundos());
-					System.out.println(stringTimer);	
 					ventana.imprimir_timer(stringTimer);
 					while(this.getSegundos()<60) {
 						stringTimer = String.format("%02d:%02d:%02d", this.getHoras(),this.getMinutos(),this.getSegundos());
-						System.out.println(stringTimer);
 						ventana.imprimir_timer(stringTimer);
-						//DUERMO UN SEGUNDO.
 						try {
 							this.sleep(this.getTiempoPorSegundo());
 						} catch (InterruptedException e) {
@@ -63,46 +99,57 @@ public class Reloj extends Thread{
 		}
 	}
 	
-//Getters & Setters
 
+//Getters & Setters
 	public long getTiempoPorSegundo() {
 		return tiempoPorSegundo;
 	}
 
+	
 	public Cliente getCliente() {
 		return cliente;
 	}
 
+	
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
 
+	
 	public void setTiempoPorSegundo(long tiempoPorSegundo) {
+		System.out.println("DESDE RELOJ - Seteo mi tiempo por segundo en: " + tiempoPorSegundo + " milis");
 		this.tiempoPorSegundo = tiempoPorSegundo;
 	}
 
+	
 	public int getHoras() {
 		return horas;
 	}
 
+	
 	public void setHoras(int horas) {
 		this.horas = horas;
 	}
 
+	
 	public int getMinutos() {
 		return minutos;
 	}
 
+	
 	public void setMinutos(int minutos) {
 		this.minutos = minutos;
 	}
 
+	
 	public int getSegundos() {
 		return segundos;
 	}
 
+	
 	public void setSegundos(int segundos) {
 		this.segundos = segundos;
 	}
+	
 	
 }
