@@ -63,10 +63,10 @@ public class Cliente implements ActionListener{
 	}
 
 	
-	private void actualizar_timer(int desface) {
-		Reloj reloj = this.getReloj();
-		reloj.setTime(desface);
-	}
+//	private void actualizar_timer(int desface) {
+//		Reloj reloj = this.getReloj();
+//		reloj.setTime(desface);
+//	}
 
 	private void iniciar_timer(int desface) {
 		reloj.setTime(desface);
