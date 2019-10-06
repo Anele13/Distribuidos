@@ -12,6 +12,7 @@ import org.postgresql.xa.PGXADataSource;
 
 import punto10.CuentaBloqueadaException;
 import punto10.CuentaNoExisteException;
+import punto10.PopUp;
 import punto10.SaldoInsuficienteException;
 
 public class Banco {
@@ -20,6 +21,8 @@ public class Banco {
 	private Xid transaccion;
 	private XAConnection xaCon;
 	private XAResource xaRes;
+	private static int count= 100;
+	private int idTransaccion= ++count;
 	
 	public Banco(String host, String BD, String user) throws SQLException {
 		this.xaDS.setServerName(host);
@@ -30,9 +33,8 @@ public class Banco {
 		
 	}
 	
-
 	public void iniciarTransaccion() throws XAException, SQLException {
-		this.transaccion =  new MyXid(101, new byte[]{0x01}, new byte[]{0x02});
+		this.transaccion =  new MyXid(idTransaccion, new byte[]{0x01}, new byte[]{0x02});
 		this.xaRes.start(this.transaccion, XAResource.TMNOFLAGS);
 	}
 	
@@ -54,18 +56,18 @@ public class Banco {
 	
 	
 	public void commitTransaccion() throws XAException, SQLException {
-		this.xaRes.rollback(this.transaccion);
-		cerrarConecciones();
+		this.xaRes.commit(this.transaccion, false);
+		//cerrarConecciones();
 	}
 	
 
 	public void rollbackTransaccion() throws XAException, SQLException {
-		this.xaRes.commit(this.transaccion, false);
+		this.xaRes.rollback(this.transaccion);
 		cerrarConecciones();
 	}
 	
 	
-	public float getMontoActual(int nroCuenta) throws Exception {
+	public float getSaldoActual(int nroCuenta) throws Exception {
 		float monto = 0;
 		Statement stmt = this.xaCon.getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
 		ResultSet resul = stmt.executeQuery("select * from cuentas where id="+nroCuenta);		 
@@ -76,7 +78,7 @@ public class Banco {
 		}
 		resul.beforeFirst();
 		while(resul.next()) {
-			monto = resul.getFloat("monto");
+			monto = resul.getFloat("saldo");
 		}
 		return monto;
 	}
@@ -119,99 +121,30 @@ public class Banco {
 			}
 			//Te alcanza la moneda?
 			if (resul.getFloat("saldo") - monto < 0) {
-				throw new SaldoInsuficienteException("Estas sacando mas de lo que hay capo.");
+				throw new SaldoInsuficienteException("Saldo Insuficiente.");
 			}
 		}
 		stmt.close();
 	}
 	
 	
-	public void depositar(int nroCuenta, float monto) throws SQLException {
+	public void depositar(int nroCuenta, float monto) throws Exception {
+		float nuevoSaldo = this.getSaldoActual(nroCuenta)+monto;
 		Statement stmt = this.xaCon.getConnection().createStatement();
-		
-		stmt.executeUpdate("select * from cuentas where id="+nroCuenta);
-		
+		stmt.executeUpdate("update cuentas set saldo="+ nuevoSaldo +" where id="+nroCuenta);	
 		stmt.close();
 	}
 	
 	
-	public void extraer(int nroCuenta, float monto) throws SQLException {
+	public void extraer(int nroCuenta, float monto) throws Exception {
+		float nuevoSaldo = this.getSaldoActual(nroCuenta)-monto;
 		Statement stmt = this.xaCon.getConnection().createStatement();
-		ResultSet resul = stmt.executeQuery("select * from cuentas where id="+nroCuenta);
-		//resul.get
-		
-		
-		
-		
+		stmt.executeUpdate("update cuentas set saldo="+ nuevoSaldo +" where id="+nroCuenta);
 		stmt.close();
 	}
 	
 	
-	private void cerrarConecciones() throws SQLException {
+	public void cerrarConecciones() throws SQLException {
 		 xaCon.close();
 	}
-
-	
-	
-	public static void main(String[] args) {
-		int cuentaADepositar = 4;
-		int cuentaADebitar = 4;
-		int monto = 10;
-		boolean usuarioDecideCommit = true;
-		
-		try {
-			
-			Banco banco1 = new Banco("localhost", "banco1", "postgres");
-			Banco banco2 = new Banco("localhost", "banco2", "postgres");
-			
-			banco1.puedoDepositar(cuentaADepositar);
-			banco2.puedoExtraer(cuentaADebitar, monto);
-			
-			banco1.iniciarTransaccion();
-			banco1.depositar(cuentaADepositar, monto);
-			banco1.finalizarTransaccion();
-			
-			
-			banco2.iniciarTransaccion();
-			banco2.extraer(cuentaADebitar, monto);
-			banco2.finalizarTransaccion();
-			
-		
-			if (banco1.prepararTransaccion() && banco2.prepararTransaccion()) {
-				
-				// Solicitar al cliente una ultima confirmacion para commitear
-				
-				if (usuarioDecideCommit) {
-					banco1.commitTransaccion();
-					banco2.commitTransaccion();
-				}
-				else {
-					banco1.rollbackTransaccion();
-					banco2.rollbackTransaccion();
-				}
-			}
-			else {
-				banco1.rollbackTransaccion();
-				banco2.rollbackTransaccion();
-			}
-			
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		catch (CuentaBloqueadaException e) {
-			e.printStackTrace();
-		}
-		catch (CuentaNoExisteException e) {
-			e.printStackTrace();
-		}
-		catch (SaldoInsuficienteException e) {
-			e.printStackTrace();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
 }
