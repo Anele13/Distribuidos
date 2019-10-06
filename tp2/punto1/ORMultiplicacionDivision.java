@@ -42,6 +42,8 @@ import java.util.concurrent.TimeUnit;
 
 	
     public static void main(String[] args) throws RemoteException, MalformedURLException {
-        new ORMultiplicacionDivision(args[0]);
+//        System.setProperty("java.rmi.server.hostname","192.168.2.148");
+
+    	new ORMultiplicacionDivision(args[0]);
 	}
 }
