@@ -54,6 +54,13 @@ import java.util.concurrent.TimeUnit;
         return this.getResultado();
 	}
 
+	public void cambiarResultado(IRSumaResta objetoRemoto ) throws RemoteException {
+		objetoRemoto.setResultado(-1);
+	}
+	
+	public void cambiarResultado(ObjetoLocal objetoLocal) {
+		objetoLocal.resultado = -1;
+	}
 	
     public static void main(String[] args) throws RemoteException, MalformedURLException {
         new ORMultiplicacionDivision(args[0]);
