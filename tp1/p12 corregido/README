@@ -1,0 +1,113 @@
+//PSEUDOCODIGO PARA QUE EL SERVIDOR SEA SIN ESTADO
+
+
+********************************************************************************************
+********************************************************************************************
+//Cliente:
+********************************************************************************************
+********************************************************************************************
+//Main del Cliente
+   
+    //Conectarse al servidor.
+    //Ciclo infinito para atender las peticiones del cliente.
+       //Obtengo lo escrito por el usuario.
+    
+        // Veo si hay que leer o escribir.
+        // if (pidió leer? )
+            //ES UNA LECTURA.
+            //Obtengo desde donde leer del archivo.
+            //Llamo a la funcion local leer(pathArchivo,principioLectura,cantidadLectura)
+         else
+            //ES UNA ESCRITURA.
+            //Llamo a la funcion local escribir(pathArchivo,cantEscritura).
+
+*********************************************************************************************
+//Funcion leer del cliente.
+leer(pathArchivo,principioLectura,cantidadLectura)
+	
+	//Abro el archivo local que va a ser escrito.    
+	//Determinar bytes a leer
+	//Mientras (tenga que seguir leyendo)
+		//llamo a la funcion read remota con el path del archivo recibido por parametro.
+		//cantidadLeida = rmtread(servidor, pathArchivo, buffer, cantidadLeida,p_actual)
+		//Escribo el archivo local.
+		//Actualizo cantidadRestante y  p_actual.
+	// Cierro el file local que estaba escribiendo.
+
+*********************************************************************************************
+// Funcion escribir del cliente.
+escribir(pathArchivo,cantEscritura)
+    //ABRO EL ARCHIVO LOCAL DONDE SE VA A ESCRIBIR.
+    /*Determinar bytes a escribir. Toma una cantidad determinada de bytes
+    desde el inicio del file.*/ 
+    //Mientras tenga que seguir escribiendo.
+        //leo el archivo local.       
+        //llamo al a funcion write remota con el pathArchivo.
+        //cantidadEscrita = rmtwrite( servidor, pathArchivo, buffer, cantidadAEscribir );	    
+        //actualizo la cantidadAEscribir
+    //CIERRO EL ARCHIVO LOCAL DONDE SE ESTUVE ESCRIBIENDO. 
+
+
+
+
+
+
+*********************************************************************************************
+********************************************************************************************
+//Stub del Cliente:
+********************************************************************************************
+********************************************************************************************
+//Funcion read del stub.
+
+int rmtread(servidor, pathArchivo, buffer, cantidadLeida,p_actual)
+
+    //abro el archivo local donde voy a escribir.
+    //mientras hayan datos que leer.
+        //llamo a la funcion remote_read definida en el servidor, ésta hace todas las operaciones (apertura,lectura y cierre).
+        //qty = rmtread ( s, pathArchivo, buffer, qty, p_actual);
+        //escribo el archivo local con lo leido.
+        fwrite( buffer, 1, qty, f);
+        //actualizo las variables c_restantes usada para saber si se debe seguir leyendo y p_actual para indicar desde donde leer.
+        //c_restantes -= qty;
+        //p_actual += qty;
+    //cierro el archivo local.
+
+*********************************************************************************************
+//Funcion write del stub.
+int rmtwrite( servidor, pathArchivo, buffer, cantidadAEscribir );
+
+    //abro el archivo local del que me baso para escribir.
+    //mientras tenga que escribir
+        //leo una porcion del archivo local.
+        //escribo con la funcion remota del servidor, esta realiza todas las operaciones (apertura,escritura,cerrado).
+	    //cantidadEscrita = rmtwrite( servidor, patharchivo, buffer, qty );	    
+        //actualizo las variables c_restantes usada para saber si se debe seguir leyendo y p_actual para indicar desde donde leer.
+        //c_restantes -= qty;
+	    //p_actual +=qty;
+    //cierro el archivo local
+
+*********************************************************************************************
+
+
+
+
+
+
+
+
+
+
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+////// Tengo que hacer los open_remote /close_remote utilizados por el server ? osea, implementarlos en 
+////// el stub del cliente?
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+
+
+
+
