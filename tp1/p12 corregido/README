@@ -1,113 +1,166 @@
 //PSEUDOCODIGO PARA QUE EL SERVIDOR SEA SIN ESTADO
 
-
 ********************************************************************************************
 ********************************************************************************************
 //Cliente:
 ********************************************************************************************
-********************************************************************************************
 //Main del Cliente
    
-    //Conectarse al servidor.
-    //Ciclo infinito para atender las peticiones del cliente.
-       //Obtengo lo escrito por el usuario.
+    Abro un socket(socket).
     
-        // Veo si hay que leer o escribir.
-        // if (pidió leer? )
-            //ES UNA LECTURA.
-            //Obtengo desde donde leer del archivo.
-            //Llamo a la funcion local leer(pathArchivo,principioLectura,cantidadLectura)
-         else
-            //ES UNA ESCRITURA.
-            //Llamo a la funcion local escribir(pathArchivo,cantEscritura).
+    Ciclo infinito para atender la interaccion con el cliente.
+        Imprimo mensaje para saber si quiere leer o escribir.
+        Guardo la respuesta en una variable(comando).
+
+        Imprimo mensaje para saber si el path del archivo.
+        Guardo la respuesta en una variable (pathArchivo).
+
+        Imprimo mensaje para saber la cantidad de bytes a transferir.
+        Guardo la respuesta en una variable(bytesBuffer).
+
+        Bloque if segun pidio el usuario, leer o escribir (if (comando == "leer")).
+            Si eligió leer.
+            Imprimo mensaje para saber desde empezar la lectura.
+            Guardo la respuesta en una variable (byteInicioLectura).
+
+            Llamo a funcion local leer, definida en el stub del cliente.
+            leer(pathArchivo,byteInicioLectura,bytesBuffer)
+        Sino
+            Si eligió escribir.
+
+            Llamo a funcion local escribir, definida en el stub del cliente.
+            escribir(pathArchivo,bytesBuffer)
+        Fin del bloque if.
+    Fin del bucle.
 
 *********************************************************************************************
 //Funcion leer del cliente.
-leer(pathArchivo,principioLectura,cantidadLectura)
-	
-	//Abro el archivo local que va a ser escrito.    
-	//Determinar bytes a leer
-	//Mientras (tenga que seguir leyendo)
-		//llamo a la funcion read remota con el path del archivo recibido por parametro.
-		//cantidadLeida = rmtread(servidor, pathArchivo, buffer, cantidadLeida,p_actual)
-		//Escribo el archivo local.
-		//Actualizo cantidadRestante y  p_actual.
-	// Cierro el file local que estaba escribiendo.
+
+leer(pathArchivo, byteInicioLectura, bytesBuffer)
+
+    Abro el archivo local donde voy a escribir lo leido (file).
+    Inicializo variable para saber cuanto leer (bytesRestantes = bytesBuffer)
+    Inicializo variable para saber en que posicion de lectura estoy (posicionActual = byteInicioLectura)
+    Ciclo de repeticion mientras tenga bytes que leer.
+        Bloque if (bytesRestantes < sizeof(buffer))
+            cantidadLeida = bytesRestantes
+        Sino
+            cantidadLeida = sizeof(buffer)
+        Fin del bloque if.
+
+        Llamo a la funcion rmtread definida en el stub del cliente.
+        cantidadLeida = rmtread(socket,pathArchivo,buffer,cantidadLeida, posicionActual)
+
+        Escribo el archivo local(file) con lo leido.
+        bytesRestantes -=cantidadLeida
+        posicionActual +=cantidadLeida
+    Fin del bucle.
+    Cierro el archivo local(file).
 
 *********************************************************************************************
 // Funcion escribir del cliente.
-escribir(pathArchivo,cantEscritura)
-    //ABRO EL ARCHIVO LOCAL DONDE SE VA A ESCRIBIR.
-    /*Determinar bytes a escribir. Toma una cantidad determinada de bytes
-    desde el inicio del file.*/ 
-    //Mientras tenga que seguir escribiendo.
-        //leo el archivo local.       
-        //llamo al a funcion write remota con el pathArchivo.
-        //cantidadEscrita = rmtwrite( servidor, pathArchivo, buffer, cantidadAEscribir );	    
-        //actualizo la cantidadAEscribir
-    //CIERRO EL ARCHIVO LOCAL DONDE SE ESTUVE ESCRIBIENDO. 
 
+escribir(pathArchivo, bytesBuffer)
+    Abro el archivo local del cual voy a leer (file).
 
+    Inicializo variable para saber cuantos bytes quedan por escribir en mi archivo local (bytesRestantes = bytesBuffer)
+    Inicializo variable para saber en que posicion de escritura estoy (posicionActual = 0)
+    Ciclo de repeticion mientras tenga bytes que escribir.
+        Bloque if (bytesRestantes < sizeof(buffer))
+            cantidadEscrita = bytesRestantes
+        Sino
+            cantidadEscrita = sizeof(buffer)
+        Fin del bloque if.
+        Me coloco en la posicion(posicionActual) desde la que quiero leer mi archivo local(file).
+        Leo la cantidad de bytes indicada del archivo local (cantidadEscrita = fread(buffer,1,cantidadEscrita,file).
 
+        Llamo a la funcion rmtwrite definida en el stub del cliente.
+        rmtwrite(socket,pathArchivo,buffer,cantidadEscrita)
 
+        bytesRestantes -= cantidadEscrita
+        posicionActual += cantidadEscrita
+    Fin del bucle.    
 
+    Cierro el archivo local(file).
 
 *********************************************************************************************
-********************************************************************************************
+*********************************************************************************************
 //Stub del Cliente:
-********************************************************************************************
-********************************************************************************************
-//Funcion read del stub.
+*********************************************************************************************
+//Funcion read del stub del cliente.
 
-int rmtread(servidor, pathArchivo, buffer, cantidadLeida,p_actual)
+int rmtread(socket,pathArchivo,buffer,cantidadLeida, posicionActual)
 
-    //abro el archivo local donde voy a escribir.
-    //mientras hayan datos que leer.
-        //llamo a la funcion remote_read definida en el servidor, ésta hace todas las operaciones (apertura,lectura y cierre).
-        //qty = rmtread ( s, pathArchivo, buffer, qty, p_actual);
-        //escribo el archivo local con lo leido.
-        fwrite( buffer, 1, qty, f);
-        //actualizo las variables c_restantes usada para saber si se debe seguir leyendo y p_actual para indicar desde donde leer.
-        //c_restantes -= qty;
-        //p_actual += qty;
-    //cierro el archivo local.
+    Defino variable del tipo de dato definido (CLSV_RREAD *pc)
+    Defino variable del tipo de dato definido (SVCL_RREAD *ps)
+
+    Defino variable status.
+    
+    pc = &clsvbuff.data.clsv_rread
+    ps = &clsvbuff.data.svcl_rread
+
+    pc->path = pathArchivo
+    pc->qty = cantidadLeida
+    pc->binicio = posicionActual
+
+    send_rcv(socket,&clsvbuff, RREAD, sizeof(CLSV_RREAD))
+
+    status = ps->status
+    bloque if (status >0)
+        memcpy(buffer, ps->buffer,status)
+    fin bloque if.
+
+    return status
 
 *********************************************************************************************
-//Funcion write del stub.
-int rmtwrite( servidor, pathArchivo, buffer, cantidadAEscribir );
+//Funcion write del stub del cliente.
 
-    //abro el archivo local del que me baso para escribir.
-    //mientras tenga que escribir
-        //leo una porcion del archivo local.
-        //escribo con la funcion remota del servidor, esta realiza todas las operaciones (apertura,escritura,cerrado).
-	    //cantidadEscrita = rmtwrite( servidor, patharchivo, buffer, qty );	    
-        //actualizo las variables c_restantes usada para saber si se debe seguir leyendo y p_actual para indicar desde donde leer.
-        //c_restantes -= qty;
-	    //p_actual +=qty;
-    //cierro el archivo local
+int rmtwrite(socket, pahtArchivo, bufer, cantidadEscrita)
 
-*********************************************************************************************
+    Defino varialbe del tipo de dato definido (CLSV_RWRITE *pc).
+    Defino variable del tipo de dato definido (SVCL_RWRITE *ps).
 
+    pc = &clsvbuff.data.clsv_rwrite
+    ps = &clsvbuff.data.svcl_rwrite
 
+    pc->path = pathArchivo
+    pc->qty = cantidadEscrita
 
+    Bloque if (cantidadEscrita>0)
+        memcpy(pc->buffer,buffer,cantidadEscrita)
+    fin bloque if.
+    send_rcv(socket,&clsvbuff,RWRITE,sizeof(CLSV_RWRITE))
 
-
-
-
-
-
+    return ps->status
 
 *********************************************************************************************
 *********************************************************************************************
+Stub del Servidor:
+*********************************************************************************************
+//Funcion para tomar que es una lectura.
+int process_rread(buffer,cantidadALeer)
+    buffer->svcl_rread.status = rmtread(socket,buffer->cldv_rread.path,buffer->svcl_rread.buffer,buffer->clsv_rread.qty, buffer->clsv_rread.binicio)
+    return sizeof(SVCL_RREAD)
+*********************************************************************************************
+//Funcion para tomar que es una escritura.
+int process_rwrite(buffer, cantidadAEscribir)
+    buffer->svcl_rwrite.status = rmtwrite(socket,buffer->clsv_rwrite.path, buffer->clsv_rwrite.buffer,buffer->clsv_rwrite.qty)
+    return sizeof(SVCL_RWRITE)
 *********************************************************************************************
 *********************************************************************************************
-////// Tengo que hacer los open_remote /close_remote utilizados por el server ? osea, implementarlos en 
-////// el stub del cliente?
+Servidor:
 *********************************************************************************************
+//Funcion rmtread del servidor.
+int rmtread(socket,pahtArchivo,buffer,cantidadLeida,posicionActual)
+    Abro el archivo local a leer(myfile = open (pathArchivo,O_RDONLY,0644)).
+    Me posiciono en la posicion desde la que voy a leer.
+    Llamo a la funcion leer con el archivo y la posicion indicados y guardo el valor resultante en una variable (retorno).
+    Cierro el archivo local leido.
+    Retorno el valor obtenido en la lectura(retorno).
 *********************************************************************************************
-*********************************************************************************************
-*********************************************************************************************
-
-
-
-
+//Funcion rmtwrite del servidor.
+int rmtwrite(socket, pathArchivo, buffer, cantidadEscrita)
+    Abro el archivo local a escribir (myfile = open (pathArchivo, O_CREAT | O_WRONLY | O_APPEND, 0644)).
+    Escribo en el archivo local con lo recibido en el buffer y guardo el valor resultante en una variable (retorno).
+    Cierro el archivo local.
+    Retorno el valor obtenido en la escritura(retorno).
