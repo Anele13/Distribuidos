@@ -18,7 +18,8 @@ public class ORSumaResta extends UnicastRemoteObject implements IRSumaResta {
     protected ORSumaResta (String host) throws RemoteException, MalformedURLException {
         super();
         String rname = "//"+ host +":" + Registry.REGISTRY_PORT  + "/ORSumaResta";
-		Naming.rebind(rname, this);
+        Naming.rebind(rname, this);
+		
     }
 
     public int suma(int a, int b) {
@@ -44,6 +45,8 @@ public class ORSumaResta extends UnicastRemoteObject implements IRSumaResta {
     }
     
     public static void main(String[] args) throws RemoteException, MalformedURLException {
-        new ORSumaResta(args[0]);
+//        System.setProperty("java.rmi.server.hostname","192.168.2.148");
+
+    	new ORSumaResta(args[0]);
 	}
 }

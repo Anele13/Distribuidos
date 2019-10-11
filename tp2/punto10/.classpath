@@ -8,7 +8,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/anele/Escritorio/distri2/Distribuidos/tp2/punto10/src/postgresql-9.4-1201.jdbc4.jar">
+	<classpathentry kind="lib" path="/home/matias/Escritorio/Segundo Cuatrimestre/Sistemas Distribuidos/Material Unidad 4/Ejemplo JTA/postgresql-9.4-1201.jdbc4.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

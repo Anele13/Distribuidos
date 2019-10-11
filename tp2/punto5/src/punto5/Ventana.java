@@ -40,9 +40,9 @@ public class Ventana {
 		botonSincronizar.addActionListener(cliente);
 		cp.add(botonSincronizar);
 		
-		Boton botonActualizar = new Boton("Actualizar",180,50,120);
-		botonActualizar.addActionListener(cliente);
-		cp.add(botonActualizar);
+//		Boton botonActualizar = new Boton("Actualizar",180,50,120);
+//		botonActualizar.addActionListener(cliente);
+//		cp.add(botonActualizar);
 
 		Texto texto =new Texto(70,10,100,cp.getBackground());
 		texto.setText("0");
@@ -62,7 +62,7 @@ public class Ventana {
 		Container cp = this.frame.getContentPane();
 		cp.setLayout(null);
 		
-		Component textBox = cp.getComponent(5);
+		Component textBox = cp.getComponent(4);
 //		System.out.println(textBox);
 		Texto texto = (Texto)textBox;
 		texto.setText(tiempo);
@@ -81,7 +81,7 @@ public class Ventana {
 		System.out.println("Milliseconds to Date: " + df.format(currentDate));
 		
 		
-		Component textBox = cp.getComponent(5);
+		Component textBox = cp.getComponent(4);
 //		System.out.println(textBox);
 		Texto texto = (Texto)textBox;
 		texto.setText(df.format(currentDate));
@@ -93,7 +93,7 @@ public class Ventana {
 		Container cp = this.frame.getContentPane();
 		cp.setLayout(null);
 		
-		Component textBox = cp.getComponent(6);
+		Component textBox = cp.getComponent(5);
 //		System.out.println(textBox);
 		JTextField texto = (JTextField)textBox;
 
