@@ -183,7 +183,7 @@ public class SntpClient
 		SntpClient cliente = new SntpClient();
 				
 		for (int i = 0; i < servers.length; i++) {
-			ArrayList<String> mensaje = cliente.requestNTP(servers[0]); // Cambiar server[0] en caso de querer 1 muestra de cada server. ahora toma 8 muestras del mismo server
+			ArrayList<String> mensaje = cliente.requestNTP(servers[1]); // Cambiar server[0] en caso de querer 1 muestra de cada server. ahora toma 8 muestras del mismo server
 			String[] aux = {mensaje.get(0), mensaje.get(4), mensaje.get(15),mensaje.get(16)};
 			datos[i] = aux;
 		}
