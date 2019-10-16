@@ -1,0 +1,96 @@
+#!/usr/bin/python3
+
+
+import cgi,cgitb
+import csv
+import os
+
+def send_header():
+    print("Content-type: text/html\n\n")
+
+
+
+def enviar_user_not_found():
+    print("No se encontraron usuarios con el criterio ingresado")
+    print('<button class="btn-default" type="submit" onclick='+'location.href="http://localhost:9090/alta_usuario.html"'+'>Volver</button>')
+
+
+def enviar_datos(lista):
+
+    usuarios = ""
+    if lista: 
+        for usuario in lista:
+            usuarios = usuarios + "<tr> <td>"+ usuario[0] +"</td> <td>"+ usuario[1] +"</td> <td>"+ usuario[2] +"</td> <td>"+ usuario[3] + "</td>  </tr>"
+
+        print("<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
+                <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous'></script>\
+                <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>\
+                <html>\
+                <meta charset='utf-8'>"+
+                '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
+                "<div class='row justify-content-center'>\
+                    <form action='/cgi-bin/busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
+                        <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar'>\
+                        <button class='btn btn-primary' type='submit'>Buscar</button>\
+                    </form>\
+                </div>\
+                <div class='row justify-content-center'>\
+                    <div class='col-md-4'>\
+                        <table class='table table-bordered'>\
+                            <thead>\
+                                <tr>\
+                                    <th>NyA</th>\
+                                    <th>Legajo</th>\
+                                    <th>Sexo</th>\
+                                    <th>Edad</th>\
+                                </tr>\
+                            </thead>\
+                            <tbody>"
+                            +usuarios+
+                            "</tbody>\
+                        </table>\
+                    </div>\
+                </div>\
+            </html>")
+    else:
+        print("<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
+                <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous'></script>\
+                <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>\
+                <html>\
+                <meta charset='utf-8'>"+
+                '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
+                "<div class='row justify-content-center'>\
+                    <form action='/cgi-bin/busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
+                        <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar'>\
+                        <button class='btn btn-primary' type='submit'>Buscar</button>\
+                    </form>\
+                </div>\
+                <div class='row justify-content-center'>\
+                <h4>No se han encontrado datos</h4>\
+                </div>")
+
+def buscar_usuario():
+    cgitb.enable() #for debugging
+
+    #user information
+    form = cgi.FieldStorage()
+    nombre = form.getvalue("clave") #Busqueda por campo clave: Nombre de la persona
+    lista_usuarios_encontrados = []
+    #open and read users csv file
+    
+    with open('/usr/local/apache2/htdocs/usuarios.csv' , 'r') as csvFile:
+        reader = csv.reader(csvFile)
+        for row in reader:
+            if nombre in row[0]:
+                lista_usuarios_encontrados.append(row)
+    enviar_datos(lista_usuarios_encontrados)
+    csvFile.close()
+
+    
+
+if __name__ == "__main__" :
+    if os.environ['REQUEST_METHOD'] == 'POST':
+        send_header()
+        buscar_usuario()
