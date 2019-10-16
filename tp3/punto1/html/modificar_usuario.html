@@ -10,7 +10,7 @@
 
     <div class="row justify-content-center">
         <form action="modificar_usuario" method="POST" class="form-inline">
-            <input type="text" name="legajo" id="legajo" maxlength="70" placeholder="Numero de alumno (legajo)" required>
+            <input type="number" name="legajo" id="legajo" min="1" max="9999" placeholder="Numero de alumno (legajo)" required>
             <input type="text" name="pwd" id="pwd" maxlength="70" placeholder="Contraseña" required>
             <button class="btn btn-primary" type="submit">Buscar Alumno</button>
         </form>
