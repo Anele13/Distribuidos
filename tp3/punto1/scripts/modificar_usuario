@@ -10,8 +10,6 @@ def send_header():
 
 
 def enviar_datos(lista):
-
-    usuarios = ""
     if lista: 
         for usuario in lista:
             print("<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
@@ -22,7 +20,7 @@ def enviar_datos(lista):
                     <meta charset='utf-8'>"+
                     '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
                     "<div class='row justify-content-center'>\
-                        <form action='/cgi-bin/alta_usuario' method='POST' name='alta_usuario_form' required>\
+                        <form action='alta_usuario' method='POST' name='alta_usuario_form' required>\
                             <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' value="+usuario[0]+" required>\
                             <input type='number' name='legajo' id='legajo' maxlength='15' placeholder='Num. legajo' value="+usuario[1]+" required>\
                             <select name='select_sexo' id='select_sexo' placeholder='sexo'>\
@@ -48,7 +46,7 @@ def modificar_usuario():
     lista_usuarios_encontrados = []
     #open and read users csv file
     
-    with open('/usr/local/apache2/htdocs/usuarios.csv', 'r') as csvFile:
+    with open('/usr/local/apache2/usuarios.csv', 'r') as csvFile:
         reader = csv.reader(csvFile)
         for row in reader:
             if legajo == row[1] and pwd == row[4]:

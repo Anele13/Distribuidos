@@ -27,7 +27,7 @@ def save_alta_usuario():
 
     #save as csv file
     row = [nombre, legajo, sexo, edad, pwd]
-    with open('/usr/local/apache2/htdocs/usuarios.csv', 'a') as csvFile:
+    with open('/usr/local/apache2/usuarios.csv', 'a') as csvFile:
         writer = csv.writer(csvFile)
         writer.writerow(row)
     csvFile.close()

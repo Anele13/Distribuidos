@@ -30,7 +30,7 @@ def enviar_datos(lista):
                 <meta charset='utf-8'>"+
                 '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
                 "<div class='row justify-content-center'>\
-                    <form action='/cgi-bin/busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
+                    <form action='busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
                         <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar'>\
                         <button class='btn btn-primary' type='submit'>Buscar</button>\
                     </form>\
@@ -62,7 +62,7 @@ def enviar_datos(lista):
                 <meta charset='utf-8'>"+
                 '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
                 "<div class='row justify-content-center'>\
-                    <form action='/cgi-bin/busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
+                    <form action='busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
                         <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar'>\
                         <button class='btn btn-primary' type='submit'>Buscar</button>\
                     </form>\
@@ -80,7 +80,7 @@ def buscar_usuario():
     lista_usuarios_encontrados = []
     #open and read users csv file
     
-    with open('/usr/local/apache2/htdocs/usuarios.csv' , 'r') as csvFile:
+    with open('/usr/local/apache2/usuarios.csv' , 'r') as csvFile:
         reader = csv.reader(csvFile)
         for row in reader:
             if nombre in row[0]:
