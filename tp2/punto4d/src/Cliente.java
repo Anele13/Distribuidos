@@ -24,10 +24,7 @@ import java.rmi.RemoteException;
 */
 public class Cliente  implements ActionListener {
 	
-	public static void cambiarValores(ObjetoLocal objeto) {
-		objeto.valor1 = 2;
-		objeto.valor2 = -3;
-	}
+
     
 	private IRSumaResta sumaResta;
 	private IRMultiplicacionDivision mulDivision;
@@ -135,17 +132,27 @@ public class Cliente  implements ActionListener {
 	
 	
 	public static void main(String[] args) throws NotBoundException, IOException {
-		System.out.println("Objetos locales");
-    	ObjetoLocal objeto = new ObjetoLocal();
-    	objeto.valor1 = 5;
-    	objeto.valor2 = 3;
-    	System.out.println("Antes de enviar el objeto a la funcion tengo: "+ objeto.valor1+" y "+objeto.valor2);
-    	cambiarValores(objeto);
-    	System.out.println("luego de llamar a la funcion obtengo: "+objeto.valor1+" y "+objeto.valor2);
-    	
-		
 		Cliente c = new Cliente();
-		c.runVentana();
+		
+		// Creo un objeto local para pasarlo como referencia.
+		// El objeto local tiene un atributo "resultado" que inicialmente es 5
+		// y luego se cambia en el metodo remoto "cambiarResultado"
+		ObjetoLocal objeto = new ObjetoLocal();
+		objeto.resultado = 4+1;
+    	System.out.println("Antes de enviar el objeto LOCAL a la funcion tengo: "+ objeto.resultado);
+    	c.mulDivision.cambiarResultado(objeto);
+    	System.out.println("luego de llamar a la funcion obtengo: "+ objeto.resultado);
+
+    	// Luego intento relizar el mismo procedimiento pero esta vez enviando un objeto remoto como parametro
+    	System.out.println("Antes de enviar el objeto REMOTO a la funcion tengo: "+ c.sumaResta.suma(4, 1));
+    	c.mulDivision.cambiarResultado(c.sumaResta);
+    	System.out.println("luego de llamar a la funcion obtengo: "+c.sumaResta.getResultado());
+    	
+    	// Lo que se observa es que el objeto local antes de enviarse como parametro al metodo remoto
+    	// vale 5 y luego de la llamada remota sigue manteniendo su valor. debido a que el pasaje fue por valor o copia
+    	
+    	// En cambio en el objeto remoto inicialmente el valor del parametro "resultado" tambien es 5
+    	// pero luego de ejecutar el meotodo remoto de cambio de valor. el nuevo valor "-1" sobreescribe el valor original de "5" de la variable resultado.
     }
     
 }

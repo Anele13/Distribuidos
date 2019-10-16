@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ORSumaResta extends UnicastRemoteObject implements IRSumaResta {
 
-	private int resultado;
+	public int resultado;
 	private static final long serialVersionUID = 1L;
 	
 	public int getResultado() {

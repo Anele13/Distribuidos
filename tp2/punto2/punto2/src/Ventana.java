@@ -16,8 +16,14 @@ public class Ventana{
 		cp.add(new Texto("localhost",10,10,100));
 		cp.add(new Texto("7896",120,10,100));
 
-		cp.add(new Texto ("ingrese un archivo local",10,40,300));
-		cp.add(new Texto ("ingrese un archivo remoto",10,70,300));
+		
+		
+		
+		
+		cp.add(new Texto ("/home/anele/Escritorio/vacio.txt",10,40,300));
+		cp.add(new Texto ("/home/anele/Escritorio/vacio2.txt",10,70,300));
+		//cp.add(new Texto ("ingrese un archivo local e capooos",10,40,300));
+		//cp.add(new Texto ("ingrese un archivo remoto",10,70,300));
 		
 		JTextArea textArea =new JTextArea();
 		textArea.setBounds(new Rectangle(330,0,300,600));

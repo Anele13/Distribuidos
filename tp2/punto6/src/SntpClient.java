@@ -66,13 +66,13 @@ public class SntpClient
 		// Process response
 		NtpMessage msg = new NtpMessage(packet.getData());
 		
-		// Corrected, according to RFC2030 errata
+		// TIEMPO QUE TARDA EN QUE SE ORIGINA EL REQUEST Y VUELVE AL CLIENTE LA PETICION COMPLETA
 		double roundTripDelay = (destinationTimestamp-msg.originateTimestamp) -
-			(msg.transmitTimestamp-msg.receiveTimestamp);
-			
-		double localClockOffset =
-			((msg.receiveTimestamp - msg.originateTimestamp) +
-			(msg.transmitTimestamp - destinationTimestamp)) / 2;
+								(msg.transmitTimestamp-msg.receiveTimestamp);
+		
+		// OFFSET DE MI HORA LOCAL
+		double localClockOffset =((msg.receiveTimestamp - msg.originateTimestamp) +
+									(msg.transmitTimestamp - destinationTimestamp)) / 2;
 		
 		
 		// Display response
@@ -178,13 +178,13 @@ public class SntpClient
 	            "oceania.pool.ntp.org",
 	            "south-america.pool.ntp.org",
 	        	};
-		String[] columnas = {"Servidor", "Local clock offset"};	
+		String[] columnas = {"Servidor","Estrato", "Round-trip delay", "Local clock offset"};	
 		String[][] datos = new String[servers.length][columnas.length];
 		SntpClient cliente = new SntpClient();
 				
 		for (int i = 0; i < servers.length; i++) {
-			ArrayList<String> mensaje = cliente.requestNTP(servers[i]);
-			String[] aux = {mensaje.get(0), mensaje.get(15)};
+			ArrayList<String> mensaje = cliente.requestNTP(servers[1]); // Cambiar server[0] en caso de querer 1 muestra de cada server. ahora toma 8 muestras del mismo server
+			String[] aux = {mensaje.get(0), mensaje.get(4), mensaje.get(15),mensaje.get(16)};
 			datos[i] = aux;
 		}
 

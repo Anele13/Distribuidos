@@ -1,0 +1,40 @@
+#!/usr/bin/python3
+
+
+import cgi,cgitb
+import csv
+import os
+
+def send_header():
+    print("Content-type: text/html\n\n")
+
+
+def send_exito():
+    print("Exito")
+    print('<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/alta_usuario.html"'+'>Volver</button>')
+
+
+def save_alta_usuario():
+    cgitb.enable() #for debugging
+
+    #user information
+    form = cgi.FieldStorage()
+    nombre = form.getvalue("nya")
+    legajo = form.getvalue("legajo")
+    sexo = form.getvalue("select_sexo")
+    edad = form.getvalue("edad")
+    pwd = form.getvalue("pwd")
+
+    #save as csv file
+    row = [nombre, legajo, sexo, edad, pwd]
+    with open('/usr/local/apache2/htdocs/usuarios.csv', 'a') as csvFile:
+        writer = csv.writer(csvFile)
+        writer.writerow(row)
+    csvFile.close()
+    send_exito()
+    
+
+if __name__ == "__main__" :
+    if os.environ['REQUEST_METHOD'] == 'POST':
+        send_header()
+        save_alta_usuario()

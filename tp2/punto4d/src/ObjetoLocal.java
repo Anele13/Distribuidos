@@ -1,5 +1,11 @@
+import java.io.Serializable;
 
-public class ObjetoLocal {
-	public int valor1;
-	public int valor2;
+import com.sun.source.doctree.SerialDataTree;
+
+public class ObjetoLocal implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public int resultado;
 }
