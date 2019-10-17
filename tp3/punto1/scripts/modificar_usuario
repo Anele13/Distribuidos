@@ -10,10 +10,6 @@ from responses_html.response_html import ResponseHtml
 from orm.orm import Orm
 
 
-def send_header():
-    print("Content-type: text/html\n\n")
-    
-
 def redirect_login():
     print("<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
                     <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
@@ -83,7 +79,7 @@ def modificar_usuario():
         for row in reader:
             if legajo == row[1] and pwd == row[4]:
                 lista_usuarios_encontrados.append(row)
-    enviar_datos(lista_usuarios_encontrados)
+    #enviar_datos(lista_usuarios_encontrados)
     csvFile.close()
 
 
@@ -102,8 +98,11 @@ if __name__ == "__main__" :
         token = cookie['sid'].value
 
         if Orm.findTokenInTokenFile(token):
+            legajo = Orm.getUserFromTokenfile(token)
+            datos_usuario = Orm.getDatosUsuario(legajo)
+
             html.setCookie(cookie) #para seguir trabajando con la cookie
-            html.setContentBody("estas habilitado para modificarte")
+            html.set_http_response_moficacion_usuario(datos_usuario)
             html.render()
         else:
             #Cookie vencida o invalida
