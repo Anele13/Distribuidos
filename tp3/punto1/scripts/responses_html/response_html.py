@@ -8,6 +8,52 @@ class ResponseHtml():
     cookie = None
     body = None
 
+    def set_http_response_moficacion_usuario(self, datos_usuario):
+        # '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
+        cadena ="<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
+                <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous'></script>\
+                <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>\
+                <html>\
+                <meta charset='utf-8'>"
+        
+        cadena2 = "<div class='row justify-content-center'>\
+                    '<form action='alta_usuario' method='POST' name='alta_usuario_form' required>\
+                        <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' value="+datos_usuario[0]+" required>\
+                        <input type='number' name='legajo' id='legajo' maxlength='15' placeholder='Num. legajo' value="+datos_usuario[1]+" required>\
+                        <select name='select_sexo' id='select_sexo' placeholder='sexo'>\
+                            <option value='F'>Femenino</option>\
+                            <option value='M'>Masculino</option>\
+                        </select>\
+                        <input type='number' name='edad' id='edad' maxlength='10' placeholder='edad' value="+datos_usuario[3]+"required>\
+                        <input type='password' placeholder='pwd' name='pwd' id='pwd' value="+datos_usuario[4]+"required>\
+                        <button class='btn-default' type='submit'>Modificar</button>'\
+                    </form>\
+                </div>\
+            </html>"
+        self.setContentBody(cadena+cadena2)
+
+
+    def set_http_response_login(self):
+        cadena = "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
+                        <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
+                        <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous'></script>\
+                        <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>\
+                        <html>\
+                        <meta charset='utf-8'>\
+                            <html>\
+                                <meta charset='utf-8'>\
+                                <button class='btn btn-primary' type='submit' onclick='location.href='index2.html''>Volver</button>\
+                                <div class='row justify-content-center'>\
+                                    <form action='login' method='POST' class='form-inline'>\
+                                        <input type='text' name='legajo' id='legajo' maxlength='70' placeholder='Numero de alumno (legajo)' required>\
+                                        <input type='text' name='pwd' id='pwd' maxlength='70' placeholder='Contraseña' required>\
+                                        <button class='btn btn-primary' type='submit'>Buscar Alumno</button>\
+                                    </form>\
+                                </div>\
+                            </html>"
+        self.setContentBody(cadena)
+
     def setHeader(self, new_header):
         self.header = new_header
             

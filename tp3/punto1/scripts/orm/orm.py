@@ -19,6 +19,7 @@ class Orm():
         csvFile.close()
         return None
 
+
     @classmethod
     def getDatosUsuario(self, legajo):
         """
