@@ -91,7 +91,61 @@ def get_session_cookie():
     else:
         cookie.load(string_cookie)
         return cookie["sid"].value  
-        
+
+
+def crear_cookie():
+    cookie = cookies.SimpleCookie()
+    # The sid will be a hash of the server time
+    sid = hashlib.md5(repr(time.time()).encode()).hexdigest()
+    # Set the sid in the cookie
+    cookie["sid"] = sid
+    # Will expire in a year
+    cookie["sid"]["expires"] = 12 * 30 * 24 * 60 * 60
+    print("Content-Type: text/html")
+    print(cookie)
+    print()
+    return sid
+
+
+
+def get_cookie(string_cookie):
+    cookie = cookies.SimpleCookie()
+    cookie.load(string_cookie)
+    return cookie["sid"].value
+
+
+def login():
+    """
+    Ademas de loguear debe setear una cookie para el usuario
+    """
+    cgitb.enable()
+    form = cgi.FieldStorage()
+    
+    legajo = form.getvalue("legajo") #Busqueda por campo clave: Nombre de la persona
+    pwd = form.getvalue("pwd")
+    cookie = crear_cookie()
+
+    print(cookie)
+    print("PAGINA DE LOGUEO")
+    
+
+
+def existe_cookie_en_archivo(cookie):
+    """
+    Debe consultar si existe string_cookie en el archivo de cookies
+    """
+    print_cabecera()
+    print(cookie)
+    print("BUSCANDO COOKIE EN EL ARCHIVO\n")
+    return True
+
+def get_datos_usuario(string_cookie):
+    """
+    Debe devolver legajo y password obtenidos del archivo de cookies
+    """
+    pass
+
+
 
 def modificar_usuario():
     cgitb.enable() #for debugging
@@ -105,7 +159,6 @@ def modificar_usuario():
     
     #open and read users csv file
     #TODO quizas falta un get cookie
-    print("entrandoo")
     with open('/usr/local/apache2/usuarios.csv', 'r') as csvFile:
         reader = csv.reader(csvFile)
         for row in reader:
@@ -114,54 +167,23 @@ def modificar_usuario():
     enviar_datos(lista_usuarios_encontrados)
     csvFile.close()
 
+def print_cabecera():
+    print("Content-type: text/html\n\n")
 
 if __name__ == "__main__" :
-    if os.environ['REQUEST_METHOD'] == 'POST':
-        
-        a = open("/usr/local/apache2/log.txt", "w+")
-
-        """
-
-        # get cookie 
-        # get legajo
-        # get password 
-
-        # existe cookie en archivo(cookie)?:
-            # template modificar datos
-        # no tiene cookie
-            # template de login
     
 
-        cookie = get_session_cookie()
-
-        if es_cookie_de_usuario(cookie):
-
-        else:
-            #agregar la cookie al archivo de cookies
-            #devolver la pagina de login
-
-        """
-        try:
-            cookie = get_session_cookie()
-            #print(get_session_cookie())
-            print("Content-Type: text/html")
-            print(cookie)
-            print()
-
-            
-
-            if cookie:
-                print("HOLAAAA")
-                print("<p>Already existent session</p>")
-            else:
-                print("NO TENGO COOKIEE")
-                print("<p>New session</p>")
-
-            print("<p>SID =", sid, "</p>")
-            print("</body></html>")
-
-        except Exception as e:
-            a.write(e)
+    string_cookie = os.environ.get('HTTP_COOKIE')
+    if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
+        cookie = get_cookie(string_cookie)
+        if existe_cookie_en_archivo(cookie): 
+            #legajo, password = get_datos_usuario(string_cookie) # obtengo los datos del usuario del archivo de cookies
+            #modificar_usuario(legajo, password)
+            print("MODIFICACION")
+        else: #Sesion vencida
+            login()
+    else: #No hay cookie entonces hay que loguear
+        login()
+    
 
 
-      
