@@ -1,0 +1,30 @@
+#!/usr/bin/python3
+
+
+import cgi,cgitb
+import csv
+import os
+from responses_html.response_html import ResponseHtml
+from orm.orm import Orm
+
+# def send_header():
+#     print("Content-type: text/html\n\n")
+
+def buscar_rango_usuarios():
+    pass
+
+
+
+if __name__ == "__main__" :
+    html = ResponseHtml()
+    html.http_response_rango_edades()
+    html.render()
+    # if os.environ['REQUEST_METHOD'] == 'POST':
+    #     pass
+    # else:
+    #     html.http_response_rango_edades()
+    #     html.render()
+    
+        #send_header()
+
+        # buscar_usuario()
