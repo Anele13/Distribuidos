@@ -63,37 +63,7 @@ def enviar_datos(lista):
 
 
 
-def es_cookie_de_usuario(legajo, pwd, cookie):
-    with open('/usr/local/apache2/cookies.csv', 'r') as csvFile:
-        reader = csv.reader(csvFile)
-        for row in reader:
-            if legajo == row[0] and pwd == row[1]:
-                return True
-    return False
 
-
-def get_session_cookie():
-    """
-    Codigo que devuelve la cookie de una nueva sesion. 
-    Si existe la trae sino la crea
-    """
-    cookie = cookies.SimpleCookie()
-    string_cookie = os.environ.get('HTTP_COOKIE')
-    # If new session
-    if not string_cookie:
-        # The sid will be a hash of the server time
-        sid = hashlib.md5(repr(time.time()).encode()).hexdigest()
-        # Set the sid in the cookie
-        cookie["sid"] = sid
-        # Will expire in a year
-        cookie["sid"]["expires"] = 12 * 30 * 24 * 60 * 60
-        return sid
-    
-    # If already existent session
-    else:
-        cookie.load(string_cookie)
-        return cookie["sid"].value  
-        
 
 def modificar_usuario():
     cgitb.enable() #for debugging
