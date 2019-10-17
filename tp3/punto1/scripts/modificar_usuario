@@ -6,6 +6,8 @@ import csv
 import os
 from http import cookies
 import time, hashlib
+from responses_html.response_html import ResponseHtml
+from orm.orm import Orm
 
 
 def send_header():
@@ -116,52 +118,26 @@ def modificar_usuario():
 
 
 if __name__ == "__main__" :
-    if os.environ['REQUEST_METHOD'] == 'POST':
-        
-        a = open("/usr/local/apache2/log.txt", "w+")
+    """
+    legajo = Orm.getUserFromTokenfile(token)
+    datos_usuario = Orm.getDatosUsuario(legajo)
+    """
+   
+    html = ResponseHtml()
+    string_cookie = os.environ.get('HTTP_COOKIE')
 
-        """
+    if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
+        cookie = cookies.SimpleCookie()
+        cookie.load(string_cookie)
+        token = cookie['sid'].value
 
-        # get cookie 
-        # get legajo
-        # get password 
-
-        # existe cookie en archivo(cookie)?:
-            # template modificar datos
-        # no tiene cookie
-            # template de login
-    
-
-        cookie = get_session_cookie()
-
-        if es_cookie_de_usuario(cookie):
-
+        if Orm.findTokenInTokenFile(token):
+            html.setCookie(cookie) #para seguir trabajando con la cookie
+            html.setContentBody("estas habilitado para modificarte")
+            html.render()
         else:
-            #agregar la cookie al archivo de cookies
-            #devolver la pagina de login
-
-        """
-        try:
-            cookie = get_session_cookie()
-            #print(get_session_cookie())
-            print("Content-Type: text/html")
-            print(cookie)
-            print()
-
-            
-
-            if cookie:
-                print("HOLAAAA")
-                print("<p>Already existent session</p>")
-            else:
-                print("NO TENGO COOKIEE")
-                print("<p>New session</p>")
-
-            print("<p>SID =", sid, "</p>")
-            print("</body></html>")
-
-        except Exception as e:
-            a.write(e)
-
-
-      
+            #Cookie vencida o invalida
+            html.redirect("index2.html")
+    else:
+        #no hay cookie
+        html.redirect("index2.html")

@@ -1,19 +1,15 @@
 #!/usr/bin/python3
 
-
 import cgi,cgitb
 import csv
 import os
 from http import cookies
 import time, hashlib
+from responses_html.response_html import ResponseHtml
+from orm.orm import Orm
 
-
-def send_header():
-    print("Content-type: text/html\n\n")
-    
-
-def redirect_login():
-    print("<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
+def http_response_login():
+    cadena = "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
                     <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
                     <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous'></script>\
                     <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>\
@@ -23,74 +19,42 @@ def redirect_login():
                             <meta charset='utf-8'>\
                             <button class='btn btn-primary' type='submit' onclick='location.href='index2.html''>Volver</button>\
                             <div class='row justify-content-center'>\
-                                <form action='modificar_usuario' method='POST' class='form-inline'>\
+                                <form action='login' method='POST' class='form-inline'>\
                                     <input type='text' name='legajo' id='legajo' maxlength='70' placeholder='Numero de alumno (legajo)' required>\
                                     <input type='text' name='pwd' id='pwd' maxlength='70' placeholder='Contraseña' required>\
                                     <button class='btn btn-primary' type='submit'>Buscar Alumno</button>\
                                 </form>\
                             </div>\
-                        </html>")
+                        </html>"
+    return cadena
 
 
-def enviar_datos(lista):
-    if lista: 
-        for usuario in lista:
-            print("<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
-                    <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
-                    <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous'></script>\
-                    <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>\
-                    <html>\
-                    <meta charset='utf-8'>"+
-                    '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
-                    "<div class='row justify-content-center'>\
-                        <form action='alta_usuario' method='POST' name='alta_usuario_form' required>\
-                            <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' value="+usuario[0]+" required>\
-                            <input type='number' name='legajo' id='legajo' maxlength='15' placeholder='Num. legajo' value="+usuario[1]+" required>\
-                            <select name='select_sexo' id='select_sexo' placeholder='sexo'>\
-                                <option value='F'>Femenino</option>\
-                                <option value='M'>Masculino</option>\
-                            </select>\
-                            <input type='number' name='edad' id='edad' maxlength='10' placeholder='edad' value="+usuario[3]+"required>\
-                            <input type='password' placeholder='pwd' name='pwd' id='pwd' value="+usuario[4]+"required>\
-                            <button class='btn-default' type='submit'>Modificar</button>'\
-                        </form>\
-                    </div>\
-                </html>")
-    else:
-        print("holasss")
+def http_response_modificar_usuario(datos_usuario):
 
-
-
-def es_cookie_de_usuario(legajo, pwd, cookie):
-    with open('/usr/local/apache2/cookies.csv', 'r') as csvFile:
-        reader = csv.reader(csvFile)
-        for row in reader:
-            if legajo == row[0] and pwd == row[1]:
-                return True
-    return False
-
-
-def get_session_cookie():
-    """
-    Codigo que devuelve la cookie de una nueva sesion. 
-    Si existe la trae sino la crea
-    """
-    cookie = cookies.SimpleCookie()
-    string_cookie = os.environ.get('HTTP_COOKIE')
-    # If new session
-    if not string_cookie:
-        # The sid will be a hash of the server time
-        sid = hashlib.md5(repr(time.time()).encode()).hexdigest()
-        # Set the sid in the cookie
-        cookie["sid"] = sid
-        # Will expire in a year
-        cookie["sid"]["expires"] = 12 * 30 * 24 * 60 * 60
-        return sid
+    # '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
+    cadena ="<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
+            <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
+            <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous'></script>\
+            <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>\
+            <html>\
+            <meta charset='utf-8'>"
     
-    # If already existent session
-    else:
-        cookie.load(string_cookie)
-        return cookie["sid"].value  
+    cadena2 = "<div class='row justify-content-center'>\
+                '<form action='alta_usuario' method='POST' name='alta_usuario_form' required>\
+                    <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' value="+datos_usuario[0]+" required>\
+                    <input type='number' name='legajo' id='legajo' maxlength='15' placeholder='Num. legajo' value="+datos_usuario[1]+" required>\
+                    <select name='select_sexo' id='select_sexo' placeholder='sexo'>\
+                        <option value='F'>Femenino</option>\
+                        <option value='M'>Masculino</option>\
+                    </select>\
+                    <input type='number' name='edad' id='edad' maxlength='10' placeholder='edad' value="+datos_usuario[3]+"required>\
+                    <input type='password' placeholder='pwd' name='pwd' id='pwd' value="+datos_usuario[4]+"required>\
+                    <button class='btn-default' type='submit'>Modificar</button>'\
+                </form>\
+            </div>\
+        </html>"
+
+    return cadena + cadena2
 
 
 def crear_cookie():
@@ -101,89 +65,56 @@ def crear_cookie():
     cookie["sid"] = sid
     # Will expire in a year
     cookie["sid"]["expires"] = 12 * 30 * 24 * 60 * 60
-    print("Content-Type: text/html")
-    print(cookie)
-    print()
-    return sid
+    return cookie
 
 
-
-def get_cookie(string_cookie):
+def get_token_from_cookie(string_cookie, cookie_existente=None):
+    """
+    Metodo que devuelve el token asociado a la cookie completa
+    """
+    if cookie_existente: #Ya viene creada la cookie
+        return cookie_existente["sid"].value 
+    # obtengo la cookie del querystring
     cookie = cookies.SimpleCookie()
     cookie.load(string_cookie)
-    return cookie["sid"].value
+    return cookie["sid"].value #Token de cookie
 
 
-def login():
+def login(html):
     """
     Ademas de loguear debe setear una cookie para el usuario
     """
     cgitb.enable()
     form = cgi.FieldStorage()
-    
-    legajo = form.getvalue("legajo") #Busqueda por campo clave: Nombre de la persona
+    legajo = form.getvalue("legajo") #Busqueda por campo clave: legajo
     pwd = form.getvalue("pwd")
     cookie = crear_cookie()
 
-    print(cookie)
-    print("PAGINA DE LOGUEO")
+    if (Orm.searchUser(legajo, pwd)):
+        html.setCookie(cookie) #Seteo nueva cookie
+        token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
+        Orm.saveTokenInTokenfile(legajo, pwd, token)
+        html.redirect("modificar_usuario") 
+    else:
+        html.setContentBody(http_response_login())
+        html.render()
     
-
-
-def existe_cookie_en_archivo(cookie):
-    """
-    Debe consultar si existe string_cookie en el archivo de cookies
-    """
-    print_cabecera()
-    print(cookie)
-    print("BUSCANDO COOKIE EN EL ARCHIVO\n")
-    return True
-
-def get_datos_usuario(string_cookie):
-    """
-    Debe devolver legajo y password obtenidos del archivo de cookies
-    """
-    pass
-
-
-
-def modificar_usuario():
-    cgitb.enable() #for debugging
-
-    #user information
-    form = cgi.FieldStorage()
-    legajo = form.getvalue("legajo") #Busqueda por campo clave: Nombre de la persona
-    pwd = form.getvalue("pwd")
-    lista_usuarios_encontrados = []
-    
-    
-    #open and read users csv file
-    #TODO quizas falta un get cookie
-    with open('/usr/local/apache2/usuarios.csv', 'r') as csvFile:
-        reader = csv.reader(csvFile)
-        for row in reader:
-            if legajo == row[1] and pwd == row[4]:
-                lista_usuarios_encontrados.append(row)
-    enviar_datos(lista_usuarios_encontrados)
-    csvFile.close()
-
-def print_cabecera():
-    print("Content-type: text/html\n\n")
 
 if __name__ == "__main__" :
-    
-
+    html = ResponseHtml()
     string_cookie = os.environ.get('HTTP_COOKIE')
     if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
-        cookie = get_cookie(string_cookie)
-        if existe_cookie_en_archivo(cookie): 
-            #legajo, password = get_datos_usuario(string_cookie) # obtengo los datos del usuario del archivo de cookies
-            #modificar_usuario(legajo, password)
-            print("MODIFICACION")
+        token = get_token_from_cookie(string_cookie)
+        if Orm.findTokenInTokenFile(token):
+            #Levanto la cookie
+            cookie = cookies.SimpleCookie()
+            cookie.load(string_cookie)
+            html.setCookie(cookie)
+            html.redirect("modificar_usuario")
         else: #Sesion vencida
-            login()
+            login(html)
     else: #No hay cookie entonces hay que loguear
-        login()
-    
+        login(html)
+   
 
 
