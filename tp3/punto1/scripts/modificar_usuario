@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-
 import cgi,cgitb
 import csv
 import os
@@ -9,8 +8,7 @@ from responses_html.response_html import ResponseHtml
 from orm.orm import Orm
 
 
-if __name__ == "__main__" :
-
+if __name__ == "__main__" : #No distinto si es POST o GET porque en ambos casos debo chequear la existencia y validez de la COOKIE
     html = ResponseHtml()
     string_cookie = os.environ.get('HTTP_COOKIE')
 
@@ -26,9 +24,7 @@ if __name__ == "__main__" :
             form = cgi.FieldStorage()
 
             if "boton_submit_modificacion" in form: #Si modifico los datos los pido de nuevo en la linea de abajo (es un refresh)
-
                 Orm.modificateUser(legajo, form)
-
                 datos_usuario = Orm.getDatosUsuario(legajo)
                 html.set_http_response_moficacion_usuario(datos_usuario)
                 html.set_http_alert("Usuario modificado correctamente","success")
@@ -38,7 +34,6 @@ if __name__ == "__main__" :
                 html.render()
         else:
             #Cookie vencida o invalida
-            html.set_http_alert("Cookie vencia o invalida", "danger")
             html.redirect("login")
     else:
         #no hay cookie

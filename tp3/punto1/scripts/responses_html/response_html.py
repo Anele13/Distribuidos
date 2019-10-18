@@ -41,8 +41,8 @@ class ResponseHtml():
                     <meta charset='utf-8'>\
                     <div class='row justify-content-center'>\
                         <form action='busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
-                            <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar'>\
-                            <button class='btn btn-primary' type='submit'>Buscar</button>\
+                            <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar' required>\
+                            <button class='btn btn-info' type='submit'>Buscar</button>\
                         </form>\
                     </div>\
                     <div class='row justify-content-center'>\
@@ -56,12 +56,16 @@ class ResponseHtml():
                                         <th>Edad</th>\
                                     </tr>\
                                 </thead>\
-                                <tbody>"    +usuarios+    "</tbody>             </table>        </div>                    </div>     </html>"
+                                <tbody>"+usuarios+"</tbody>\
+                            </table>\
+                        </div>\
+                    </div>\
+                    </html>"
         else:
             cadena = "<div class='row justify-content-center'>\
                     <form action='busqueda_usuario' method='POST' class='form-inline'>\
-                        <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar' required>\
-                        <button class='btn btn-primary' type='submit'>Buscar</button>\
+                        <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar' required >\
+                        <button class='btn btn-info' type='submit'>Buscar</button>\
                         </form>\
                     </div>"
         self.setContentBody(cadena)
@@ -69,7 +73,7 @@ class ResponseHtml():
     def set_http_response_alta_usuario(self):
         cadena = "<html>\
                 <meta charset='utf-8'>\
-                <button class='btn btn-primary' type='submit' onclick='location.href='index2.html''>Volver</button>\
+                <button class='btn btn-info' type='submit' onclick='location.href='index2.html''>Volver</button>\
                 <div class='row justify-content-center'>\
                     <form action='alta_usuario' method='POST' name='alta_usuario_form' required>\
                         <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' required>\
@@ -87,19 +91,23 @@ class ResponseHtml():
 
 
     def set_http_response_moficacion_usuario(self, datos_usuario):
-        # '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
-        cadena =  "<html>\
+        # '<button class="btn btn-info" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
+        if datos_usuario[2] == 'F': #Sexo
+            cadena_sexo = "<option value='F'>Femenino</option>\
+                           <option value='M'>Masculino</option>"
+        else:
+            cadena_sexo = "<option value='M'>Masculino</option>\
+                           <option value='F'>Femenino</option>"
+
+        cadena = "<html>\
                     <meta charset='utf-8'>\
                     <div class='row justify-content-center'>\
                         '<form action='modificar_usuario' method='POST' name='alta_usuario_form' required>\
                             <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' value="+datos_usuario[0]+" required>\
-                            <select name='select_sexo' id='select_sexo' placeholder='sexo'>\
-                                <option value='F'>Femenino</option>\
-                                <option value='M'>Masculino</option>\
-                            </select>\
+                            <select name='select_sexo' id='select_sexo' placeholder='sexo'>"+ cadena_sexo + "</select>\
                             <input type='number' name='edad' id='edad' maxlength='10' placeholder='edad' value="+datos_usuario[3]+" required>\
                             <input type='password' placeholder='pwd' name='pwd' id='pwd' value="+datos_usuario[4]+" required>\
-                            <button class='btn-default' type='submit' value='submit' name='boton_submit_modificacion' id='boton_submit_modificacion'> Modificar </button>'\
+                            <button class='btn btn-info' type='submit' value='submit' name='boton_submit_modificacion' id='boton_submit_modificacion'> Modificar </button>'\
                         </form>\
                     </div>\
                 </html>"
@@ -111,12 +119,11 @@ class ResponseHtml():
                     <meta charset='utf-8'>\
                         <html>\
                             <meta charset='utf-8'>\
-                            <button class='btn btn-primary' type='submit' onclick='location.href='index2.html''>Volver</button>\
                             <div class='row justify-content-center'>\
                                 <form action='login' method='POST' class='form-inline'>\
                                     <input type='text' name='legajo' id='legajo' maxlength='70' placeholder='Numero de alumno (legajo)' required>\
-                                    <input type='text' name='pwd' id='pwd' maxlength='70' placeholder='Contraseña' required>\
-                                    <button class='btn btn-primary' type='submit'>Buscar Alumno</button>\
+                                    <input type='password' name='pwd' id='pwd' maxlength='70' placeholder='Contraseña' required>\
+                                    <button class='btn btn-info' type='submit'>Login</button>\
                                 </form>\
                             </div>\
                         </html>"
