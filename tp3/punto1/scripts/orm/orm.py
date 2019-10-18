@@ -6,6 +6,13 @@ class Orm():
     """
 
     @classmethod
+    def modificateUser(self,legajo, form):
+
+
+        
+
+
+    @classmethod
     def getUserFromTokenfile(self, token):
         """
         busca un usuario y devuelve su legajo en caso de encontrarlo
@@ -41,14 +48,18 @@ class Orm():
     
 
     @classmethod
-    def searchUser(self, legajo, pwd):
+    def searchUser(self, legajo, pwd=None):
         """
         Devuelve true o false si encuentra o no al alumno por legajo
         """
         with open('/usr/local/apache2/usuarios.csv', 'r') as csvFile:
             reader = csv.reader(csvFile)
             for row in reader:
-                if legajo == row[1] and pwd == row[4]:
+                if pwd:
+                    if legajo == row[1] and pwd == row[4]:
+                    return True
+                else:
+                    if legajo == row[1]:
                     return True
         return False
 

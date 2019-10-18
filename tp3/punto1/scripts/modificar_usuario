@@ -61,11 +61,12 @@ def enviar_datos(lista):
 
 
 
-def modificar_usuario():
-    cgitb.enable() #for debugging
+def modificar_usuario(form):
+    #cgitb.enable() #for debugging
 
     #user information
-    form = cgi.FieldStorage()
+    #form = cgi.FieldStorage()
+    
     legajo = form.getvalue("legajo") #Busqueda por campo clave: Nombre de la persona
     pwd = form.getvalue("pwd")
     lista_usuarios_encontrados = []
@@ -98,10 +99,15 @@ if __name__ == "__main__" :
         token = cookie['sid'].value
 
         if Orm.findTokenInTokenFile(token):
+            html.setCookie(cookie) #para seguir trabajando con la cookie
             legajo = Orm.getUserFromTokenfile(token)
             datos_usuario = Orm.getDatosUsuario(legajo)
+            form = cgi.FieldStorage()
 
-            html.setCookie(cookie) #para seguir trabajando con la cookie
+            if "boton_submit_modificacion" in form: #Si modifico los datos los pido de nuevo en la linea de abajo (es un refresh)
+                Orm.modificateUser(legajo, form)
+                datos_usuario = Orm.getDatosUsuario(legajo)
+
             html.set_http_response_moficacion_usuario(datos_usuario)
             html.render()
         else:

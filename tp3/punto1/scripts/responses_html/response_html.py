@@ -27,7 +27,7 @@ class ResponseHtml():
                         </select>\
                         <input type='number' name='edad' id='edad' maxlength='10' placeholder='edad' value="+datos_usuario[3]+"required>\
                         <input type='password' placeholder='pwd' name='pwd' id='pwd' value="+datos_usuario[4]+"required>\
-                        <button class='btn-default' type='submit'>Modificar</button>'\
+                        <button class='btn-default' type='submit' name='boton_submit_modificacion'>Modificar</button>'\
                     </form>\
                 </div>\
             </html>"
@@ -54,7 +54,7 @@ class ResponseHtml():
                             </html>"
         self.setContentBody(cadena)
 
-#Funcion para el punto 4.
+    #Funcion para el punto 4.
     def http_response_rango_edades():
         cadena1 ="<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
             <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
