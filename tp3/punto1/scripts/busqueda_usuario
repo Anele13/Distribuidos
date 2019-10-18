@@ -2,18 +2,9 @@
 
 
 import cgi,cgitb
-import csv
 import os
-
-def send_header():
-    print("Content-type: text/html\n\n")
-
-
-
-def enviar_user_not_found():
-    print("No se encontraron usuarios con el criterio ingresado")
-    print('<button class="btn-default" type="submit" onclick='+'location.href="http://localhost:9090/alta_usuario.html"'+'>Volver</button>')
-
+from responses_html.response_html import ResponseHtml
+from orm.orm import Orm
 
 def enviar_datos(lista):
 
@@ -71,26 +62,18 @@ def enviar_datos(lista):
                 <h4>No se han encontrado datos</h4>\
                 </div>")
 
-def buscar_usuario():
-    cgitb.enable() #for debugging
-
-    #user information
-    form = cgi.FieldStorage()
-    nombre = form.getvalue("clave") #Busqueda por campo clave: Nombre de la persona
-    lista_usuarios_encontrados = []
-    #open and read users csv file
-    
-    with open('/usr/local/apache2/usuarios.csv' , 'r') as csvFile:
-        reader = csv.reader(csvFile)
-        for row in reader:
-            if nombre in row[0]:
-                lista_usuarios_encontrados.append(row)
-    enviar_datos(lista_usuarios_encontrados)
-    csvFile.close()
-
-    
 
 if __name__ == "__main__" :
+    html = ResponseHtml()
     if os.environ['REQUEST_METHOD'] == 'POST':
-        send_header()
-        buscar_usuario()
+        form = cgi.FieldStorage()
+        try:
+            lista_usuarios_encontrados = Orm.searchUserList(form)
+            html.set_http_response_busqueda_usuario(lista_usuarios_encontrados)
+        except Exception as e:
+            html.set_http_alert(e.__str__(), "danger")
+            html.set_http_response_busqueda_usuario()
+        html.render()
+    else:
+        html.set_http_response_busqueda_usuario()
+        html.render()

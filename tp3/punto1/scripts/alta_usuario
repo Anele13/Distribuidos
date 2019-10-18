@@ -1,40 +1,21 @@
 #!/usr/bin/python3
 
-
-import cgi,cgitb
-import csv
-import os
-
-def send_header():
-    print("Content-type: text/html\n\n")
-
-
-def send_exito():
-    print("Exito")
-    print('<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/alta_usuario.html"'+'>Volver</button>')
-
-
-def save_alta_usuario():
-    cgitb.enable() #for debugging
-
-    #user information
-    form = cgi.FieldStorage()
-    nombre = form.getvalue("nya")
-    legajo = form.getvalue("legajo")
-    sexo = form.getvalue("select_sexo")
-    edad = form.getvalue("edad")
-    pwd = form.getvalue("pwd")
-
-    #save as csv file
-    row = [nombre, legajo, sexo, edad, pwd]
-    with open('/usr/local/apache2/usuarios.csv', 'a') as csvFile:
-        writer = csv.writer(csvFile)
-        writer.writerow(row)
-    csvFile.close()
-    send_exito()
-    
+import cgi, cgitb, os
+from responses_html.response_html import ResponseHtml
+from orm.orm import Orm
 
 if __name__ == "__main__" :
+    html = ResponseHtml()
     if os.environ['REQUEST_METHOD'] == 'POST':
-        send_header()
-        save_alta_usuario()
+        form = cgi.FieldStorage()
+        try:
+            Orm.createUser(form)
+            html.set_http_alert("Usuario dado de alta correctamente.", "success")
+            html.set_http_response_alta_usuario()
+        except Exception as e:
+            html.set_http_alert(e.__str__(), "danger")
+            html.set_http_response_alta_usuario()
+        html.render()
+    else:
+        html.set_http_response_alta_usuario()
+        html.render()

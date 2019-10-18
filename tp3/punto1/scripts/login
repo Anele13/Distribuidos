@@ -36,7 +36,6 @@ def login(html):
     """
     Ademas de loguear debe setear una cookie para el usuario
     """
-    cgitb.enable()
     form = cgi.FieldStorage()
     legajo = form.getvalue("legajo") #Busqueda por campo clave: legajo
     pwd = form.getvalue("pwd")
@@ -48,25 +47,34 @@ def login(html):
         Orm.saveTokenInTokenfile(legajo, pwd, token)
         html.redirect("modificar_usuario")
     else:
+        html.set_http_alert("Legajo o Password incorrectos. Reintente", "danger")
         html.set_http_response_login()
         html.render()
     
 
 if __name__ == "__main__" :
     html = ResponseHtml()
-    string_cookie = os.environ.get('HTTP_COOKIE')
-    if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
-        token = get_token_from_cookie(string_cookie)
-        if Orm.findTokenInTokenFile(token):
-            #Levanto la cookie
-            cookie = cookies.SimpleCookie()
-            cookie.load(string_cookie)
-            html.setCookie(cookie)
-            html.redirect("modificar_usuario")
-        else: #Sesion vencida
-            login(html)
-    else: #No hay cookie entonces hay que loguear
+    if os.environ['REQUEST_METHOD'] == 'POST':
         login(html)
+    else:
+        string_cookie = os.environ.get('HTTP_COOKIE')
+        if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
+            token = get_token_from_cookie(string_cookie)
+            if Orm.findTokenInTokenFile(token):
+                #Levanto la cookie
+                cookie = cookies.SimpleCookie()
+                cookie.load(string_cookie)
+                html.setCookie(cookie)
+                html.redirect("modificar_usuario")
+            else: #Sesion vencida
+                html.set_http_alert("Cookie vencida. Reintente", "danger")
+                html.set_http_response_login()
+                html.render()
+        else: #No hay cookie entonces hay que loguear
+            html.set_http_response_login()
+            html.render()
+
+    
    
 
 

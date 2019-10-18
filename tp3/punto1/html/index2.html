@@ -11,11 +11,17 @@
         <div class="col-md-3">
             <h1>BIENVENIDO</h1>
             <br>
-            <button class="btn-default" onclick="window.location.href='alta_usuario.html';"> Alta Usuario</button>
-            <form action="login" method="POST">
-                <button class="btn-warning" type="submit"> Modificar Usuario</button>
+            <form action="alta_usuario" method="GET">
+                <button class="btn-default"> Alta Usuario</button>
+            </form>
+
+            <form action="login" method="GET">
+                <button class="btn-warning"> Modificar Usuario</button>
             </form>            
-            <button class="btn-info" onclick="window.location.href='busqueda_usuario.html';"> Busqueda Usuario</button>
+
+            <form action="busqueda_usuario" method="GET">
+                <button class="btn-info"> Busqueda Usuario</button>
+            </form>
         </div> 
     </div>   
 </html>
