@@ -57,12 +57,12 @@ class Orm():
         """
         Busca una lista de usuarios completa por legajo
         """
-        legajo = form.getvalue("clave") #Busqueda por campo clave: legajo de la persona
+        nombre = form.getvalue("clave") #Busqueda por campo nombre de persona
         lista_usuarios_encontrados = []
         with open('/usr/local/apache2/usuarios.csv' , 'r') as csvFile:
             reader = csv.reader(csvFile)
             for row in reader:
-                if legajo in row[1]:
+                if nombre in row[0]: #Nombre de usuario
                     lista_usuarios_encontrados.append(row)
         csvFile.close()
         if not lista_usuarios_encontrados:

@@ -41,7 +41,7 @@ class ResponseHtml():
                     <meta charset='utf-8'>\
                     <div class='row justify-content-center'>\
                         <form action='busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
-                            <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar' required>\
+                            <input type='text' name='clave' id='clave' maxlength='70' placeholder='Ingrese nombre de alumno' required>\
                             <button class='btn btn-info' type='submit'>Buscar</button>\
                         </form>\
                     </div>\
@@ -64,7 +64,7 @@ class ResponseHtml():
         else:
             cadena = "<div class='row justify-content-center'>\
                     <form action='busqueda_usuario' method='POST' class='form-inline'>\
-                        <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar' required >\
+                        <input type='text' name='clave' id='clave' maxlength='70' placeholder='Ingrese nombre de alumno' required >\
                         <button class='btn btn-info' type='submit'>Buscar</button>\
                         </form>\
                     </div>"
