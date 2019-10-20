@@ -7,60 +7,6 @@ import os
 from responses_html.response_html import ResponseHtml
 from orm.orm import Orm
 
-# def send_header():
-#     print("Content-type: text/html\n\n")
-
-def enviar_datos(lista):
-
-    usuarios = ""
-     
-    if lista: 
-        for usuario in lista:
-            usuarios = usuarios + "<tr> <td>"+ usuario[0] +"</td> <td>"+ usuario[1] +"</td> <td>"+ usuario[2] +"</td> <td>"+ usuario[3] + "</td>  </tr>"
-
-        print("<html>\
-                <meta charset='utf-8'>"+
-                '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
-                "<div class='row justify-content-center'>\
-                    <form action='busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
-                        <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar'>\
-                        <button class='btn btn-primary' type='submit'>Buscar</button>\
-                    </form>\
-                </div>\
-                <div class='row justify-content-center'>\
-                    <div class='col-md-4'>\
-                        <table class='table table-bordered'>\
-                            <thead>\
-                                <tr>\
-                                    <th>NyA</th>\
-                                    <th>Legajo</th>\
-                                    <th>Sexo</th>\
-                                    <th>Edad</th>\
-                                </tr>\
-                            </thead>\
-                            <tbody>"
-                            +usuarios+
-                            "</tbody>\
-                        </table>\
-                    </div>\
-                </div>\
-            </html>")
-    else:
-        print("<html>\
-                <meta charset='utf-8'>"+
-                '<button class="btn btn-primary" type="submit" onclick='+'location.href="http://localhost:9090/index2.html"'+'>Volver</button>'+
-                "<div class='row justify-content-center'>\
-                    <form action='busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
-                        <input type='text' name='clave' id='clave' maxlength='70' placeholder='inserte campo a buscar'>\
-                        <button class='btn btn-primary' type='submit'>Buscar</button>\
-                    </form>\
-                </div>\
-                <div class='row justify-content-center'>\
-                <h4>No se han encontrado datos</h4>\
-                </div>")
-
-
-
 
 if __name__ == "__main__" :
     html = ResponseHtml()
@@ -71,9 +17,18 @@ if __name__ == "__main__" :
         rango = form.getvalue("select_rango")
         lista_usuarios_en_rango = []
         lista_usuarios_en_rango = Orm.searchUsersInRange(rango)
-        # enviar_datos(lista_usuarios_en_rango)
-        html.set_http_response_rango_edades()
+        html.set_http_response_busqueda_usuarios_en_rango(lista_usuarios_en_rango)
         html.render()
+        # enviar_datos(lista_usuarios_en_rango)
+        # if (len(lista_usuarios_en_rango) > 0):
+        #     cadena = "<html><p>aaaaa"+ str(lista_usuarios_en_rango[0]) +"aaaa</p></html>"
+        #     html.setContentBody(cadena)
+        #     html.render()
+        # else:
+        #     cadena2 = "<html><h1>No hay usuarios en el rango solicitado.</h1></html>"
+        #     html.setContentBody(cadena2)
+        # # html.set_http_response_rango_edades()
+        #     html.render()
 
     else:
         html.set_http_response_rango_edades()

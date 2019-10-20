@@ -185,5 +185,4 @@ class Orm():
                             if ("40" < row[3]):
                                 lista_usuarios_en_rango.append(row)
         csvFile.close()
-        
         return lista_usuarios_en_rango

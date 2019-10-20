@@ -146,6 +146,38 @@ class ResponseHtml():
             </html>"
         self.setContentBody(cadena)
 
+    def set_http_response_busqueda_usuarios_en_rango(self, lista_usuarios=None):
+        cadena = ""
+        usuarios = ""
+        if lista_usuarios:
+            for usuario in lista_usuarios:
+                usuarios = usuarios + "<tr> <td>"+ usuario[0] +"</td> <td>"+ usuario[1] +"</td> <td>"+ usuario[2] +"</td> <td>"+ usuario[3] + "</td>  </tr>"
+
+            cadena="<html>\
+                    <meta charset='utf-8'>\
+                    <div class='row justify-content-center'>\
+                        <div class='col-md-4'>\
+                            <table class='table table-bordered'>\
+                                <thead>\
+                                    <tr>\
+                                        <th>NyA</th>\
+                                        <th>Legajo</th>\
+                                        <th>Sexo</th>\
+                                        <th>Edad</th>\
+                                    </tr>\
+                                </thead>\
+                                <tbody>"+usuarios+"</tbody>\
+                            </table>\
+                        </div>\
+                    </div>\
+                    </html>"
+        else:
+            cadena = "<div class='row justify-content-center'>\
+                    <h4>No se han encontrado usuarios en el rango solicitado.</h4>\
+                    </div>"
+        self.setContentBody(cadena)
+
+
 
     def getContentBody(self):
         return self.body
