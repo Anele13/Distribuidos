@@ -163,3 +163,27 @@ class Orm():
             writer = csv.writer(csvFile)
             writer.writerow(row)
         csvFile.close()
+        
+    @classmethod
+    def searchUsersInRange(self, range):
+        """
+        Devuelve la lista de usuarios en el rango dado
+        """
+        lista_usuarios_en_rango = []
+        with open('/usr/local/apache2/usuarios.csv', 'r') as csvFile:
+            reader = csv.reader(csvFile)
+            for row in reader:
+                if (range == "1"):
+                    if (("0" <= row[3])  and (row[3]<="20")):
+                        lista_usuarios_en_rango.append(row)
+                else:
+                    if (range == "2"):
+                        if (("20" < row[3]) and (row[3] <= "40")):
+                            lista_usuarios_en_rango.append(row)
+                    else:
+                        if (range == "3"):
+                            if ("40" < row[3]):
+                                lista_usuarios_en_rango.append(row)
+        csvFile.close()
+        
+        return lista_usuarios_en_rango

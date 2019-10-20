@@ -134,13 +134,13 @@ class ResponseHtml():
         cadena = "<html>\
                 <meta charset='utf-8'>\
                 <div class='row justify-content-center'>\
-                '<form action='consulta_rango_edades' method='POST' name='consulta_rango_edades_form' required>\
+                <form action='consulta_rango_edades' method='POST' name='consulta_rango_edades_form' required>\
                     <select name='select_rango' id='select_rango' placeholder='rango_edades'>\
                         <option value='1'>0-20</option>\
                         <option value='2'>20-40</option>\
                         <option value='3'>mas de 40</option>\
                     </select>\
-                        <button class='btn-default' type='submit'>Buscar</button>'\
+                        <button class='btn-default' type='submit'>Buscar</button>\
                     </form>\
                 </div>\
             </html>"
