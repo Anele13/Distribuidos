@@ -86,7 +86,7 @@ class ResponseHtml():
                         </select>\
                         <input type='number' name='edad' id='edad' min='18' max='99' placeholder='edad' required>\
                         <input type='password' placeholder='Contraseña' name='pwd' id='pwd' required>\
-                        <button class='btn-default' type='submit'>Alta</button>\
+                        <button class='btn btn-info' type='submit'>Alta</button>\
                     </form>\
                     </div> </html>"
         self.setContentBody(cadena)
