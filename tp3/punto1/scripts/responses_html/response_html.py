@@ -103,9 +103,9 @@ class ResponseHtml():
 
         cadena = "<html>\
                     <meta charset='utf-8'>\
+                    <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Inicio</a>\
                     <div class='row justify-content-center'>\
                         <form action='modificar_usuario' method='POST' name='alta_usuario_form' required>\
-                            <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Inicio</a>\
                             <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' value="+datos_usuario[0]+" required>\
                             <select name='select_sexo' id='select_sexo' placeholder='sexo'>"+ cadena_sexo + "</select>\
                             <input type='number' name='edad' id='edad' maxlength='10' placeholder='edad' value="+datos_usuario[3]+" required>\
@@ -160,6 +160,9 @@ class ResponseHtml():
 
             cadena="<html>\
                     <meta charset='utf-8'>\
+                    <form action='consulta_rango_edades' method='GET'>\
+                        <button class='btn btn-info'>Volver</button>\
+                    </form>\
                     <div class='row justify-content-center'>\
                         <div class='col-md-4'>\
                             <table class='table table-bordered'>\
@@ -177,8 +180,11 @@ class ResponseHtml():
                     </div>\
                     </html>"
         else:
-            cadena = "<div class='row justify-content-center'>\
-                    <h4>No se han encontrado usuarios en el rango solicitado.</h4>\
+            cadena = "<form action='consulta_rango_edades' method='GET'>\
+                        <button class='btn btn-info'>Volver</button>\
+                    </form>\
+                    <div class='row justify-content-center'>\
+                        <h4>No se han encontrado usuarios en el rango solicitado.</h4>\
                     </div>"
         self.setContentBody(cadena)
 
