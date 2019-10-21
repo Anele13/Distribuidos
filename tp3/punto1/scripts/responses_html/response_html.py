@@ -103,9 +103,9 @@ class ResponseHtml():
 
         cadena = "<html>\
                     <meta charset='utf-8'>\
-                    <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Inicio</a>\
                     <div class='row justify-content-center'>\
                         <form action='modificar_usuario' method='POST' name='alta_usuario_form' required>\
+                            <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Inicio</a>\
                             <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' value="+datos_usuario[0]+" required>\
                             <select name='select_sexo' id='select_sexo' placeholder='sexo'>"+ cadena_sexo + "</select>\
                             <input type='number' name='edad' id='edad' maxlength='10' placeholder='edad' value="+datos_usuario[3]+" required>\
@@ -160,9 +160,17 @@ class ResponseHtml():
 
             cadena="<html>\
                     <meta charset='utf-8'>\
-                    <form action='consulta_rango_edades' method='GET'>\
-                        <button class='btn btn-info'>Volver</button>\
-                    </form>\
+                    <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
+                    <div class='row justify-content-center'>\
+                    <form action='consulta_rango_edades' method='POST' name='consulta_rango_edades_form' required>\
+                        <select name='select_rango' id='select_rango' placeholder='rango_edades'>\
+                            <option value='1'>0-20</option>\
+                            <option value='2'>20-40</option>\
+                            <option value='3'>mas de 40</option>\
+                        </select>\
+                            <button class='btn btn-info' type='submit'>Buscar</button>\
+                        </form>\
+                    </div>\
                     <div class='row justify-content-center'>\
                         <div class='col-md-4'>\
                             <table class='table table-bordered'>\
@@ -180,11 +188,18 @@ class ResponseHtml():
                     </div>\
                     </html>"
         else:
-            cadena = "<form action='consulta_rango_edades' method='GET'>\
-                        <button class='btn btn-info'>Volver</button>\
-                    </form>\
+            cadena = "<html>\
+                    <meta charset='utf-8'>\
+                    <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
                     <div class='row justify-content-center'>\
-                        <h4>No se han encontrado usuarios en el rango solicitado.</h4>\
+                    <form action='consulta_rango_edades' method='POST' name='consulta_rango_edades_form' required>\
+                        <select name='select_rango' id='select_rango' placeholder='rango_edades'>\
+                            <option value='1'>0-20</option>\
+                            <option value='2'>20-40</option>\
+                            <option value='3'>mas de 40</option>\
+                        </select>\
+                            <button class='btn btn-info' type='submit'>Buscar</button>\
+                        </form>\
                     </div>"
         self.setContentBody(cadena)
 

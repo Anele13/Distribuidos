@@ -13,10 +13,12 @@ if __name__ == "__main__" :
     if os.environ['REQUEST_METHOD'] == 'POST':
         form =cgi.FieldStorage()
         rango = form.getvalue("select_rango")
-        lista_usuarios_en_rango = []
         lista_usuarios_en_rango = Orm.searchUsersInRange(rango)
-        html.set_http_response_busqueda_usuarios_en_rango(lista_usuarios_en_rango)
-
+        if lista_usuarios_en_rango:
+            html.set_http_response_busqueda_usuarios_en_rango(lista_usuarios_en_rango)
+        else:
+            html.set_http_response_busqueda_usuarios_en_rango()
+            html.set_http_alert("No se encontro ningun usuario en el rango especificado", "danger")
         html.render()
     else:
         html.set_http_response_rango_edades()
