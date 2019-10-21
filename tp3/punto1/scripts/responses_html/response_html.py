@@ -75,9 +75,9 @@ class ResponseHtml():
     def set_http_response_alta_usuario(self):
         cadena = "<html>\
                 <meta charset='utf-8'>\
+                <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
                 <div class='row justify-content-center'>\
                     <form action='alta_usuario' method='POST' name='alta_usuario_form' required>\
-                        <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
                         <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' required>\
                     <input type='number' name='legajo' id='legajo' min='1' max='9999' placeholder='legajo' required>\
                         <select name='select_sexo' id='select_sexo' placeholder='sexo'>\
