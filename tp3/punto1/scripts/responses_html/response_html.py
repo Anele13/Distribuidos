@@ -39,8 +39,9 @@ class ResponseHtml():
 
             cadena="<html>\
                     <meta charset='utf-8'>\
+                    <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
                     <div class='row justify-content-center'>\
-                        <form action='busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
+                         <form action='busqueda_usuario' method='POST' name='alta_usuario_form' class='form-inline'>\
                             <input type='text' name='clave' id='clave' maxlength='70' placeholder='Ingrese nombre de alumno' required>\
                             <button class='btn btn-info' type='submit'>Buscar</button>\
                         </form>\
@@ -62,7 +63,8 @@ class ResponseHtml():
                     </div>\
                     </html>"
         else:
-            cadena = "<div class='row justify-content-center'>\
+            cadena = "<a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
+                    <div class='row justify-content-center'>\
                     <form action='busqueda_usuario' method='POST' class='form-inline'>\
                         <input type='text' name='clave' id='clave' maxlength='70' placeholder='Ingrese nombre de alumno' required >\
                         <button class='btn btn-info' type='submit'>Buscar</button>\
@@ -73,9 +75,9 @@ class ResponseHtml():
     def set_http_response_alta_usuario(self):
         cadena = "<html>\
                 <meta charset='utf-8'>\
-                <button class='btn btn-info' type='submit' onclick='location.href='index2.html''>Volver</button>\
                 <div class='row justify-content-center'>\
                     <form action='alta_usuario' method='POST' name='alta_usuario_form' required>\
+                        <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
                         <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' required>\
                     <input type='number' name='legajo' id='legajo' min='1' max='9999' placeholder='legajo' required>\
                         <select name='select_sexo' id='select_sexo' placeholder='sexo'>\
@@ -102,12 +104,13 @@ class ResponseHtml():
         cadena = "<html>\
                     <meta charset='utf-8'>\
                     <div class='row justify-content-center'>\
-                        '<form action='modificar_usuario' method='POST' name='alta_usuario_form' required>\
+                        <form action='modificar_usuario' method='POST' name='alta_usuario_form' required>\
+                            <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Inicio</a>\
                             <input type='text' name='nya' id='nya' maxlength='70' placeholder='nombre y apellido' value="+datos_usuario[0]+" required>\
                             <select name='select_sexo' id='select_sexo' placeholder='sexo'>"+ cadena_sexo + "</select>\
                             <input type='number' name='edad' id='edad' maxlength='10' placeholder='edad' value="+datos_usuario[3]+" required>\
                             <input type='password' placeholder='pwd' name='pwd' id='pwd' value="+datos_usuario[4]+" required>\
-                            <button class='btn btn-info' type='submit' value='submit' name='boton_submit_modificacion' id='boton_submit_modificacion'> Modificar </button>'\
+                            <button class='btn btn-info' type='submit' value='submit' name='boton_submit_modificacion' id='boton_submit_modificacion'> Modificar </button>\
                         </form>\
                     </div>\
                 </html>"
@@ -119,6 +122,7 @@ class ResponseHtml():
                     <meta charset='utf-8'>\
                         <html>\
                             <meta charset='utf-8'>\
+                            <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
                             <div class='row justify-content-center'>\
                                 <form action='login' method='POST' class='form-inline'>\
                                     <input type='text' name='legajo' id='legajo' maxlength='70' placeholder='Numero de alumno (legajo)' required>\
@@ -133,6 +137,7 @@ class ResponseHtml():
     def set_http_response_rango_edades(self):
         cadena = "<html>\
                 <meta charset='utf-8'>\
+                <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
                 <div class='row justify-content-center'>\
                 <form action='consulta_rango_edades' method='POST' name='consulta_rango_edades_form' required>\
                     <select name='select_rango' id='select_rango' placeholder='rango_edades'>\

@@ -10,26 +10,14 @@ from orm.orm import Orm
 
 if __name__ == "__main__" :
     html = ResponseHtml()
-    # html.set_http_response_rango_edades()
-    # html.render()
     if os.environ['REQUEST_METHOD'] == 'POST':
         form =cgi.FieldStorage()
         rango = form.getvalue("select_rango")
         lista_usuarios_en_rango = []
         lista_usuarios_en_rango = Orm.searchUsersInRange(rango)
         html.set_http_response_busqueda_usuarios_en_rango(lista_usuarios_en_rango)
-        html.render()
-        # enviar_datos(lista_usuarios_en_rango)
-        # if (len(lista_usuarios_en_rango) > 0):
-        #     cadena = "<html><p>aaaaa"+ str(lista_usuarios_en_rango[0]) +"aaaa</p></html>"
-        #     html.setContentBody(cadena)
-        #     html.render()
-        # else:
-        #     cadena2 = "<html><h1>No hay usuarios en el rango solicitado.</h1></html>"
-        #     html.setContentBody(cadena2)
-        # # html.set_http_response_rango_edades()
-        #     html.render()
 
+        html.render()
     else:
         html.set_http_response_rango_edades()
         html.render()
