@@ -145,7 +145,7 @@ class ResponseHtml():
                         <option value='2'>20-40</option>\
                         <option value='3'>mas de 40</option>\
                     </select>\
-                        <button class='btn-default' type='submit'>Buscar</button>\
+                        <button class='btn btn-info' type='submit'>Buscar</button>\
                     </form>\
                 </div>\
             </html>"
@@ -160,6 +160,17 @@ class ResponseHtml():
 
             cadena="<html>\
                     <meta charset='utf-8'>\
+                    <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
+                    <div class='row justify-content-center'>\
+                    <form action='consulta_rango_edades' method='POST' name='consulta_rango_edades_form' required>\
+                        <select name='select_rango' id='select_rango' placeholder='rango_edades'>\
+                            <option value='1'>0-20</option>\
+                            <option value='2'>20-40</option>\
+                            <option value='3'>mas de 40</option>\
+                        </select>\
+                            <button class='btn btn-info' type='submit'>Buscar</button>\
+                        </form>\
+                    </div>\
                     <div class='row justify-content-center'>\
                         <div class='col-md-4'>\
                             <table class='table table-bordered'>\
@@ -177,8 +188,18 @@ class ResponseHtml():
                     </div>\
                     </html>"
         else:
-            cadena = "<div class='row justify-content-center'>\
-                    <h4>No se han encontrado usuarios en el rango solicitado.</h4>\
+            cadena = "<html>\
+                    <meta charset='utf-8'>\
+                    <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
+                    <div class='row justify-content-center'>\
+                    <form action='consulta_rango_edades' method='POST' name='consulta_rango_edades_form' required>\
+                        <select name='select_rango' id='select_rango' placeholder='rango_edades'>\
+                            <option value='1'>0-20</option>\
+                            <option value='2'>20-40</option>\
+                            <option value='3'>mas de 40</option>\
+                        </select>\
+                            <button class='btn btn-info' type='submit'>Buscar</button>\
+                        </form>\
                     </div>"
         self.setContentBody(cadena)
 
