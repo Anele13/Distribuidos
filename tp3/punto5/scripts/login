@@ -1,0 +1,74 @@
+#!/usr/byn/python3
+
+import cgi,cgitb
+import csv
+import os
+from http import cookies
+import time, hashlib
+from responses_html.response_html import ResponseHtml
+from orm.orm import Orm
+
+def crear_cookie():
+    cookie = cookies.SimpleCookie()
+    # The sid will be a hash of the server time
+    sid = hashlib.md5(repr(time.time()).encode()).hexdigest()
+    # Set the sid in the cookie
+    cookie["sid"] = sid
+    # Will expire in a year
+    cookie["sid"]["expires"] = 12 * 30 * 24 * 60 * 60
+    return cookie
+
+def get_token_from_cookie(string_cookie, cookie_existente=None):
+    """
+    Metodo que devuelve el token asociado a la cookie completa
+    """
+    if cookie_existente: #Ya viene creada la cookie
+        return cookie_existente["sid"].value 
+    # obtengo la cookie del querystring
+    cookie = cookies.SimpleCookie()
+    cookie.load(string_cookie)
+    return cookie["sid"].value #Token de cookie
+
+
+def login(html):
+    """
+    Ademas de loguear debe setear una cookie para el usuario
+    """
+    form = cgi.FieldStorage()
+    nick = form.getvalue("nick") #Busqueda por campo clave: nick
+    date = form.getvalue("date")
+    cookie = crear_cookie()
+
+    if (Orm.searchUser(nick)):
+        html.setCookie(cookie) #Seteo nueva cookie
+        token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
+        Orm.saveTokenInTokenfile(nick, token, date)
+        html.redirect("chat")
+    else:
+        html.set_http_alert("Nick en uso. Reintente mas tarde o con otro nick.", "danger")
+        html.set_http_response_login()
+        html.render()
+    
+
+if __name__ == "__main__" :
+    html = ResponseHtml()
+    if os.environ['REQUEST_METHOD'] == 'POST':
+        login(html)
+    else:
+        string_cookie = os.environ.get('HTTP_COOKIE')
+        if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
+            token = get_token_from_cookie(string_cookie)
+            if Orm.findTokenInTokenFile(token):
+                #Levanto la cookie
+                cookie = cookies.SimpleCookie()
+                cookie.load(string_cookie)
+                html.setCookie(cookie)
+                html.redirect("chat")
+            else: #Sesion vencida
+                html.set_http_alert("Cookie vencida. Reintente", "danger")
+                html.set_http_response_login()
+                html.render()
+        else: #No hay cookie entonces hay que loguear
+            html.set_http_response_login()
+            html.render()    
+
