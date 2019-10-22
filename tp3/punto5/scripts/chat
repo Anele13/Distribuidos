@@ -1,0 +1,9 @@
+import so
+import cgi,  cgitb
+
+if __name__ == "__main__" :
+    if os.environ['REQUEST_METHOD'] == 'POST':
+        pass
+    else:
+        pass
+        
