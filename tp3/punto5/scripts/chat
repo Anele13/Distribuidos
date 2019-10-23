@@ -45,7 +45,7 @@ if __name__ == "__main__" :
         
         #if Orm.findTokenInTokenFile(token):
         if True:
-            timestamp = datetime.now()
+            timestamp = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
             lista_usuarios_en_vivo = Orm.getUsuariosEnVivo()
             
 
