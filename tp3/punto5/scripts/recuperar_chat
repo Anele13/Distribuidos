@@ -3,9 +3,8 @@
 import cgi,cgitb
 import os
 from responses_html.response_html import ResponseHtml
-#from orm.orm import Orm
 
-if __name__ == "__main__" :
+if __name__ == '__main__':
     html = ResponseHtml()
-    html.setContentBody(html.get_sala_de_chat())
+    html.setContentBody("hola esto es recuperar mensaje mensaje")
     html.render()
