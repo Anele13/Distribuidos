@@ -52,5 +52,18 @@ class Orm():
         return False 
     
 
-
+    @classmethod
+    def getUsuariosEnVivo(self):
+        """
+        Recorre el archivo de cookies y todos los usuarios que encuentra
+        los devuelve en una lista con sus nicks:
+        Ejemplo return ['negro','micho','tito','gordo']
+        """
+        with open('/usr/local/apache2/cookies.csv', 'r') as csvFile:
+            lista_usuarios = []
+            reader = csv.reader(csvFile)
+            for row in reader:
+                lista_usuarios.append(row[0]) #El nick del usuario
+        csv.close()
+        return lista_usuarios
 

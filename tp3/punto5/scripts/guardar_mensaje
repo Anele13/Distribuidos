@@ -1,0 +1,13 @@
+#!/usr/bin/python3
+
+import cgi,cgitb
+import os
+from responses_html.response_html import ResponseHtml
+
+if __name__ == '__main__':
+    html = ResponseHtml()
+    html.setContentBody("hola esto es guardar mensaje")
+    html.render()
+
+
+
