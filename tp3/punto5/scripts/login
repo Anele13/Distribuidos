@@ -1,4 +1,4 @@
-#!/usr/byn/python3
+#!/usr/bin/python3
 
 import cgi,cgitb
 import csv
@@ -51,7 +51,14 @@ def login(html):
     
 
 if __name__ == "__main__" :
+    # print("Content-type: text/html")
+    # print()
+    # print()
+    # print("<html><meta charset='utf-8'><p>AAAAAAAAAAAasdfdsfsAAAAAAAA</p></html>")
     html = ResponseHtml()
+    # html.setContentBody("<html><p>AAAAAA</p></html>")
+    # html.set_http_response_login()
+    # html.render()
     if os.environ['REQUEST_METHOD'] == 'POST':
         login(html)
     else:
