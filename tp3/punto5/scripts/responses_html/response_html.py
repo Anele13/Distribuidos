@@ -10,8 +10,6 @@ class ResponseHtml():
     message = None
     body = None
 
-    def __init__(self):
-        self.sala_de_chat = self.get_sala_de_chat()
 
     def get_static(self):
         """
@@ -215,18 +213,40 @@ class ResponseHtml():
     # MEtodos para chat
     #---------------------------------------------------------------------------------------------------------
 
-    def get_sala_de_chat(self, usuarios_activos=None, mensajes_usuarios=None):
+    def set_http_response_sala_de_chat(self, usuarios_activos=None, mensajes_usuarios=None, usuario_que_solicita=None):
 
         usuariosActivos = ""
         mensajesDeChat = ""
 
         if usuarios_activos:
             for usuario in usuarios_activos:
-                pass
-        
+                usuariosActivos = usuariosActivos + "<div class='chat_list'>\
+                                                        <div class='chat_people'>\
+                                                            <div class='chat_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>\
+                                                            <div class='chat_ib'>\
+                                                            <h5>"+ usuario +" <span class='chat_date'>Dec 25</span></h5>\
+                                                            <p> Hola soy un usuario.</p>\
+                                                            </div>\
+                                                        </div>\
+                                                    </div>"
+                
         if mensajes_usuarios:
             for mensaje in mensajes_usuarios:
-                pass
+                if mensaje[0] == usuario_que_solicita:
+                    mensajesDeChat = mensajesDeChat + "<div class='incoming_msg'>\
+                                                        <div class='incoming_msg_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>\
+                                                        <div class='received_msg'>\
+                                                            <div class='received_withd_msg'>\
+                                                            <p>"+mensaje[1]+"</p>\
+                                                            <span class='time_date'>"+mensaje[2]+"</span></div>\
+                                                        </div>\
+                                                        </div>"
+                else:
+                    mensajesDeChat = mensajesDeChat + "<div class='outgoing_msg'>\
+                                                        <div class='sent_msg'>\
+                                                            <p>"+mensaje[1]+"</p>\
+                                                            <span class='time_date'>"+mensaje[2]+"</span></div>\
+                                                        </div>"
 
         sala_chat = "<style>\
                     .container{max-width:1170px; margin:auto;}\
@@ -375,14 +395,10 @@ class ResponseHtml():
                                     </span> </div>\
                                 </div>\
                             </div>\
-                            <div class='inbox_chat'>\
-                                <!-- active chat -->\
-                            </div>\
+                            <div class='inbox_chat'>"+ usuariosActivos + "</div>\
                             </div>\
                             <div class='mesgs'>\
-                            <div class='msg_history'>\
-                                <!-- incoming message y outcomming message -->\
-                            </div>\
+                            <div class='msg_history'>"+ mensajesDeChat +"</div>\
                             <div class='type_msg'>\
                                 <div class='input_msg_write'>\
                                 <input type='text' class='write_msg' placeholder='Type a message' />\
@@ -395,7 +411,7 @@ class ResponseHtml():
                         </div></div>\
                         </body>\
                         </html>"
-        return sala_chat
+        self.setContentBody(sala_chat)
 
 
 
