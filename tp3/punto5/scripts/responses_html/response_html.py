@@ -11,7 +11,7 @@ class ResponseHtml():
     body = None
 
     def __init__(self):
-        self.
+        self.sala_de_chat = self.get_sala_de_chat()
 
     def get_static(self):
         """
@@ -20,8 +20,9 @@ class ResponseHtml():
         static_path ="<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>\
                     <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
                     <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous'></script>\
-                    <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>"
-            
+                    <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>\
+                    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css' type='text/css' rel='stylesheet'>"
+
         return static_path
 
 
@@ -214,7 +215,19 @@ class ResponseHtml():
     # MEtodos para chat
     #---------------------------------------------------------------------------------------------------------
 
-    def get_sala_de_chat(self):
+    def get_sala_de_chat(self, usuarios_activos=None, mensajes_usuarios=None):
+
+        usuariosActivos = ""
+        mensajesDeChat = ""
+
+        if usuarios_activos:
+            for usuario in usuarios_activos:
+                pass
+        
+        if mensajes_usuarios:
+            for mensaje in mensajes_usuarios:
+                pass
+
         sala_chat = "<style>\
                     .container{max-width:1170px; margin:auto;}\
                     img{ max-width:100%;}\
@@ -342,8 +355,47 @@ class ResponseHtml():
                     height: 516px;\
                     overflow-y: auto;\
                     }\
-                    "
-
+                    </style>\
+                    <html>\
+                    <body>\
+                    <div class='container'>\
+                    <h3 class=' text-center'>Messaging</h3>\
+                    <div class='messaging'>\
+                        <div class='inbox_msg'>\
+                            <div class='inbox_people'>\
+                            <div class='headind_srch'>\
+                                <div class='recent_heading'>\
+                                <h4>Recent</h4>\
+                                </div>\
+                                <div class='srch_bar'>\
+                                <div class='stylish-input-group'>\
+                                    <input type='text' class='search-bar'  placeholder='Search' >\
+                                    <span class='input-group-addon'>\
+                                    <button type='button'> <i class='fa fa-search' aria-hidden='true'></i> </button>\
+                                    </span> </div>\
+                                </div>\
+                            </div>\
+                            <div class='inbox_chat'>\
+                                <!-- active chat -->\
+                            </div>\
+                            </div>\
+                            <div class='mesgs'>\
+                            <div class='msg_history'>\
+                                <!-- incoming message y outcomming message -->\
+                            </div>\
+                            <div class='type_msg'>\
+                                <div class='input_msg_write'>\
+                                <input type='text' class='write_msg' placeholder='Type a message' />\
+                                <button class='msg_send_btn' type='button'><i class='fa fa-paper-plane-o' aria-hidden='true'></i></button>\
+                                </div>\
+                            </div>\
+                            </div>\
+                        </div>\
+                        <p class='text-center top_spac'> Design by <a target='_blank' href='#'>Sunil Rajput</a></p>\
+                        </div></div>\
+                        </body>\
+                        </html>"
+        return sala_chat
 
 
 
