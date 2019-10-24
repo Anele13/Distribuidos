@@ -9,6 +9,7 @@ class ResponseHtml():
     cookie = None
     message = None
     body = None
+    is_ajax_response = False
 
 
     def get_static(self):
@@ -214,6 +215,11 @@ class ResponseHtml():
     #---------------------------------------------------------------------------------------------------------
     # MEtodos para chat
     #---------------------------------------------------------------------------------------------------------
+
+    def set_ajax_response(self, response):
+        self.setContentBody(response)
+        self.is_ajax_response = True
+
 
     def set_http_response_sala_de_chat(self, usuarios_activos=None, mensajes_usuarios=None, usuario_que_solicita=None):
 
@@ -447,7 +453,10 @@ class ResponseHtml():
         Metodo para renderizar el html desde cualquier CGI
         """
         # Cabecera
-        print(self.header)
+        if self.is_ajax_response:
+            print("Content-type: application/json")
+        else:
+            print(self.header)
         # Cookie
         if (self.cookie):
             print(self.cookie)
@@ -456,7 +465,8 @@ class ResponseHtml():
             print()
             print()
         # Body del html
-        print(self.get_static()) # path a estaticos bootstrap   
+        if not self.is_ajax_response:
+            print(self.get_static()) # path a estaticos bootstrap   
         if (self.message):
             print(self.message)
         print(self.body)
