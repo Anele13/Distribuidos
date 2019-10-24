@@ -7,6 +7,8 @@ from http import cookies
 import time, hashlib
 from responses_html.response_html import ResponseHtml
 from orm.orm import Orm
+from datetime import datetime
+
 
 def crear_cookie():
     cookie = cookies.SimpleCookie()
@@ -36,10 +38,12 @@ def login(html):
     """
     form = cgi.FieldStorage()
     nick = form.getvalue("nick") #Busqueda por campo clave: nick
-    date = form.getvalue("date")
+    date = datetime.now() #Guardo el tiempo en el que se hizo el login.
     cookie = crear_cookie()
 
-    if (Orm.searchUser(nick)):
+    # Orm.searchUser(nick,html)
+
+    if (not Orm.searchUser(nick)):
         html.setCookie(cookie) #Seteo nueva cookie
         token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
         Orm.saveTokenInTokenfile(nick, token, date)
@@ -51,14 +55,9 @@ def login(html):
     
 
 if __name__ == "__main__" :
-    # print("Content-type: text/html")
-    # print()
-    # print()
-    # print("<html><meta charset='utf-8'><p>AAAAAAAAAAAasdfdsfsAAAAAAAA</p></html>")
+    
     html = ResponseHtml()
-    # html.setContentBody("<html><p>AAAAAA</p></html>")
-    # html.set_http_response_login()
-    # html.render()
+
     if os.environ['REQUEST_METHOD'] == 'POST':
         login(html)
     else:

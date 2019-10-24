@@ -15,24 +15,19 @@ class Orm():
     @classmethod
     def searchUser(self, nick=None):
         """
-        Devuelve true o false si encuentra o no al alumno por legajo
+        Devuelve true o false si encuentra o no al usuario por nick
         """
-        with open('/usr/local/apache2/usuarios.csv', 'r') as csvFile:
+        with open('/usr/local/apache2/cookies.csv', 'r') as csvFile:
             reader = csv.reader(csvFile)
             for row in reader:
                 if nick == row[0]:
-                    csvFile.close()
                     return True
-                else:
-                    csvFile.close()
-                    return False
-        csvFile.close()
         return False
     
     @classmethod
     def saveTokenInTokenfile(self, nick, token, date):
         """
-        Metodo que guarda en el archivo de tokens: legajo, pwd, token (EN ESE ORDEN)
+        Metodo que guarda en el archivo de tokens: nick,token y date (EN ESE ORDEN)
         """
         row = [nick,token, date]
         with open('/usr/local/apache2/cookies.csv', 'a') as csvFile:
@@ -95,3 +90,5 @@ class Orm():
                 lista_usuarios.append(row[0])
         csvFile.close()
         return lista_usuarios
+
+    

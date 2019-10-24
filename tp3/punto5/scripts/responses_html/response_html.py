@@ -131,8 +131,7 @@ class ResponseHtml():
                             <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
                             <div class='row justify-content-center'>\
                                 <form action='login' method='POST' class='form-inline'>\
-                                    <input type='text' name='legajo' id='legajo' maxlength='70' placeholder='Numero de alumno (legajo)' required>\
-                                    <input type='password' name='pwd' id='pwd' maxlength='70' placeholder='Contraseña' required>\
+                                    <input type='text' name='nick' id='nick' maxlength='70' placeholder='Nombre de usuario (nick)' required>\
                                     <button class='btn btn-info' type='submit'>Login</button>\
                                 </form>\
                             </div>\
