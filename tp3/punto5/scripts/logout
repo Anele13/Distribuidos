@@ -1,0 +1,34 @@
+#!/usr/bin/python3
+
+import cgi,cgitb
+import csv
+from responses_html.response_html import ResponseHtml
+from orm.orm import Orm
+
+
+
+def get_token_from_cookie(string_cookie, cookie_existente=None):
+    """
+    Metodo que devuelve el token asociado a la cookie completa
+    """
+    if cookie_existente: #Ya viene creada la cookie
+        return cookie_existente["sid"].value 
+    # obtengo la cookie del querystring
+    cookie = cookies.SimpleCookie()
+    cookie.load(string_cookie)
+    return cookie["sid"].value #Token de cookie
+
+
+
+if __name__ == "__main__" :
+    html = ResponseHtml()
+    
+    string_cookie = os.environ.get('HTTP_COOKIE')
+    # token = get_token_from_cookie(string_cookie)
+    
+
+    # nick = Orm.getNickFromCookie(token)
+    # Orm.removeUser(nick)
+    # Orm.removeCookie(token)
+    html.setContentBody("<html><p>AAAAAAAAAAAAAAAAAAAA</p></html>")
+    html.render()

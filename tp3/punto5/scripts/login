@@ -47,6 +47,7 @@ def login(html):
         html.setCookie(cookie) #Seteo nueva cookie
         token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
         Orm.saveTokenInTokenfile(nick, token, date)
+        Orm.createUser(nick,date)
         html.redirect("chat")
     else:
         html.set_http_alert("Nick en uso. Reintente mas tarde o con otro nick.", "danger")
@@ -55,7 +56,7 @@ def login(html):
     
 
 if __name__ == "__main__" :
-    
+
     html = ResponseHtml()
 
     if os.environ['REQUEST_METHOD'] == 'POST':
