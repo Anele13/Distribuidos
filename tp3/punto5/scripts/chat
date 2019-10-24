@@ -41,7 +41,7 @@ if __name__ == "__main__" :
     if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
         cookie = cookies.SimpleCookie()
         cookie.load(string_cookie)
-        #token = cookie['sid'].value
+        token = cookie['sid'].value
         
         #if Orm.findTokenInTokenFile(token):
         if True:
@@ -49,13 +49,13 @@ if __name__ == "__main__" :
             lista_usuarios_en_vivo = Orm.getUsuariosEnVivo()
             
 
-            usuario = 'anele'
-            lista_nuevos_mensajes = Orm.getNuevosMensajes(timestamp)
+            nick = Orm.getUserFromTokenfile(token)
+            lista_nuevos_mensajes = Orm.getNuevosMensajes(nick,timestamp)
             
             
             cookie['timestamp'] = timestamp
             html.setCookie(cookie)
-            html.set_http_response_sala_de_chat(lista_usuarios_en_vivo, lista_nuevos_mensajes, usuario)
+            html.set_http_response_sala_de_chat(lista_usuarios_en_vivo, lista_nuevos_mensajes, nick)
             
             
             #html.setContentBody(cookie['timestamp'])
@@ -65,10 +65,8 @@ if __name__ == "__main__" :
             html.redirect("login")
     else:
         #no hay cookie
-        #html.redirect("login")
-        html.setCookie(crear_cookie())
-        html.setContentBody("HOlaa creando cookie")
-        html.render()
+        html.redirect("login")
+
 
 
 

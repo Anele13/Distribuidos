@@ -1,6 +1,7 @@
 import csv
 from tempfile import NamedTemporaryFile
 import shutil
+from datetime import datetime
 
 class Orm():
     """
@@ -66,12 +67,17 @@ class Orm():
 
 
     @classmethod
-    def getNuevosMensajes(self, timestamp):
+    def getNuevosMensajes(self, nick_sesion, timestamp):
         lista_mensajes = []
         with open(self.mensajes_filepath, 'r') as csvFile:
             reader = csv.reader(csvFile)
             for row in reader:
-                lista_mensajes.append(row)
+                timestamp_archivo = datetime.strptime(row[2],'%m/%d/%Y %H:%M:%S')
+                if (timestamp_archivo > datetime.strptime(timestamp,'%m/%d/%Y %H:%M:%S')):
+                    if (nick_sesion == row[0]):
+                        lista_mensajes.append([ 'nick-session-'+row[0], row[1], row[2] ]) #para diferenciar los msj que envio yo de los que recibo.
+                    else:
+                        lista_mensajes.append(row)
         csvFile.close()
         return lista_mensajes
 
@@ -90,5 +96,20 @@ class Orm():
                 lista_usuarios.append(row[0])
         csvFile.close()
         return lista_usuarios
+
+
+    @classmethod
+    def guardarNuevoMensaje(self, nick, mensaje,timestamp):
+        """
+        Guarda un mensaje entrante en el archivo de mensajes en formato:
+        ['nick', 'mensaje', 'timestamp']
+        """
+        if mensaje != None:
+            row = [nick, mensaje, timestamp]
+            with open(self.mensajes_filepath, 'a') as csvFile:
+                writer = csv.writer(csvFile)
+                writer.writerow(row)
+            csvFile.close()
+    
 
     
