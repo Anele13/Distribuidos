@@ -97,6 +97,17 @@ class Orm():
         csvFile.close()
         return lista_usuarios
 
+    @classmethod
+    def createUser(self, nick,date):
+        """
+        Metodo que sirve para dar de alta un nuevo usuario.
+        lanza una excepcion en caso de ingresar un legajo duplicado
+        """        
+        row = [nick, date]
+        with open(self.usuarios_filepath, 'a') as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerow(row)
+        csvFile.close()
 
     @classmethod
     def guardarNuevoMensaje(self, nick, mensaje,timestamp):
@@ -112,4 +123,74 @@ class Orm():
             csvFile.close()
     
 
+        with open(self.usuarios_filepath, 'w+') as csvFile:
+            writer = csv.writer(csvFile)
+            lista=[]
+            for row in writer:
+                if row[0] == nick:
+                    pass
+                else:
+                    lista.append(row)
+            writer.writerows(lista)
+        csvFile.close()
     
+    @classmethod
+    def removeCookie(self, token):
+        """
+        Metodo que sirve para dar borrar una cookie.
+        """        
+        with open(self.cookies_filepath, 'r') as csvFile:
+            reader = csv.reader(csvFile)
+            lista=[]
+            for row in reader:
+                lista.append(row)
+                if row[1] == token:
+                    lista.remove(row)
+            # writer.writerows(lista)
+        csvFile.close()
+        with open(self.cookies_filepath, 'w+') as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerows(lista)
+        csvFile.close()
+
+    @classmethod
+    def removeAllCookies(self, token):
+        """
+        Metodo que sirve para dar borrar una cookie.
+        """        
+
+        with open(self.cookies_filepath, 'w+') as csvFile:
+            writer = csv.writer(csvFile)
+            lista=[]
+            writer.writerows(lista)
+        csvFile.close()
+
+    @classmethod
+    def getNickFromCookie(self, token):
+        """
+        Metodo que sirve para obtener un nick a partir de una cookie.
+        """
+        with open(self.cookies_filepath, 'r') as csvFile:
+            reader = csv.writer(csvFile)
+            for row in reader:
+                if row[1] == token:
+                    nick = row[0]
+        csvFile.close()
+        return nick
+
+    @classmethod
+    def removeUser(self, nick):
+        """
+        Metodo que sirve para dar borrar una cookie.
+        """        
+
+        with open(self.usuarios_filepath, 'w+') as csvFile:
+            writer = csv.writer(csvFile)
+            lista=[]
+            for row in writer:
+                if row[0] == nick:
+                    pass
+                else:
+                    lista.append(row)
+            writer.writerows(lista)
+        csvFile.close()

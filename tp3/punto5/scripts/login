@@ -38,16 +38,17 @@ def login(html):
     """
     form = cgi.FieldStorage()
     nick = form.getvalue("nick") #Busqueda por campo clave: nick
-    date = datetime.now() #Guardo el tiempo en el que se hizo el login.
+    date = datetime.now().strftime("%m/%d/%Y %H:%M:%S") #Guardo el tiempo en el que se hizo el login.
     cookie = crear_cookie()
-
-    # Orm.searchUser(nick,html)
 
     if (not Orm.searchUser(nick)):
         html.setCookie(cookie) #Seteo nueva cookie
         token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
         Orm.saveTokenInTokenfile(nick, token, date)
-        html.redirect("chat")
+        Orm.createUser(nick,date)
+        html.set_http_response_login()
+        html.render()
+        # html.redirect("chat")
     else:
         html.set_http_alert("Nick en uso. Reintente mas tarde o con otro nick.", "danger")
         html.set_http_response_login()
@@ -55,7 +56,7 @@ def login(html):
     
 
 if __name__ == "__main__" :
-    
+
     html = ResponseHtml()
 
     if os.environ['REQUEST_METHOD'] == 'POST':
@@ -69,7 +70,9 @@ if __name__ == "__main__" :
                 cookie = cookies.SimpleCookie()
                 cookie.load(string_cookie)
                 html.setCookie(cookie)
-                html.redirect("chat")
+                html.set_http_response_login()
+                html.render()
+                # html.redirect("chat")
             else: #Sesion vencida
                 html.set_http_alert("Cookie vencida. Reintente", "danger")
                 html.set_http_response_login()

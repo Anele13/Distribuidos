@@ -136,6 +136,9 @@ class ResponseHtml():
                                     <button class='btn btn-info' type='submit'>Login</button>\
                                 </form>\
                             </div>\
+                            <form action='logout' method='GET' class='form-inline'>\
+                                <button class='btn btn-info' type='submit'>Logout</button>\
+                            </form>\
                         </html>"
         self.setContentBody(cadena)
 
@@ -449,18 +452,23 @@ class ResponseHtml():
         """
         Metodo para renderizar el html desde cualquier CGI
         """
+        # Cookie
+        if (self.cookie):
+            print(self.cookie)
         # Cabecera
         if self.is_ajax_response:
             print("Content-type: application/json")
         else:
             print(self.header)
         # Cookie
-        if (self.cookie):
-            print(self.cookie)
-            print()            
-        else:
-            print()
-            print()
+        # if (self.cookie):
+        #     print(self.cookie)
+        #     print()            
+        # else:
+        #     print()
+        #     print()
+        print()
+        print()
         # Body del html
         if not self.is_ajax_response:
             print(self.get_static()) # path a estaticos bootstrap   
