@@ -139,18 +139,31 @@ class Orm():
         """
         Metodo que sirve para dar borrar una cookie.
         """        
+        with open(self.cookies_filepath, 'r') as csvFile:
+            reader = csv.reader(csvFile)
+            lista=[]
+            for row in reader:
+                lista.append(row)
+                if row[1] == token:
+                    lista.remove(row)
+            # writer.writerows(lista)
+        csvFile.close()
+        with open(self.cookies_filepath, 'w+') as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerows(lista)
+        csvFile.close()
+
+    @classmethod
+    def removeAllCookies(self, token):
+        """
+        Metodo que sirve para dar borrar una cookie.
+        """        
 
         with open(self.cookies_filepath, 'w+') as csvFile:
             writer = csv.writer(csvFile)
             lista=[]
-            for row in writer:
-                if row[1] == token:
-                    pass
-                else:
-                    lista.append(row)
             writer.writerows(lista)
         csvFile.close()
-
 
     @classmethod
     def getNickFromCookie(self, token):
@@ -164,3 +177,20 @@ class Orm():
                     nick = row[0]
         csvFile.close()
         return nick
+
+    @classmethod
+    def removeUser(self, nick):
+        """
+        Metodo que sirve para dar borrar una cookie.
+        """        
+
+        with open(self.usuarios_filepath, 'w+') as csvFile:
+            writer = csv.writer(csvFile)
+            lista=[]
+            for row in writer:
+                if row[0] == nick:
+                    pass
+                else:
+                    lista.append(row)
+            writer.writerows(lista)
+        csvFile.close()
