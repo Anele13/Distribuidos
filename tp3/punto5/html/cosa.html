@@ -172,7 +172,6 @@
         </html>"
 
         <script>
-
         var input = document.getElementById("input_write_msg");
         input.addEventListener("keyup", function(event) {
             // Number 13 is the "Enter" key on the keyboard
@@ -182,7 +181,6 @@
                 send_message();
             }
         }); 
-
         function send_message(){
             var mensaje = $(".write_msg").val();
             $(".write_msg").val("");
@@ -197,7 +195,6 @@
                 }
             });
         }
-        
         // Funcion para refrescar mensajes nuevos
         timer_id = setInterval(function(){
             $.ajax({
@@ -236,5 +233,4 @@
                     }
             });
         }, 300);
-
         </script>
