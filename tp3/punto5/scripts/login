@@ -50,29 +50,39 @@ def login(html):
             html.set_http_response_login()
             html.render()
         else:
-            if (not Orm.searchUser(nick)):
+            if ((not Orm.searchUser(nick)) and (nick.strip())):
                 html.setCookie(cookie) #Seteo nueva cookie        
                 token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
                 Orm.saveTokenInTokenfile(nick, token, date)
                 # Orm.createUser(nick,date) # No la usamos el create user porque no nos interesa el archivo de usuarios.
-                html.set_http_alert("Usuario logeado exitosamente.","success")
+                html.set_http_alert("Usuario logeado exitosamente 2.","success")
                 html.set_http_response_login()
                 html.render()
                 # html.redirect("chat")
+            else:
+                if not nick.strip():
+                    html.set_http_alert("No se aceptan usuarios sin nombre.","danger")
+                    html.set_http_response_login()
+                    html.render()
     else:
-        if (not Orm.searchUser(nick)):
+        if ((not Orm.searchUser(nick)) and (nick.strip())):
             html.setCookie(cookie) #Seteo nueva cookie        
             token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
             Orm.saveTokenInTokenfile(nick, token, date)
             # Orm.createUser(nick,date) # No la usamos el create user porque no nos interesa el archivo de usuarios.
-            html.set_http_alert("Usuario logeado exitosamente.","success")
+            html.set_http_alert("Usuario logeado exitosamente 1.","success")
             html.set_http_response_login()
             html.render()
             # html.redirect("chat")
         else:
-            html.set_http_alert("Nick en uso. Reintente mas tarde o con otro nick.", "danger")
-            html.set_http_response_login()
-            html.render()
+            if not nick.strip():
+                html.set_http_alert("No se aceptan usuarios sin nombre.","danger")
+                html.set_http_response_login()
+                html.render()
+            else:    
+                html.set_http_alert("Nick en uso. Reintente mas tarde o con otro nick.", "danger")
+                html.set_http_response_login()
+                html.render()
     
 
 if __name__ == "__main__" :
