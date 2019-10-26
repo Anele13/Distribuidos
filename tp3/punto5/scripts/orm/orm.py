@@ -194,3 +194,16 @@ class Orm():
                     lista.append(row)
             writer.writerows(lista)
         csvFile.close()
+    
+    @classmethod
+    def estoy_logeado(self, token):
+        """
+        Metodo que saber si una cookie esta en uso o no según un token.
+        """
+        with open(self.cookies_filepath, 'r') as csvFile:
+            reader = csv.reader(csvFile)
+            for row in reader:
+                if row[1] == token:
+                    return True
+        csvFile.close()
+        return False

@@ -40,19 +40,39 @@ def login(html):
     nick = form.getvalue("nick") #Busqueda por campo clave: nick
     date = datetime.now().strftime("%m/%d/%Y %H:%M:%S") #Guardo el tiempo en el que se hizo el login.
     cookie = crear_cookie()
-
-    if (not Orm.searchUser(nick)):
-        html.setCookie(cookie) #Seteo nueva cookie
-        token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
-        Orm.saveTokenInTokenfile(nick, token, date)
-        Orm.createUser(nick,date)
-        html.set_http_response_login()
-        html.render()
-        # html.redirect("chat")
+    
+    string_cookie = os.environ.get('HTTP_COOKIE')
+    
+    if string_cookie:
+        tokenNavegador = get_token_from_cookie(string_cookie) 
+        if Orm.estoy_logeado(tokenNavegador):
+            html.set_http_alert("Ya estas logeado./a.", "danger")
+            html.set_http_response_login()
+            html.render()
+        else:
+            if (not Orm.searchUser(nick)):
+                html.setCookie(cookie) #Seteo nueva cookie        
+                token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
+                Orm.saveTokenInTokenfile(nick, token, date)
+                # Orm.createUser(nick,date) # No la usamos el create user porque no nos interesa el archivo de usuarios.
+                html.set_http_alert("Usuario logeado exitosamente.","success")
+                html.set_http_response_login()
+                html.render()
+                # html.redirect("chat")
     else:
-        html.set_http_alert("Nick en uso. Reintente mas tarde o con otro nick.", "danger")
-        html.set_http_response_login()
-        html.render()
+        if (not Orm.searchUser(nick)):
+            html.setCookie(cookie) #Seteo nueva cookie        
+            token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
+            Orm.saveTokenInTokenfile(nick, token, date)
+            # Orm.createUser(nick,date) # No la usamos el create user porque no nos interesa el archivo de usuarios.
+            html.set_http_alert("Usuario logeado exitosamente.","success")
+            html.set_http_response_login()
+            html.render()
+            # html.redirect("chat")
+        else:
+            html.set_http_alert("Nick en uso. Reintente mas tarde o con otro nick.", "danger")
+            html.set_http_response_login()
+            html.render()
     
 
 if __name__ == "__main__" :
@@ -65,19 +85,26 @@ if __name__ == "__main__" :
         string_cookie = os.environ.get('HTTP_COOKIE')
         if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
             token = get_token_from_cookie(string_cookie)
-            if Orm.findTokenInTokenFile(token):
-                #Levanto la cookie
-                cookie = cookies.SimpleCookie()
-                cookie.load(string_cookie)
-                html.setCookie(cookie)
+            if Orm.estoy_logeado(token):
+                html.set_http_alert("Ya estas logeado./a.", "danger")
                 html.set_http_response_login()
                 html.render()
-                # html.redirect("chat")
-            else: #Sesion vencida
-                html.set_http_alert("Cookie vencida. Reintente", "danger")
-                html.set_http_response_login()
-                html.render()
+            else:
+                if Orm.findTokenInTokenFile(token):
+                    #Levanto la cookie
+                    cookie = cookies.SimpleCookie()
+                    cookie.load(string_cookie)
+                    html.setCookie(cookie)
+                    html.set_http_alert("Se te asigno una cookie","danger")
+                    html.set_http_response_login()
+                    html.render()
+                    # html.redirect("chat")
+                else: #Sesion vencida
+                    html.set_http_alert("No estas logeado/a.", "danger")
+                    html.set_http_response_login()
+                    html.render()
         else: #No hay cookie entonces hay que loguear
+            html.set_http_alert("No tenes cookie asignada.","danger")
             html.set_http_response_login()
             html.render()    
 
