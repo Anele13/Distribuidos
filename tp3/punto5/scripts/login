@@ -37,54 +37,24 @@ def login(html):
     Ademas de loguear debe setear una cookie para el usuario
     """
     form = cgi.FieldStorage()
-    nick = form.getvalue("nick") #Busqueda por campo clave: nick
+    nick = form.getvalue("nick")
     estado = form.getvalue("estado")
     date = datetime.now().strftime("%m/%d/%Y %H:%M:%S") #Guardo el tiempo en el que se hizo el login.
-    
-    cookie = crear_cookie()
-    #cookie['timestamp'] = date #Esto recien se hace cuando pasas al chat.
-    
-    string_cookie = os.environ.get('HTTP_COOKIE')
-    
-    if string_cookie:
-        tokenNavegador = get_token_from_cookie(string_cookie) 
-        if Orm.estoy_logeado(tokenNavegador):
-            #html.set_http_alert("Ya estas logeado./a.", "danger")
-            #html.set_http_response_login()
-            #html.render()
-            html.redirect("chat")
-        else:
-            """
-            if (not Orm.searchUser(nick)):
-                html.setCookie(cookie) #Seteo nueva cookie        
-                token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
-                Orm.saveTokenInTokenfile(nick, token, date)
-                # Orm.createUser(nick,date) # No la usamos el create user porque no nos interesa el archivo de usuarios.
-                #html.set_http_alert("Usuario logeado exitosamente.","success")
-                #html.set_http_response_login()
-                #html.render()
-                html.redirect("chat")
-            """
-            # Si habia cookie pero es invalida entonces lo mando a login otra vez
-            html.set_http_response_login()
-            html.render()
 
-
+    if (not Orm.searchUser(nick)):
+        cookie = crear_cookie()
+        html.setCookie(cookie)        
+        token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
+        Orm.saveTokenInTokenfile(nick, token, date, estado)
+        html.redirect("chat")
     else:
-        if (not Orm.searchUser(nick)):
-            html.setCookie(cookie) #Seteo nueva cookie        
-            token = get_token_from_cookie(None, cookie) #Asocio token de cookie a usuario en tokenfile
-            Orm.saveTokenInTokenfile(nick, token, date, estado)
-            html.redirect("chat")
-        else:
-            html.set_http_alert("Nick en uso. Reintente mas tarde o con otro nick.", "danger") # Perfecto!
-            html.set_http_response_login()
-            html.render()
+        html.set_http_alert("Nick en uso. Reintente mas tarde o con otro nick.", "danger") # Perfecto!
+        html.set_http_response_login()
+        html.render()
 
     
 
 if __name__ == "__main__" :
-
     html = ResponseHtml()
 
     if os.environ['REQUEST_METHOD'] == 'POST':
@@ -93,37 +63,12 @@ if __name__ == "__main__" :
         string_cookie = os.environ.get('HTTP_COOKIE')
         if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
             token = get_token_from_cookie(string_cookie)
-            
             if Orm.estoy_logeado(token): # Este metodo es el mismo que 'findTokenInTokenFile'
-                #html.set_http_alert("Ya estas logeado./a.", "danger")
-                #html.set_http_response_login()
-                #html.render()
-                # Si ya estas logueado entonces anda al chat!
                 html.redirect("chat")
             else:
-                """
-                if Orm.findTokenInTokenFile(token):
-                    #Levanto la cookie
-                    cookie = cookies.SimpleCookie()
-                    cookie.load(string_cookie)
-                    html.setCookie(cookie)
-                    html.set_http_alert("Se te asigno una cookie","danger")
-                    html.set_http_response_login()
-                    html.render()
-                    # html.redirect("chat")
-                else: #Sesion vencida
-                    html.set_http_alert("No estas logeado/a.", "danger")
-                    html.set_http_response_login()
-                    html.render()
-                """
-                # No necesito lo de arriba. Primero pregunto si hay cookie [if (string_cookie)]
-                # Luego consulto si esa cookie es valida (puede haber apretado el boton logout y la cookie esta en el navegador aun, pero NO es valida entonces Orm.estoy_logueado retornaria false)
-                # luego caigo aca y entonces como hay cookie pero NO ES VALIDA (porque no esta en el archivo de cookies). Lo mando a que inicie sesion de nuevo
                 html.set_http_response_login()
                 html.render()    
-
         else: #No hay cookie entonces hay que loguear
-            #html.set_http_alert("No tenes cookie asignada.","danger")
             html.set_http_response_login()
             html.render()    
 

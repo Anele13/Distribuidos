@@ -594,6 +594,7 @@ class ResponseHtml():
         # Cookie
         if (self.cookie):
             print(self.cookie)
+            #pass
         # Cabecera
         if self.is_ajax_response:
             print("Content-type: application/json")

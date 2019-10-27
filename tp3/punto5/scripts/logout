@@ -7,8 +7,6 @@ from orm.orm import Orm
 from http import cookies
 
 
-
-
 def get_token_from_cookie(string_cookie, cookie_existente=None):
     """
     Metodo que devuelve el token asociado a la cookie completa
@@ -21,7 +19,6 @@ def get_token_from_cookie(string_cookie, cookie_existente=None):
     return cookie["sid"].value #Token de cookie
 
 
-
 if __name__ == "__main__" :
     html = ResponseHtml()
     string_cookie = os.environ.get('HTTP_COOKIE')
@@ -30,11 +27,9 @@ if __name__ == "__main__" :
         token = get_token_from_cookie(string_cookie)
         if Orm.findTokenInTokenFile(token):
             Orm.removeCookie(token)
-            html.redirect("login")
+            html.redirect('login')
         else:
-            html.set_http_alert("Deberías logearte.","danger")
-            html.set_http_response_login()
-            html.render()
+            html.redirect('login')
     else:
         html.set_http_alert("No estas logeado","danger")
         html.set_http_response_login()
