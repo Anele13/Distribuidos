@@ -10,30 +10,6 @@ import time, hashlib
 from datetime import datetime
 
 
-def crear_cookie():
-    cookie = cookies.SimpleCookie()
-    # The sid will be a hash of the server time
-    sid = hashlib.md5(repr(time.time()).encode()).hexdigest()
-    # Set the sid in the cookie
-    cookie["sid"] = sid
-    # Will expire in a year
-    cookie["sid"]["expires"] = 12 * 30 * 24 * 60 * 60
-    return cookie
-
-
-def get_token_from_cookie(string_cookie, cookie_existente=None):
-    """
-    Metodo que devuelve el token asociado a la cookie completa
-    """
-    if cookie_existente: #Ya viene creada la cookie
-        return cookie_existente["sid"].value 
-    # obtengo la cookie del querystring
-    cookie = cookies.SimpleCookie()
-    cookie.load(string_cookie)
-    return cookie["sid"].value #Token de cookie
-
-
-
 if __name__ == "__main__" :
     html = ResponseHtml()
     string_cookie = os.environ.get('HTTP_COOKIE')
@@ -43,22 +19,15 @@ if __name__ == "__main__" :
         cookie.load(string_cookie)
         token = cookie['sid'].value
         
-        #if Orm.findTokenInTokenFile(token):
-        if True:
+        if Orm.findTokenInTokenFile(token):
             timestamp = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-            lista_usuarios_en_vivo = Orm.getUsuariosEnVivo()
-            
-
             nick = Orm.getUserFromTokenfile(token)
+            lista_usuarios_en_vivo = Orm.getUsuariosEnVivo()
             lista_nuevos_mensajes = Orm.getNuevosMensajes(nick,timestamp)
-            
-            
+
             cookie['timestamp'] = timestamp
             html.setCookie(cookie)
             html.set_http_response_sala_de_chat(lista_usuarios_en_vivo, lista_nuevos_mensajes, nick)
-            
-            
-            #html.setContentBody(cookie['timestamp'])
             html.render()
         else:
             #Cookie vencida o invalida

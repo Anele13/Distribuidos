@@ -5,6 +5,8 @@
 <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css' type='text/css' rel='stylesheet'>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
+
+
 <style>
     .container{max-width:1170px; margin:auto;}
     img{ max-width:100%;}
@@ -136,7 +138,7 @@
     <html>
             <meta encoding='UTF-8'>
 
-    <body>
+    <body style="background-color: #d7cdc6">
     <div class='container'>
     <h3 class=' text-center'>Messaging</h3>
     <div class='messaging'>
@@ -154,7 +156,11 @@
                     </span> </div>
                 </div>
             </div>
-            <div class='inbox_chat'></div>
+            <div class='inbox_chat'>
+
+
+
+            </div>
             </div>
             <div class='mesgs'>
             <div class='msg_history'></div>
@@ -172,29 +178,73 @@
         </html>"
 
         <script>
+        //------------------- GUARDAR MENSAJE -----------------------
+        function getReqObj() {
+                var XMLHttpRequestObject; 
+                if (window.XMLHttpRequest) { 
+                    XMLHttpRequestObject = new XMLHttpRequest(); 
+                } else if (window.ActiveXObject) { 
+                    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP"); 
+                }
+                return XMLHttpRequestObject; 
+            }
+        //---------------------------------------------------------------
+        function submitHandler(theText) {
+            var params = 'mensaje='+theText;
+            var reqObj = getReqObj();
+            var url="guardar_mensaje";
+            reqObj.open("POST", url, true);
+            reqObj.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            reqObj.send(params); 
+            return false;
+        }
+        
         var input = document.getElementById("input_write_msg");
         input.addEventListener("keyup", function(event) {
-            // Number 13 is the "Enter" key on the keyboard
             if (event.keyCode === 13) {
-                // Cancel the default action, if needed
                 event.preventDefault();
                 send_message();
             }
         }); 
+
         function send_message(){
             var mensaje = $(".write_msg").val();
+            $(".write_msg").val("");
+            submitHandler(mensaje);
+        }
+
+        /*
+        function send_message(){
+            var mensaje_1 = $(".write_msg").val();
             $(".write_msg").val("");
             $.ajax({
                 url: "guardar_mensaje",
                 method: 'POST',
-                data: {mensaje: mensaje},
+                data: {mensaje: mensaje_1},
                 success: function(data){
                     if(data){
-                    a = 1;
+                        a = 1;
                     }
                 }
             });
         }
+        */
+
+
+
+
+
+        //--------- RECUPERAR MENSAJES Y USUARIOS EN VIVO-----------
+        function usuarioEnBanner(usuario){
+            respuesta = false;
+            $('.username').each(function(){
+                if(usuario == $(this).html()){
+                    respuesta = true;
+                }
+            });
+            return respuesta;
+        }
+
         // Funcion para refrescar mensajes nuevos
         timer_id = setInterval(function(){
             $.ajax({
@@ -202,35 +252,57 @@
                     method: 'POST',
                     success: function(data){
                         if(data){
-                            console.log(data);
-                            for (let index = 0; index < data.length; index++) {
-                                const lista = data[index];
-                                const usuario = lista[0];
-                                const mensaje = lista[1];
-                                const timestamp = lista[2];
+                            if (data.lista_nuevos_mensajes){
+                                for (let index = 0; index < data.lista_nuevos_mensajes.length; index++) {
+                                lista = data.lista_nuevos_mensajes[index];
+                                usuario = lista[0];
+                                mensaje = lista[1];
+                                timestamp = lista[2];
 
-                                if (usuario.includes('nick-session')){
-                                    $('.msg_history').append("<div class='outgoing_msg'>\
-                                                                <div class='sent_msg'>\
+                                    if (usuario.includes('nick-session')){
+                                        $('.msg_history').append("<div class='outgoing_msg'>\
+                                                                    <div class='sent_msg'>\
+                                                                        <p>"+mensaje+"</p>\
+                                                                        <span class='time_date'>"+timestamp+"</span></div>\
+                                                                    </div>")
+                                    }
+                                    else{
+                                        $('.msg_history').append(
+                                                                "<div class='incoming_msg'>\
+                                                                <div class='incoming_msg_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>\
+                                                                <div class='received_msg'>\
+                                                                    <div class='received_withd_msg'>\
                                                                     <p>"+mensaje+"</p>\
                                                                     <span class='time_date'>"+timestamp+"</span></div>\
+                                                                </div>\
                                                                 </div>")
+                                    }
                                 }
-                                else{
-                                    $('.msg_history').append(
-                                                            "<div class='incoming_msg'>\
-                                                            <div class='incoming_msg_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>\
-                                                            <div class='received_msg'>\
-                                                                <div class='received_withd_msg'>\
-                                                                <p>"+mensaje+"</p>\
-                                                                <span class='time_date'>"+timestamp+"</span></div>\
-                                                            </div>\
-                                                            </div>"
-                                    )
+
+                            }
+                            if (data.lista_usuarios_en_vivo){
+                                for (let index = 0; index < data.lista_usuarios_en_vivo.length; index++) {
+                                    lista = data.lista_usuarios_en_vivo[index];
+                                    usuario = lista[0];
+                                    timestamp = lista[1];
+
+                                    if (! usuarioEnBanner(usuario)){
+                                        $('.inbox_chat').append("<div class='chat_list'>\
+                                                                <div class='chat_people'>\
+                                                                <div class='chat_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>\
+                                                                <div class='chat_ib'>\
+                                                                    <h5> <div class='username'>"+usuario+"</div><span class='chat_date'>"+timestamp+"</span></h5>\
+                                                                    <p>Test, which is a new approach to have all solutions\
+                                                                    astrology under one roof.</p>\
+                                                                </div>\
+                                                                </div>\
+                                                            </div>")
+
+                                    }
                                 }
-                                $('.msg_history').animate({ scrollTop: 9999 }, 'slow');                            }
+                            }
                         }
                     }
-            });
-        }, 300);
+                });
+            }, 300);
         </script>

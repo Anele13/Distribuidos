@@ -20,7 +20,9 @@ class ResponseHtml():
                     <script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>\
                     <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous'></script>\
                     <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>\
-                    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css' type='text/css' rel='stylesheet'>"
+                    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css' type='text/css' rel='stylesheet'>\
+                    <script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>"
+
 
         return static_path
 
@@ -125,21 +127,68 @@ class ResponseHtml():
 
 
     def set_http_response_login(self):
-        cadena = "<html>\
+        cadena = "<style type='text/css'>\
+                        .login-form {\
+                            width: 330px;\
+                            margin: 30px auto;\
+                        }\
+                        .login-form h2 {\
+                            font-size: 19px;\
+                            margin-bottom: 15px;\
+                            text-align: center;\
+                        }\
+                        .login-form form { \
+                            background: #f7f7f7;\
+                            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);\
+                            margin-bottom: 10px;\
+                            padding: 30px;\
+                        }\
+                        .login-form .avatar {\
+                            width: 90px;\
+                            margin-bottom: 20px;\
+                        }\
+                        .login-form .form-control, .login-form .btn {\
+                            min-height: 38px;\
+                        }\
+                        .login-form input[type='email'] {\
+                            border-radius: 2px 2px 0 0;\
+                        }\
+                        .login-form input[type='password'] {\
+                            border-radius: 0 0 2px 2px;\
+                            margin-top: -1px;\
+                        }\
+                        .login-form input.form-control:focus {\
+                            position: relative;\
+                            z-index: 2;\
+                        }\
+                        .login-form .btn {\
+                            font-size: 15px;\
+                            font-weight: bold;\
+                            border-radius: 2px;\
+                        }\
+                    </style>\
+                    <html>\
                     <meta charset='utf-8'>\
-                        <html>\
-                            <meta charset='utf-8'>\
-                            <a href='index2.html' class='btn btn-primary btn-lg active' role='button' aria-pressed='true' >Volver</a>\
-                            <div class='row justify-content-center'>\
-                                <form action='login' method='POST' class='form-inline'>\
-                                    <input type='text' name='nick' id='nick' maxlength='70' placeholder='Nombre de usuario (nick)' required>\
-                                    <button class='btn btn-info' type='submit'>Login</button>\
+                        <body style='background-color: #f5f5f5'>\
+                            <div class='login-form'>\
+                                <h2>Antes de entrar ..</h2>\
+                                <form action='login' method='POST'>\
+                                    <div class='text-center'>\
+                                        <i class='fa fa-user' style='font-size:100px;' aria-hidden='true'></i>\
+                                    </div>\
+                                    <br>\
+                                    <div class='form-group'>\
+                                        <input type='text' class='form-control' name='nick' id='nick' maxlength='70' placeholder='Nombre de usuario (nick)' required>\
+                                        <br>\
+                                        <input type='text' class='form-control' name='estado' id='estado' placeholder='Elija un estado (opcional)'>\
+                                    </div>\
+                                    <br>\
+                                    <div class='form-group'>\
+                                        <button type='submit' class='btn btn-primary btn-block'>Ingresar</button>\
+                                    </div>\
                                 </form>\
                             </div>\
-                            <form action='logout' method='GET' class='form-inline'>\
-                                <button class='btn btn-info' type='submit'>Logout</button>\
-                            </form>\
-                        </html>"
+                        </body>"
         self.setContentBody(cadena)
 
     #Funcion para el punto 4.
@@ -227,13 +276,13 @@ class ResponseHtml():
         mensajesDeChat = ""
 
         if usuarios_activos:
-            for usuario in usuarios_activos:
+            for usuario in usuarios_activos: #Tiene el formato [nick, timestamp, estado (opcional)]
                 usuariosActivos = usuariosActivos + "<div class='chat_list'>\
                                                         <div class='chat_people'>\
                                                             <div class='chat_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>\
                                                             <div class='chat_ib'>\
-                                                            <h5>"+ usuario +" <span class='chat_date'>Dec 25</span></h5>\
-                                                            <p> Hola soy un usuario.</p>\
+                                                            <h5><div class="+'username'+">"+ usuario[0] +"</div> <span class='chat_date'>"+usuario[1]+"</span></h5>\
+                                                            <p>"+usuario[2]+"</p>\
                                                             </div>\
                                                         </div>\
                                                     </div>"
@@ -256,7 +305,8 @@ class ResponseHtml():
                                                             <span class='time_date'>"+mensaje[2]+"</span></div>\
                                                         </div>"
 
-        sala_chat = "<style>\
+        sala_chat = "<!DOCTYPE html>\
+                    <style>\
                     .container{max-width:1170px; margin:auto;}\
                     img{ max-width:100%;}\
                     .inbox_people {\
@@ -385,9 +435,13 @@ class ResponseHtml():
                     }\
                     </style>\
                     <html>\
-                    <body>\
+                    <body style='background-color: #217d5d3d;'>\
+                    <nav class='navbar navbar-light bg-light'>\
+                        <a target='_blank' href='https://github.com/Anele13/Distribuidos/tree/master/tp3/punto5'> <i class='fa fa-github' aria-hidden='true' style='font-size:48px;'></i></a>\
+                        <a class='navbar-brand pull-right' href='logout'>Logout</a>\
+                    </nav>\
+                    <br>\
                     <div class='container'>\
-                    <h3 class=' text-center'>Messaging</h3>\
                     <div class='messaging'>\
                         <div class='inbox_msg'>\
                             <div class='inbox_people'>\
@@ -405,31 +459,116 @@ class ResponseHtml():
                             </div>\
                             <div class='inbox_chat'>"+ usuariosActivos + "</div>\
                             </div>\
-                            <div class='mesgs'>\
+                            <div class='mesgs' style='background-color: white;'>\
                             <div class='msg_history'>"+ mensajesDeChat +"</div>\
-                            <div class='type_msg'>\
+                            <div class='type_msg' style='background-color: white;'>\
                                 <div class='input_msg_write'>\
-                                <input type='text' class='write_msg' placeholder='Type a message' />\
-                                <button class='msg_send_btn' type='button'><i class='fa fa-paper-plane-o' aria-hidden='true'></i></button>\
+                                    <input id='input_write_msg' type='text' class='write_msg' placeholder='Type a message' />\
+                                    <button class='msg_send_btn' type='button' onclick='send_message();'><i class='fa fa-paper-plane-o' aria-hidden='true'></i></button>\
                                 </div>\
                             </div>\
                             </div>\
                         </div>\
-                        <p class='text-center top_spac'> Design by <a target='_blank' href='#'>Sunil Rajput</a></p>\
                         </div></div>\
                         </body>\
-                        </html>"
+                        </html>\
+                        <script type='text/javascript'>\
+                            function getReqObj() {\
+                                var XMLHttpRequestObject; \
+                                if (window.XMLHttpRequest) { \
+                                    XMLHttpRequestObject = new XMLHttpRequest(); \
+                                } else if (window.ActiveXObject) { \
+                                    XMLHttpRequestObject = new ActiveXObject('Microsoft.XMLHTTP'); \
+                                }\
+                                return XMLHttpRequestObject; \
+                            }\
+                        function submitHandler(theText) {\
+                            var params = 'mensaje='+theText;\
+                            var reqObj = getReqObj();\
+                            var url='guardar_mensaje';\
+                            reqObj.open('POST', url, true);\
+                            reqObj.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');\
+                            reqObj.send(params); \
+                            return false;\
+                        }\
+                        var input = document.getElementById('input_write_msg');\
+                        input.addEventListener('keyup', function(event) {\
+                            if (event.keyCode === 13) {\
+                                event.preventDefault();\
+                                send_message();\
+                            }\
+                        }); \
+                        function send_message(){\
+                            var mensaje = $('.write_msg').val();\
+                            $('.write_msg').val('');\
+                            submitHandler(mensaje);\
+                        }\
+                        function usuarioEnBanner(usuario){\
+                            respuesta = false;\
+                            $('.username').each(function(){\
+                                if(usuario == $(this).html()){\
+                                    respuesta = true;\
+                                }\
+                            });\
+                            return respuesta;\
+                        }\
+                        timer_id = setInterval(function(){\
+                            $.ajax({\
+                                    url: 'recuperar_chat',\
+                                    method: 'POST',\
+                                    success: function(data){\
+                                        if(data){\
+                                            if (data.lista_nuevos_mensajes){\
+                                                for (let index = 0; index < data.lista_nuevos_mensajes.length; index++) {\
+                                                    var lista = data.lista_nuevos_mensajes[index];\
+                                                    var usuario = lista[0];\
+                                                    var mensaje = lista[1];\
+                                                    var timestamp = lista[2];\
+                                                    if (usuario.includes('nick-session')){\
+                                                        $('.msg_history').append('<div class="+'outgoing_msg'+">\
+                                                                                    <div class="+'sent_msg'+">\
+                                                                                        <p>'+mensaje+'</p>\
+                                                                                        <span class="+'time_date'+">'+timestamp+'</span></div>\
+                                                                                    </div>')\
+                                                    }\
+                                                    else{\
+                                                        $('.msg_history').append('<div class="+'incoming_msg'+">\
+                                                                                <div class="+'incoming_msg_img'+">\
+                                                                                <img src="+'https://ptetutorials.com/images/user-profile.png'+" alt="+'sunil'+"> </div>\
+                                                                                <div class="+'received_msg'+">\
+                                                                                    <div class="+'received_withd_msg'+">\
+                                                                                    <p>'+mensaje+'</p>\
+                                                                                    <span class="+'time_date'+">'+timestamp+'</span></div>\
+                                                                                </div>\
+                                                                                </div>')\
+                                                    }\
+                                                }\
+                                            }\
+                                            if (data.lista_usuarios_en_vivo){\
+                                                for (let index = 0; index < data.lista_usuarios_en_vivo.length; index++) {\
+                                                    lista = data.lista_usuarios_en_vivo[index];\
+                                                    usuario = lista[0];\
+                                                    timestamp = lista[1];\
+                                                    if (! usuarioEnBanner(usuario)){\
+                                                        $('.inbox_chat').append('<div class="+'chat_list'+">\
+                                                                                <div class="+'chat_people'+">\
+                                                                                <div class="+'chat_img'+"> <img src="+'https://ptetutorials.com/images/user-profile.png'+" alt="+'sunil'+"> </div>\
+                                                                                <div class="+'chat_ib'+">\
+                                                                                    <h5> <div class="+'username'+">'+usuario+'</div><span class="+'chat_date'+">"+'timestamp'+"</span></h5>\
+                                                                                    <p>Test, which is a new approach to have all solutions astrology under one roof.</p>\
+                                                                                </div>\
+                                                                                </div>\
+                                                                            </div>')\
+                                                    }\
+                                                }\
+                                            }\
+                                        }\
+                                    }\
+                                });\
+                            }, 300);\
+                        </script>"
+
         self.setContentBody(sala_chat)
-
-
-
-
-
-
-
-
-
-
 
 
     def getContentBody(self):

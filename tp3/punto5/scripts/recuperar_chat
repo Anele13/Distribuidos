@@ -24,12 +24,14 @@ if __name__ == '__main__':
             nick = Orm.getUserFromTokenfile(token)
             timestamp = cookie['timestamp'].value
 
+            lista_usuarios_en_vivo = Orm.getUsuariosEnVivo()
             lista_nuevos_mensajes = Orm.getNuevosMensajes(nick,timestamp)
             if lista_nuevos_mensajes:
                 cookie['timestamp'] = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
             html.setCookie(cookie) 
-            html.set_ajax_response(json.dumps(lista_nuevos_mensajes))
+            html.set_ajax_response(json.dumps({'lista_nuevos_mensajes':lista_nuevos_mensajes,
+                                                'lista_usuarios_en_vivo':lista_usuarios_en_vivo }))
             html.render()
 
         else: #Sesion vencida

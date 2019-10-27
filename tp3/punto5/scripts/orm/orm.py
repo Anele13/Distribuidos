@@ -26,15 +26,16 @@ class Orm():
         return False
     
     @classmethod
-    def saveTokenInTokenfile(self, nick, token, date):
+    def saveTokenInTokenfile(self, nick, token, date, estado=None):
         """
         Metodo que guarda en el archivo de tokens: nick,token y date (EN ESE ORDEN)
         """
-        row = [nick,token, date]
+        row = [nick, token, date, estado if estado else "Pone un estadito aunque sea"]
+        
         with open('/usr/local/apache2/cookies.csv', 'a') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(row)
-        csvFile.close()  
+        csvFile.close()
 
 
     @classmethod
@@ -72,7 +73,7 @@ class Orm():
         with open(self.mensajes_filepath, 'r') as csvFile:
             reader = csv.reader(csvFile)
             for row in reader:
-                timestamp_archivo = datetime.strptime(row[2],'%m/%d/%Y %H:%M:%S')
+                timestamp_archivo = datetime.strptime(str(row[2]),'%m/%d/%Y %H:%M:%S')
                 if (timestamp_archivo > datetime.strptime(timestamp,'%m/%d/%Y %H:%M:%S')):
                     if (nick_sesion == row[0]):
                         lista_mensajes.append([ 'nick-session-'+row[0], row[1], row[2] ]) #para diferenciar los msj que envio yo de los que recibo.
@@ -93,7 +94,7 @@ class Orm():
         with open(self.cookies_filepath, 'r') as csvFile:
             reader = csv.reader(csvFile)
             for row in reader:
-                lista_usuarios.append(row[0])
+                lista_usuarios.append([ row[0], row[2], row[3]]) # nick, timestamp, estado
         csvFile.close()
         return lista_usuarios
 
@@ -109,31 +110,22 @@ class Orm():
             writer.writerow(row)
         csvFile.close()
 
+
     @classmethod
     def guardarNuevoMensaje(self, nick, mensaje,timestamp):
         """
         Guarda un mensaje entrante en el archivo de mensajes en formato:
         ['nick', 'mensaje', 'timestamp']
         """
-        if mensaje != None:
-            row = [nick, mensaje, timestamp]
-            with open(self.mensajes_filepath, 'a') as csvFile:
-                writer = csv.writer(csvFile)
-                writer.writerow(row)
-            csvFile.close()
     
-
-        with open(self.usuarios_filepath, 'w+') as csvFile:
+        row = [nick, mensaje, timestamp]
+        with open(self.mensajes_filepath, 'a') as csvFile:
             writer = csv.writer(csvFile)
-            lista=[]
-            for row in writer:
-                if row[0] == nick:
-                    pass
-                else:
-                    lista.append(row)
-            writer.writerows(lista)
+            writer.writerow(row)
         csvFile.close()
     
+
+ 
     @classmethod
     def removeCookie(self, token):
         """
@@ -182,8 +174,7 @@ class Orm():
     def removeUser(self, nick):
         """
         Metodo que sirve para dar borrar una cookie.
-        """        
-
+        """
         with open(self.usuarios_filepath, 'w+') as csvFile:
             writer = csv.writer(csvFile)
             lista=[]

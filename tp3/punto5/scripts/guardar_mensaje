@@ -26,8 +26,7 @@ if __name__ == '__main__':
             Orm.guardarNuevoMensaje(nick, mensaje, timestamp)
 
             #cookie['timestamp'] = timestamp
-            html.setCookie(cookie) 
-            html.setContentBody(form)         
+            html.setCookie(cookie)        
             html.render()
 
         else: #Sesion vencida
