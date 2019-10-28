@@ -245,6 +245,24 @@
             return respuesta;
         }
 
+        function borrarUsuarios(listaUsuarios){
+            $('.username').each(function(){
+                var usuario = $(this).html();
+                var encontrado = true;
+
+                for (let index = 0; index < listaUsuarios.length; index++) {
+                    lista = listaUsuarios[index];
+                    usuario_2 = lista[0];
+                    if (usuario == usuario_2){
+                        encontrado = false;
+                    }
+                }
+                if (encontrado){
+                    $('.username').remove();
+                }
+            });
+        }
+
         // Funcion para refrescar mensajes nuevos
         timer_id = setInterval(function(){
             $.ajax({
@@ -300,6 +318,7 @@
 
                                     }
                                 }
+                                borrarUsuarios(data.lista_usuarios_en_vivo);
                             }
                         }
                     }

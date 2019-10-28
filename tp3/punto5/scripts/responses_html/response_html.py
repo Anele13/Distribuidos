@@ -447,13 +447,11 @@ class ResponseHtml():
                             <div class='inbox_people'>\
                             <div class='headind_srch'>\
                                 <div class='recent_heading'>\
-                                <h4>Recent</h4>\
+                                <h4>Recientes</h4>\
                                 </div>\
                                 <div class='srch_bar'>\
                                 <div class='stylish-input-group'>\
-                                    <input type='text' class='search-bar'  placeholder='Search' >\
                                     <span class='input-group-addon'>\
-                                    <button type='button'> <i class='fa fa-search' aria-hidden='true'></i> </button>\
                                     </span> </div>\
                                 </div>\
                             </div>\
@@ -549,13 +547,14 @@ class ResponseHtml():
                                                     lista = data.lista_usuarios_en_vivo[index];\
                                                     usuario = lista[0];\
                                                     timestamp = lista[1];\
+                                                    estado = lista[2];\
                                                     if (! usuarioEnBanner(usuario)){\
                                                         $('.inbox_chat').append('<div class="+'chat_list'+">\
                                                                                 <div class="+'chat_people'+">\
                                                                                 <div class="+'chat_img'+"> <img src="+'https://ptetutorials.com/images/user-profile.png'+" alt="+'sunil'+"> </div>\
                                                                                 <div class="+'chat_ib'+">\
-                                                                                    <h5> <div class="+'username'+">'+usuario+'</div><span class="+'chat_date'+">"+'timestamp'+"</span></h5>\
-                                                                                    <p>Test, which is a new approach to have all solutions astrology under one roof.</p>\
+                                                                                    <h5> <div class="+'username'+">'+usuario+'</div><span class="+'chat_date'+">'+timestamp+'</span></h5>\
+                                                                                    <p>'+estado+'</p>\
                                                                                 </div>\
                                                                                 </div>\
                                                                             </div>')\

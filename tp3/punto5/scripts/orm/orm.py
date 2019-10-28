@@ -76,9 +76,9 @@ class Orm():
                 timestamp_archivo = datetime.strptime(str(row[2]),'%m/%d/%Y %H:%M:%S')
                 if (timestamp_archivo > datetime.strptime(timestamp,'%m/%d/%Y %H:%M:%S')):
                     if (nick_sesion == row[0]):
-                        lista_mensajes.append([ 'nick-session-'+row[0], row[1], row[2] ]) #para diferenciar los msj que envio yo de los que recibo.
+                        lista_mensajes.append([ 'nick-session-'+row[0], row[1], row[2][10:-3] ]) #para diferenciar los msj que envio yo de los que recibo.
                     else:
-                        lista_mensajes.append(row)
+                        lista_mensajes.append([row[0], row[1], row[2][10:-3]])
         csvFile.close()
         return lista_mensajes
 
@@ -94,7 +94,7 @@ class Orm():
         with open(self.cookies_filepath, 'r') as csvFile:
             reader = csv.reader(csvFile)
             for row in reader:
-                lista_usuarios.append([ row[0], row[2], row[3]]) # nick, timestamp, estado
+                lista_usuarios.append([ row[0], row[2][10:-3], row[3]]) # nick, timestamp, estado
         csvFile.close()
         return lista_usuarios
 
