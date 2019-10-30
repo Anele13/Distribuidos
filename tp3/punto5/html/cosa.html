@@ -206,15 +206,16 @@
                 send_message();
             }
         }); 
-
+        /*
         function send_message(){
             var mensaje = $(".write_msg").val();
             $(".write_msg").val("");
             submitHandler(mensaje);
-        }
+        }*/
 
-        /*
+        
         function send_message(){
+            alert("enviado");
             var mensaje_1 = $(".write_msg").val();
             $(".write_msg").val("");
             $.ajax({
@@ -223,12 +224,12 @@
                 data: {mensaje: mensaje_1},
                 success: function(data){
                     if(data){
-                        a = 1;
+                        alert(data);
                     }
                 }
             });
         }
-        */
+        
 
 
 
@@ -248,18 +249,21 @@
         function borrarUsuarios(listaUsuarios){
             $('.username').each(function(){
                 var usuario = $(this).html();
-                var encontrado = true;
+                var encontrado = false;
 
                 for (let index = 0; index < listaUsuarios.length; index++) {
                     lista = listaUsuarios[index];
                     usuario_2 = lista[0];
                     if (usuario == usuario_2){
-                        encontrado = false;
+                        encontrado = true;
                     }
                 }
-                if (encontrado){
-                    $('.username').remove();
+
+                if (!encontrado){
+                    console.log(listaUsuarios);
+                    console.log(usuario);
                 }
+
             });
         }
 
@@ -323,5 +327,5 @@
                         }
                     }
                 });
-            }, 300);
+            }, 1000);
         </script>
