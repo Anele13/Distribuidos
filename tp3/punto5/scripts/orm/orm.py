@@ -190,7 +190,8 @@ class Orm():
     @classmethod
     def estoy_logeado(self, token):
         """
-        Metodo que saber si una cookie esta en uso o no según un token.
+        Metodo que saber si el token  esta en elarchivo de cookies, retorna verdadero
+        si encuentra el token en el archivo y falso si no lo encuentra.
         """
         with open(self.cookies_filepath, 'r') as csvFile:
             reader = csv.reader(csvFile)
