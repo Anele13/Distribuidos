@@ -186,6 +186,7 @@ class Orm():
             writer.writerows(lista)
         csvFile.close()
     
+    
     @classmethod
     def estoy_logeado(self, token):
         """
@@ -198,3 +199,29 @@ class Orm():
                     return True
         csvFile.close()
         return False
+    
+
+    @classmethod
+    def actualizarUltimoIngreso(self, timestamp, nick):
+        """
+        Actualiza el archivo de cookies con el ultimo ingreso tuyo en el sistema
+        es para el borrado de usuarios por inactividad
+        """
+        # Busco todos los usuarios en el archivo de cookies
+        cookie_user_list = []
+        with open(self.cookies_filepath, 'r') as csvFile:
+            reader = csv.reader(csvFile)
+            for row in reader:
+                cookie_user_list.append(row)
+        csvFile.close()
+
+
+        # Actualizo solo el que necesito
+        with open(self.cookies_filepath, 'w') as csvFile:
+            writer = csv.writer(csvFile)
+            for usuario in cookie_user_list:
+                if usuario[0] == nick:
+                    writer.writerow([usuario[0], usuario[1], timestamp, usuario[3]])
+                else:
+                    writer.writerow(usuario)
+        csvFile.close()
