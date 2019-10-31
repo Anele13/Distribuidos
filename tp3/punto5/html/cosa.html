@@ -253,15 +253,11 @@
                 for (let index = 0; index < listaUsuarios.length; index++) {
                     lista = listaUsuarios[index];
                     usuario_2 = lista[0];
-                    console.log("el que estaba:"+usuario)
-                    console.log("el que sale:"+usuario_2)
                     if (usuario == usuario_2){
                         encontrado = true;
-                        console.log("encontrado");
                     }
                 }
                 if (!encontrado){
-                    alert("borrando"+usuario);
                     $('#'+usuario+'_banner').remove();
                 }
             });
