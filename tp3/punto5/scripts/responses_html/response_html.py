@@ -178,7 +178,7 @@ class ResponseHtml():
                                     </div>\
                                     <br>\
                                     <div class='form-group'>\
-                                        <input type='text' class='form-control' name='nick' id='nick' maxlength='70' placeholder='Nombre de usuario (nick)' required>\
+                                        <input type='text' class='form-control' name='nick' id='nick' maxlength='70' pattern='^[A-Za-z0-9]*' placeholder='Nombre de usuario (nick)' required>\
                                         <br>\
                                         <input type='text' class='form-control' name='estado' id='estado' placeholder='Elija un estado (opcional)'>\
                                     </div>\
