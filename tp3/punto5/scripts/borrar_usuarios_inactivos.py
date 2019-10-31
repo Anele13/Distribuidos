@@ -27,7 +27,6 @@ csvFile.close()
 
 # NICK TOKEN TIMESTAMP ESTADO
 
-
 # Actualizo solo el que necesito
 with open(cookies_filepath, 'w') as csvFile:
     writer = csv.writer(csvFile)
@@ -35,11 +34,15 @@ with open(cookies_filepath, 'w') as csvFile:
         timestamp_archivo = datetime.strptime(str(row[2]),'%m/%d/%Y %H:%M:%S')
         timestam_arribo = datetime.strptime(datetime.now().strftime('%m/%d/%Y %H:%M:%S'),'%m/%d/%Y %H:%M:%S')
 
-        if (((timestam_arribo- timestamp_archivo).total_seconds()/60)> umbral):
-            lista_resultado.append(usuario) #para diferenciar los msj que envio yo de los que recibo.
+        #print((timestam_arribo- timestamp_archivo).total_seconds()/60)
+
+        if not (((timestam_arribo- timestamp_archivo).total_seconds()/60)> umbral):
+            #lista_resultado.append(usuario) #para diferenciar los msj que envio yo de los que recibo.
             writer.writerow(usuario)
+            
         else:
-            print("Usuario que puede quedarse")
-            print("-".join(usuario))
+            print("Usuario que puede irse")
+            print(((timestam_arribo- timestamp_archivo).total_seconds()/60))
+            print(usuario[0])
 
 csvFile.close()
