@@ -248,17 +248,21 @@
         function borrarUsuarios(listaUsuarios){
             $('.username').each(function(){
                 var usuario = $(this).html();
-                var encontrado = true;
+                var encontrado = false;
 
                 for (let index = 0; index < listaUsuarios.length; index++) {
                     lista = listaUsuarios[index];
                     usuario_2 = lista[0];
+                    console.log("el que estaba:"+usuario)
+                    console.log("el que sale:"+usuario_2)
                     if (usuario == usuario_2){
-                        encontrado = false;
+                        encontrado = true;
+                        console.log("encontrado");
                     }
                 }
-                if (encontrado){
-                    $('.username').remove();
+                if (!encontrado){
+                    alert("borrando"+usuario);
+                    $('#'+usuario+'_banner').remove();
                 }
             });
         }
@@ -299,13 +303,14 @@
 
                             }
                             if (data.lista_usuarios_en_vivo){
+                                console.log(data.lista_usuarios_en_vivo)
                                 for (let index = 0; index < data.lista_usuarios_en_vivo.length; index++) {
                                     lista = data.lista_usuarios_en_vivo[index];
                                     usuario = lista[0];
                                     timestamp = lista[1];
 
                                     if (! usuarioEnBanner(usuario)){
-                                        $('.inbox_chat').append("<div class='chat_list'>\
+                                        $('.inbox_chat').append("<div class='chat_list' id="+usuario+"_banner>\
                                                                 <div class='chat_people'>\
                                                                 <div class='chat_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>\
                                                                 <div class='chat_ib'>\
@@ -323,5 +328,5 @@
                         }
                     }
                 });
-            }, 300);
+            }, 2000);
         </script>

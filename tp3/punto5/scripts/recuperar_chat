@@ -37,7 +37,9 @@ if __name__ == '__main__':
         else: #Sesion vencida
             #html.set_http_alert("Cookie vencida. Reintente", "danger")
             #html.redirect('login')
-            html.setContentBody("")
+            #html.setCookie(cookie) 
+            html.set_ajax_response(json.dumps({'lista_nuevos_mensajes':[],
+                                                'lista_usuarios_en_vivo':[]}))
             html.render()
     else: #No hay cookie entonces hay que loguear
         html.setContentBody("")
