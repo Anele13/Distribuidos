@@ -497,9 +497,21 @@ class ResponseHtml():
                             }\
                         }); \
                         function send_message(){\
-                            var mensaje = $('.write_msg').val();\
-                            $('.write_msg').val('');\
-                            submitHandler(mensaje);\
+                        var mensaje_1 = $('.write_msg').val();\
+                        $('.write_msg').val('');\
+                            $.ajax({\
+                                url: 'guardar_mensaje',\
+                                method: 'POST',\
+                                data: {mensaje: mensaje_1},\
+                                success: function(data){\
+                                    if(data){\
+                                        a = 1;\
+                                    }\
+                                },\
+                                error: function( jqXHR, textStatus, errorThrown ) {\
+                                    window.location.replace('http://localhost:9090/login');\
+                                }\
+                            });\
                         }\
                         function usuarioEnBanner(usuario){\
                             respuesta = false;\
