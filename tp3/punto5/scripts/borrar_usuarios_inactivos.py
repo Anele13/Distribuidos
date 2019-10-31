@@ -27,6 +27,8 @@ csvFile.close()
 
 # NICK TOKEN TIMESTAMP ESTADO
 
+print("estoy en cron")
+
 # Actualizo solo el que necesito
 with open(cookies_filepath, 'w') as csvFile:
     writer = csv.writer(csvFile)

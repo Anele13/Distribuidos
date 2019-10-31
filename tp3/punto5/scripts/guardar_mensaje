@@ -6,44 +6,25 @@ from responses_html.response_html import ResponseHtml
 from orm.orm import Orm
 from http import cookies
 from datetime import datetime
-import json
 
 if __name__ == '__main__':
-
-
-
     html = ResponseHtml()
     string_cookie = os.environ.get('HTTP_COOKIE')
-
-
-
-    
     if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
 
         cookie = cookies.SimpleCookie()
         cookie.load(string_cookie)
         token = cookie['sid'].value
         
-        
         if Orm.findTokenInTokenFile(token):
-
-
-
             form = cgi.FieldStorage()
 
             mensaje = form.getvalue("mensaje") 
             nick = Orm.getUserFromTokenfile(token)
-
-            
             timestamp = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-
-
-
-
 
             Orm.guardarNuevoMensaje(nick, mensaje, timestamp)
             Orm.actualizarUltimoIngreso(timestamp, nick)
-
 
             #cookie['timestamp'] = timestamp
             html.setCookie(cookie) 
@@ -52,7 +33,8 @@ if __name__ == '__main__':
 
         else: #Sesion vencida
             pass
-            
+            #html.set_http_alert("Cookie vencida. Reintente", "danger")
+            #html.redirect('login')
     else: #No hay cookie entonces hay que loguear
         html.redirect('login')
 

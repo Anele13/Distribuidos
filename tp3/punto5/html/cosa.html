@@ -206,16 +206,15 @@
                 send_message();
             }
         }); 
-        /*
+
         function send_message(){
             var mensaje = $(".write_msg").val();
             $(".write_msg").val("");
             submitHandler(mensaje);
-        }*/
+        }
 
-        
+        /*
         function send_message(){
-            alert("enviado");
             var mensaje_1 = $(".write_msg").val();
             $(".write_msg").val("");
             $.ajax({
@@ -224,12 +223,12 @@
                 data: {mensaje: mensaje_1},
                 success: function(data){
                     if(data){
-                        alert(data);
+                        a = 1;
                     }
                 }
             });
         }
-        
+        */
 
 
 
@@ -258,12 +257,9 @@
                         encontrado = true;
                     }
                 }
-
                 if (!encontrado){
-                    console.log(listaUsuarios);
-                    console.log(usuario);
+                    $('#'+usuario+'_banner').remove();
                 }
-
             });
         }
 
@@ -303,13 +299,14 @@
 
                             }
                             if (data.lista_usuarios_en_vivo){
+                                console.log(data.lista_usuarios_en_vivo)
                                 for (let index = 0; index < data.lista_usuarios_en_vivo.length; index++) {
                                     lista = data.lista_usuarios_en_vivo[index];
                                     usuario = lista[0];
                                     timestamp = lista[1];
 
                                     if (! usuarioEnBanner(usuario)){
-                                        $('.inbox_chat').append("<div class='chat_list'>\
+                                        $('.inbox_chat').append("<div class='chat_list' id="+usuario+"_banner>\
                                                                 <div class='chat_people'>\
                                                                 <div class='chat_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>\
                                                                 <div class='chat_ib'>\
@@ -327,5 +324,5 @@
                         }
                     }
                 });
-            }, 1000);
+            }, 300);
         </script>

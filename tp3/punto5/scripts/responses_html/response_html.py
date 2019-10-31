@@ -178,7 +178,7 @@ class ResponseHtml():
                                     </div>\
                                     <br>\
                                     <div class='form-group'>\
-                                        <input type='text' class='form-control' name='nick' id='nick' maxlength='70' placeholder='Nombre de usuario (nick)' required>\
+                                        <input type='text' class='form-control' name='nick' id='nick' maxlength='70' pattern='^[A-Za-z0-9]*' placeholder='Nombre de usuario (nick)' required>\
                                         <br>\
                                         <input type='text' class='form-control' name='estado' id='estado' placeholder='Elija un estado (opcional)'>\
                                     </div>\
@@ -497,9 +497,21 @@ class ResponseHtml():
                             }\
                         }); \
                         function send_message(){\
-                            var mensaje = $('.write_msg').val();\
-                            $('.write_msg').val('');\
-                            submitHandler(mensaje);\
+                        var mensaje_1 = $('.write_msg').val();\
+                        $('.write_msg').val('');\
+                            $.ajax({\
+                                url: 'guardar_mensaje',\
+                                method: 'POST',\
+                                data: {mensaje: mensaje_1},\
+                                success: function(data){\
+                                    if(data){\
+                                        a = 1;\
+                                    }\
+                                },\
+                                error: function( jqXHR, textStatus, errorThrown ) {\
+                                    window.location.replace('http://localhost:9090/login');\
+                                }\
+                            });\
                         }\
                         function usuarioEnBanner(usuario){\
                             respuesta = false;\
@@ -509,6 +521,22 @@ class ResponseHtml():
                                 }\
                             });\
                             return respuesta;\
+                        }\
+                        function borrarUsuarios(listaUsuarios){\
+                            $('.username').each(function(){\
+                                var usuario = $(this).html();\
+                                var encontrado = false;\
+                                for (let index = 0; index < listaUsuarios.length; index++) {\
+                                    lista = listaUsuarios[index];\
+                                    usuario_2 = lista[0];\
+                                    if (usuario == usuario_2){\
+                                        encontrado = true;\
+                                    }\
+                                }\
+                                if (!encontrado){\
+                                    $('#'+usuario+'_banner').remove();\
+                                }\
+                            });\
                         }\
                         timer_id = setInterval(function(){\
                             $.ajax({\
@@ -549,7 +577,7 @@ class ResponseHtml():
                                                     timestamp = lista[1];\
                                                     estado = lista[2];\
                                                     if (! usuarioEnBanner(usuario)){\
-                                                        $('.inbox_chat').append('<div class="+'chat_list'+">\
+                                                        $('.inbox_chat').append('<div class="+'chat_list'+" id='+usuario+'_banner>\
                                                                                 <div class="+'chat_people'+">\
                                                                                 <div class="+'chat_img'+"> <img src="+'https://ptetutorials.com/images/user-profile.png'+" alt="+'sunil'+"> </div>\
                                                                                 <div class="+'chat_ib'+">\
@@ -560,6 +588,7 @@ class ResponseHtml():
                                                                             </div>')\
                                                     }\
                                                 }\
+                                                borrarUsuarios(data.lista_usuarios_en_vivo);\
                                             }\
                                         }\
                                     }\
