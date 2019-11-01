@@ -17,4 +17,4 @@ RUN chmod 755 /entry.sh
 
 RUN /usr/bin/crontab /crontab.txt
 
-CMD ["/usr/local/apache2/forward_env_start_httpd"]
+ENTRYPOINT /entry.sh
