@@ -3,13 +3,13 @@
 ### Build the image:
 
 ```
-docker build -t `*tag*` .
+docker build -t `tag` .
 ```
 
 ### Run the image to use it:
 
 ```
-docker run -d -p 9090:80 -v $(pwd)/scripts:/usr/local/apache2/cgi-bin -v $(pwd)/html:/usr/local/apache2/htdocs `*tag*`
+docker run -d -p 9090:80 -v $(pwd)/scripts:/usr/local/apache2/cgi-bin -v $(pwd)/html:/usr/local/apache2/htdocs `tag`
 ```
 
 ### Running:
