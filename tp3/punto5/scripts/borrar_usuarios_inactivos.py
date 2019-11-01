@@ -28,13 +28,16 @@ csvFile.close()
 # NICK TOKEN TIMESTAMP ESTADO
 
 print("estoy en cron")
+print("----------------")
+print(datetime.now())
+print("----------------")
+timestam_arribo = datetime.strptime(datetime.now().strftime('%m/%d/%Y %H:%M:%S'),'%m/%d/%Y %H:%M:%S')
 
 # Actualizo solo el que necesito
 with open(cookies_filepath, 'w') as csvFile:
     writer = csv.writer(csvFile)
     for usuario in cookie_user_list:
-        timestamp_archivo = datetime.strptime(str(row[2]),'%m/%d/%Y %H:%M:%S')
-        timestam_arribo = datetime.strptime(datetime.now().strftime('%m/%d/%Y %H:%M:%S'),'%m/%d/%Y %H:%M:%S')
+        timestamp_archivo = datetime.strptime(str(usuario[2]),'%m/%d/%Y %H:%M:%S')
 
         #print((timestam_arribo- timestamp_archivo).total_seconds()/60)
 
@@ -45,6 +48,6 @@ with open(cookies_filepath, 'w') as csvFile:
         else:
             print("Usuario que puede irse")
             print(((timestam_arribo- timestamp_archivo).total_seconds()/60))
-            print(usuario[0])
+            print(usuario)
 
 csvFile.close()
