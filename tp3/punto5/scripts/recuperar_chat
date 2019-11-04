@@ -15,7 +15,11 @@ if __name__ == '__main__':
 
         cookie = cookies.SimpleCookie()
         cookie.load(string_cookie)
-        token = cookie['sid'].value
+        token = None
+        try:
+            token = cookie['sid'].value
+        except:
+            pass
         
         if Orm.findTokenInTokenFile(token):
             form = cgi.FieldStorage()

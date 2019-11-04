@@ -11,12 +11,21 @@ def get_token_from_cookie(string_cookie, cookie_existente=None):
     """
     Metodo que devuelve el token asociado a la cookie completa
     """
+    token = None    
     if cookie_existente: #Ya viene creada la cookie
-        return cookie_existente["sid"].value 
-    # obtengo la cookie del querystring
+        try:
+            token = cookie_existente['sid'].value
+        except:
+            pass
+        return token
+
     cookie = cookies.SimpleCookie()
     cookie.load(string_cookie)
-    return cookie["sid"].value #Token de cookie
+    try:
+        token = cookie['sid'].value
+    except:
+        pass
+    return token
 
 
 if __name__ == "__main__" :

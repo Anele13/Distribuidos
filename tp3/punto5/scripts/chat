@@ -17,7 +17,11 @@ if __name__ == "__main__" :
     if string_cookie: #Si hay una cookie entonces veo si corresponde en el archivo
         cookie = cookies.SimpleCookie()
         cookie.load(string_cookie)
-        token = cookie['sid'].value
+        token = None
+        try:
+            token = cookie['sid'].value
+        except:
+            pass
         
         if Orm.findTokenInTokenFile(token):
             timestamp = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
