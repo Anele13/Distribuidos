@@ -509,7 +509,7 @@ class ResponseHtml():
                                     }\
                                 },\
                                 error: function( jqXHR, textStatus, errorThrown ) {\
-                                    window.location.replace('http://localhost:9090/login');\
+                                    window.location.replace('login');\
                                 }\
                             });\
                         }\
