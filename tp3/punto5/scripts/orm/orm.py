@@ -76,7 +76,7 @@ class Orm():
                 timestamp_archivo = datetime.strptime(str(row[2]),'%m/%d/%Y %H:%M:%S')
                 if (timestamp_archivo > datetime.strptime(timestamp,'%m/%d/%Y %H:%M:%S')):
                     if (nick_sesion == row[0]):
-                        lista_mensajes.append([ 'nick-session-'+row[0], row[1], row[2][10:-3] ]) #para diferenciar los msj que envio yo de los que recibo.
+                        lista_mensajes.append(['nick-session-'+row[0], row[1], row[2][10:-3] ]) #para diferenciar los msj que envio yo de los que recibo.
                     else:
                         lista_mensajes.append([row[0], row[1], row[2][10:-3]])
         csvFile.close()
@@ -226,3 +226,17 @@ class Orm():
                 else:
                     writer.writerow(usuario)
         csvFile.close()
+
+    @classmethod
+    def getTimestampFromToken(self, token):
+
+        """
+        Busca un token de cookie dentro del archivo de cookies
+        y devuelve verdadero o falso segun el caso
+        """
+        with open('/usr/local/apache2/cookies.csv', 'r') as csvFile:
+            reader = csv.reader(csvFile)
+            for row in reader:
+                if token == row[1]:
+                    return row[2]
+        return False

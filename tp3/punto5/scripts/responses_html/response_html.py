@@ -289,7 +289,7 @@ class ResponseHtml():
                 
         if mensajes_usuarios:
             for mensaje in mensajes_usuarios:
-                if mensaje[0] == usuario_que_solicita:
+                if not 'nick-session' in mensaje[0]:
                     mensajesDeChat = mensajesDeChat + "<div class='incoming_msg'>\
                                                         <div class='incoming_msg_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>\
                                                         <div class='received_msg'>\
@@ -550,6 +550,7 @@ class ResponseHtml():
                                                     var usuario = lista[0];\
                                                     var mensaje = lista[1];\
                                                     var timestamp = lista[2];\
+                                                    console.log(usuario);\
                                                     if (usuario.includes('nick-session')){\
                                                         $('.msg_history').append('<div class="+'outgoing_msg'+">\
                                                                                     <div class="+'sent_msg'+">\

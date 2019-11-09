@@ -24,12 +24,15 @@ if __name__ == "__main__" :
             pass
         
         if Orm.findTokenInTokenFile(token):
-            timestamp = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+            try:
+                timestamp = Orm.getTimestampFromToken(token)
+            except Exception as e:
+                html.setContentBody(str(e))
+                html.render()
             nick = Orm.getUserFromTokenfile(token)
             lista_usuarios_en_vivo = Orm.getUsuariosEnVivo()
             lista_nuevos_mensajes = Orm.getNuevosMensajes(nick,timestamp)
-
-            cookie['timestamp'] = timestamp
+            cookie['timestamp'] = datetime.now().strftime("%m/%d/%Y %H:%M:%S") #tiene que ser mayor al de inicio de sesion este timestamp sino el recuperar chat me devuelve los mismos msj que "chat" (duplicados)
             html.setCookie(cookie)
             html.set_http_response_sala_de_chat(lista_usuarios_en_vivo, lista_nuevos_mensajes, nick)
             html.render()

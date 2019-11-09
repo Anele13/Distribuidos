@@ -28,7 +28,7 @@ if __name__ == '__main__':
             timestamp = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
             Orm.guardarNuevoMensaje(nick, mensaje, timestamp)
-            Orm.actualizarUltimoIngreso(timestamp, nick)
+            #Orm.actualizarUltimoIngreso(timestamp, nick)
 
             #cookie['timestamp'] = timestamp
             html.setCookie(cookie) 
