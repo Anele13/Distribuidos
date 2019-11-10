@@ -271,10 +271,8 @@ class ResponseHtml():
 
 
     def set_http_response_sala_de_chat(self, usuarios_activos=None, mensajes_usuarios=None, usuario_que_solicita=None):
-
         usuariosActivos = ""
         mensajesDeChat = ""
-
         if usuarios_activos:
             for usuario in usuarios_activos: #Tiene el formato [nick, timestamp, estado (opcional)]
                 usuariosActivos = usuariosActivos + "<div class='chat_list'>\
@@ -286,7 +284,6 @@ class ResponseHtml():
                                                             </div>\
                                                         </div>\
                                                     </div>"
-                
         if mensajes_usuarios:
             for mensaje in mensajes_usuarios:
                 if not 'nick-session' in mensaje[0]:
@@ -304,7 +301,6 @@ class ResponseHtml():
                                                             <p>"+mensaje[1]+"</p>\
                                                             <span class='time_date'>"+mensaje[2]+"</span></div>\
                                                         </div>"
-
         sala_chat = "<!DOCTYPE html>\
                     <style>\
                     .container{max-width:1170px; margin:auto;}\

@@ -18,19 +18,11 @@ cookies_filepath = '/usr/local/apache2/cookies.csv'
 umbral = 1 #equivalente a 1 minuto. esta en segundos. Esto es cuanto dura la sesion
 
 # Busco todos los usuarios en el archivo de cookies
-
 with open(cookies_filepath, 'r') as csvFile:
     reader = csv.reader(csvFile)
     for row in reader:
         cookie_user_list.append(row)
 csvFile.close()
-
-# NICK TOKEN TIMESTAMP ESTADO
-
-print("estoy en cron")
-print("----------------")
-print(datetime.now())
-print("----------------")
 timestam_arribo = datetime.strptime(datetime.now().strftime('%m/%d/%Y %H:%M:%S'),'%m/%d/%Y %H:%M:%S')
 
 # Actualizo solo el que necesito
@@ -38,16 +30,10 @@ with open(cookies_filepath, 'w') as csvFile:
     writer = csv.writer(csvFile)
     for usuario in cookie_user_list:
         timestamp_archivo = datetime.strptime(str(usuario[2]),'%m/%d/%Y %H:%M:%S')
-
-        #print((timestam_arribo- timestamp_archivo).total_seconds()/60)
-
         if not (((timestam_arribo- timestamp_archivo).total_seconds()/60)> umbral):
-            #lista_resultado.append(usuario) #para diferenciar los msj que envio yo de los que recibo.
             writer.writerow(usuario)
-            
         else:
             print("Usuario que puede irse")
             print(((timestam_arribo- timestamp_archivo).total_seconds()/60))
             print(usuario)
-
 csvFile.close()
