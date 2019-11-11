@@ -1,11 +1,14 @@
 package punto1;
 
 import jade.core.*;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.util.Logger;
 
-public class Agente extends Agent{
+public class Agente extends Agent implements ActionListener{
 	String strdir = "/";
 	// Dir to list
 	String[] list;
@@ -94,4 +97,9 @@ public class Agente extends Agent{
 	protected void afterMove() {
         System.out.println("Siempre ejecuta afterMove cuando al llegar --> " + here().getID());
     }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
