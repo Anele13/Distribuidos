@@ -11,28 +11,25 @@ public class Agente extends Agent{
 	String[] list;
 	ContainerID destino = null;
 	Location origen = null;
+	
+	
+	public Agente() {
+		
+	}
 
 	public void setup()	{
-		System.out.println("Se crea al agente --> " + getName());
-		// inicializa origen y destino
-		destino = new ContainerID("Container-1", null);
-		System.out.println("Destino --> " + destino.getID());
+		destino = new ContainerID("otroche", null);
 		origen = here();
-		System.out.println("Origen --> " + origen.getID());
-		// registra el comportamiento deseado del agente
 		
-		
+			
 		
 		addBehaviour(new CyclicBehaviour(this){
 			public void action() {
 			switch(_state){
 					case 0:
-						// Comienza la migración del agente al destino
 						_state++;
-						System.out.println("Estado 0 Comienza la migración del agente al destino --> " + destino.getID());
 						try {
 							doMove(destino);
-							System.out.println("Despues de doMove en CyclicBehaviour de Estado 0 --> " + destino.getID());
 						} catch (Exception e) {
 							System.out.println("fallo al moverse al Container-1");e.getMessage();
 						}
@@ -41,18 +38,16 @@ public class Agente extends Agent{
 					case 1:
 						// el agente llegó al destino, recupera el directorio y regresa
 						_state++;
-						System.out.println("Estado 1 agente llegó a destino, recupera directorio y regresa a --> " + origen.getID());
 						try {
 							File dir = new File(strdir);
 							list = dir.list();
-							System.out.println("recuperó el directorio en " + here().getID());
 						} catch (Exception e) {System.out.println("Falló al recuperar directorio dir.list()");e.getMessage();}
-						// regresa al origen e imprime el directorio
 						try {
 							System.out.println("regresando a --> " + origen.getID());
 							doMove(origen);
 							System.out.println("despues de domove en CyclicBehaviour estado 1 --> " + here().getID());
 						} catch (Exception e) {System.out.println("Falla al mover al regresar al origen"); e.getMessage();}
+						System.out.println("ANTES DE ROMPER estado 1");
 						break;
 						
 					case 2:
@@ -64,6 +59,7 @@ public class Agente extends Agent{
 						// destruye al agente
 						System.out.println("destruye al agente --> " + getName());
 						doDelete();
+						System.out.println("ANTES DE ROMPER estado 2");
 						break;
 					default:
 						myAgent.doDelete();
