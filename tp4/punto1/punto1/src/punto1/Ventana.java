@@ -49,14 +49,17 @@ public class Ventana implements ActionListener{
 		//Agrego los botones al panel.
 		Boton botonLeer = new Boton("Leer",10,100,80);
 		Boton botonEscribir = new Boton("Escribir",150,100,120);
+		Boton botonCerrar = new Boton("Cerrar",200,250,100);
 		
 		//Defino quien ataja los eventos de los botones.
 		botonLeer.addActionListener(this);
 		botonEscribir.addActionListener(this);
+		botonCerrar.addActionListener(this);
 		
 		//Agrego los botones al panel.
 		cp.add(botonLeer);
 		cp.add(botonEscribir);
+		cp.add(botonCerrar);
 		
 		//Seteo el frame al atributo privado y lo muestro.
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,15 +87,31 @@ public class Ventana implements ActionListener{
 			manager.saludar();
 			//[TODO] ACA LEVANTAR EL AGENTE QUE HACE EL LEER (prioridad maxima).
 //			AgenteLeer agenteLeer = new AgenteLeer(contenedor,filelocal,fileremoto);
+			this.setManager(manager);
+
 		}
 		
 		//Si se pidio una escritura.
 		if (e.getActionCommand() == "Escribir") {
 			AgenteManager manager = this.getManager();
 			manager.saludar();
+
 			//[TODO] ACA LEVANTAR EL AGENTE QUE HACE EL ESCRIBIR (prioridad maxima).
 //			AgenteLeer agenteLeer = new AgenteLeer(contenedor,filelocal,fileremoto);
+			this.setManager(manager);
+
 		}
+		
+		if (e.getActionCommand() == "Cerrar") {
+			AgenteManager manager = this.getManager();
+			Ventana ventana = manager.getVentana();
+			ventana.setVisible(false);
+			manager.cerrar();
+			//[TODO] ACA LEVANTAR EL AGENTE QUE HACE EL ESCRIBIR (prioridad maxima).
+//			AgenteLeer agenteLeer = new AgenteLeer(contenedor,filelocal,fileremoto);
+
+		}
+		
 	}
 
 	
