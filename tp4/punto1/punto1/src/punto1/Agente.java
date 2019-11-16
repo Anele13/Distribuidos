@@ -8,13 +8,16 @@ import java.io.*;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.util.Logger;
 
-public class Agente extends Agent implements ActionListener{
+public class Agente extends Agent{
 	String strdir = "/";
 	// Dir to list
 	String[] list;
 	ContainerID destino = null;
 	Location origen = null;
 
+
+	
+	
 	public void setup()	{
 		System.out.println("Se crea al agente --> " + getName());
 		// inicializa origen y destino
@@ -23,7 +26,6 @@ public class Agente extends Agent implements ActionListener{
 		origen = here();
 		System.out.println("Origen --> " + origen.getID());
 		// registra el comportamiento deseado del agente
-		
 		
 		
 		addBehaviour(new CyclicBehaviour(this){
@@ -97,9 +99,5 @@ public class Agente extends Agent implements ActionListener{
 	protected void afterMove() {
         System.out.println("Siempre ejecuta afterMove cuando al llegar --> " + here().getID());
     }
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }
