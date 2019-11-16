@@ -27,7 +27,7 @@ public class AgenteManager extends Agent{
 		addBehaviour(new CyclicBehaviour(this){
 			public void action() {
 				
-				AgenteLeer agenteLeer = new AgenteLeer();
+				//AgenteLeer agenteLeer = new AgenteLeer();
 //				switch(_state){
 //						case 0:
 //							// Comienza la migración del agente al destino

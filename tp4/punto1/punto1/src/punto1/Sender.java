@@ -1,44 +1,66 @@
 package punto1;
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.ContainerID;
-import jade.core.Location;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
 
 public class Sender extends Agent {
-	String strdir = "/";
-	String[] list;
-	ContainerID destino = null;
-	Location origen = null;
-	String nombreContainer = null;
 	
+	String ContainerDestino = null;
+	String FilePath = null;
+	String AgenteReceptor = null;
 	
 	public void setup()	{
-		//destino = new ContainerID("cliente", null);
-		origen = here();
 		
-		addBehaviour(new SimpleBehaviour() {
+		Object[] arguments = getArguments();
+        AgenteReceptor = (String) arguments[0];
+        FilePath = (String) arguments[1];
+        ContainerDestino = (String) arguments[2];;
+        if (ContainerDestino != null)
+        	doMove(new ContainerID(ContainerDestino, null));
+        
+        
+		addBehaviour(new SimpleBehaviour(this) {
 			
-			@Override
-			public boolean done() {
-				return true;
+			public void leerArchivo(ACLMessage mensaje, String FilePath) {
+				boolean hayErrores = false;
+				try {
+				    BufferedReader in = new BufferedReader(new FileReader(FilePath));
+				    String str;
+				    while ((str = in.readLine()) != null) {
+				    	mensaje.setContent(str);
+						send(mensaje);
+				    }				    	
+				    in.close();
+				} catch (IOException e) {
+					hayErrores = true;
+				}
+				if (hayErrores) {
+					mensaje.setContent("Hubo un error en la ejecucion o el archivo no existe.");
+					send(mensaje);
+				}
 			}
+			
 			
 			@Override
 			public void action() {
-					ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-					AID r=new AID("Receptor@192.168.1.20:1099/JADE",AID.ISGUID);
-					r.addAddresses("http://192.168.1.20:7778/acc");
-					message.addReceiver(r);
-					message.setContent("Hello.! mensaje puto de mierda!!!!");
-					send(message);
-					System.out.println("\nMessage asAASASSAS to "+r);
+				ACLMessage mensaje = new ACLMessage(ACLMessage.INFORM);
+				mensaje.addReceiver(new AID(AgenteReceptor,AID.ISGUID));
+				leerArchivo(mensaje, FilePath);
 			}
-		});		
+			
+			
+			@Override
+			public boolean done() {
+				doDelete();
+				return true;
+			}
+		});
 	}
 }

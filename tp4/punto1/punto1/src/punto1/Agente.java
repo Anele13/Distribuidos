@@ -21,7 +21,7 @@ public class Agente extends Agent implements ActionListener{
 	}
 
 	public void setup()	{
-		destino = new ContainerID("otroche", null);
+		destino = new ContainerID("Anele", null);
 		origen = here();
 		
 			

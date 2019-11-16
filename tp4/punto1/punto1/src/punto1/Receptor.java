@@ -9,23 +9,26 @@ import jade.lang.acl.ACLMessage;
 
 
 public class Receptor extends Agent {
-	String strdir = "/";
-	String[] list;
-	ContainerID destino = null;
-	Location origen = null;
-	String nombreContainer = null;
+	
+	String ContainerDestino = null;
+	String FilePath = null;
 	
 	
 
 	public void setup()	{
-		//destino = new ContainerID(this.nombreContainer, null);
-		origen = here();
+		Object[] arguments = getArguments();
+        FilePath = (String) arguments[0];
+        ContainerDestino = (String) arguments[1];
+        if (ContainerDestino != null)
+        	doMove(new ContainerID(ContainerDestino, null));
 	
+        
 		addBehaviour(new SimpleBehaviour() {
 			
 			@Override
 			public boolean done() {
-				return false;
+				doDelete();
+				return true;
 			}
 			
 			@Override
