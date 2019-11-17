@@ -46,7 +46,7 @@ public 	class ManejadorAgentes {
 	
 	
 	public void escribir(String FilePathLocal, String FilePathRemoto, String contenedorDestino) throws StaleProxyException {
-		
+			
 		//Creo el agente receptor con el filepath donde debe escribir los datos que recibe
 		Object agentArgs[] = new Object[2];
 		agentArgs[0] = FilePathRemoto;
@@ -55,20 +55,13 @@ public 	class ManejadorAgentes {
 		
 		//Creo el agente que envia datos con el filepath remoto
 		Object agentArgs2[] = new Object[3];
-		agentArgs2[0] = FilePathLocal;
-        agentArgs2[1] = agenteReceptor.getName();
+		agentArgs2[0] = agenteReceptor.getName();
+        agentArgs2[1] = FilePathLocal;
         agentArgs2[2] = null;
         AgentController agenteSender = container.createNewAgent("Sender", "punto1.Sender", agentArgs2);
        
         //Arranco los agentes
         agenteReceptor.start();
         agenteSender.start();
-	}
-	
-	
-	public static void main(String[] args) throws StaleProxyException, UnknownHostException {
-		ManejadorAgentes m = new ManejadorAgentes();
-		m.leer("hola", "/home/anele/Desktop/unarchivocopado", "Anele");
-		m.leer("hola", "/home/anele/Desktop/unarchivocopado2", "Anele");
 	}
 }

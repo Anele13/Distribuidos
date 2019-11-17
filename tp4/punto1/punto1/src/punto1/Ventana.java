@@ -7,33 +7,35 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import jade.wrapper.StaleProxyException;
+
 
 public class Ventana implements ActionListener{
 
-	private JFrame frame ;
-	private AgenteManager manager;
-
-	public Ventana(AgenteManager manager) {
-		//Registro el agente.
-		this.setManager(manager);
-		
+	private ManejadorAgentes manejador = null;
+	
+	
+	public Ventana() throws UnknownHostException {
+		manejador = new ManejadorAgentes();
+			
 		//Creo la ventana.
-		JFrame f = new JFrame("Titulo de ventana");
+		JFrame f = new JFrame("TP 4 Distribuidos");
 		f.setSize(600, 600);
 		Container cp = f.getContentPane();
 		cp.setLayout(null);
 		
 		//Agrego los text box al panel.
-		cp.add(new Texto ("PATH-ARCHIVO-1",10,40,300));
-		cp.add(new Texto ("PATH-ARCHIVO-2",10,70,300));
-		cp.add(new Texto ("Container",10,10,100));
-		
+		cp.add(new Texto ("Anele",10,10,100));
+		cp.add(new Texto ("/home/anele/Escritorio/nuevo",10,40,300)); //local
+		cp.add(new Texto ("/home/anele/Desktop/unarchivocopado",10,70,300)); //remoto
+				
 		//Creo el text area
 		JTextArea textArea =new JTextArea();
 		textArea.setBounds(new Rectangle(330,0,300,600));
@@ -63,65 +65,49 @@ public class Ventana implements ActionListener{
 		
 		//Seteo el frame al atributo privado y lo muestro.
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setFrame(f);
 		f.setVisible(true);
 	}
 	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String contenedor,fileLocal,fileServer;
-		Component[] componentes = getComponentes(e);
 		
 		//Obtengo los textos necesarios de la ventana.
-		Texto fileLocalTextBox = (Texto)componentes[0];
-		Texto fileServerTextBox = (Texto)componentes[1];
-		Texto contenedorTextBox = (Texto)componentes[2];
-		contenedor = contenedorTextBox.getText();
+		String contenedorDestino,fileLocal,fileServer;
+		Component[] componentes = getComponentes(e);
+		
+		Texto contenedorTextBox = (Texto)componentes[0]; 
+		Texto fileLocalTextBox = (Texto)componentes[1]; 
+		Texto fileServerTextBox = (Texto)componentes[2];
+		JTextArea textAreaBox = (JTextArea)componentes[3];
+		
+		contenedorDestino = contenedorTextBox.getText();
 		fileLocal = fileLocalTextBox.getText();
 		fileServer = fileServerTextBox.getText();
 		
-		//Si se hizo pidio una lectura.
+		System.out.println(contenedorDestino);
+		System.out.println(fileLocal);
+		System.out.println(fileServer);
+		
+		
 		if (e.getActionCommand() == "Leer") {
-			AgenteManager manager = this.getManager();
-			manager.saludar();
-			//[TODO] ACA LEVANTAR EL AGENTE QUE HACE EL LEER (prioridad maxima).
-//			AgenteLeer agenteLeer = new AgenteLeer(contenedor,filelocal,fileremoto);
-			this.setManager(manager);
-
+			//textAreaBox.setText("HOLA CAPOOOOOO");
+			try {
+				manejador.leer(fileLocal, fileServer, contenedorDestino);
+			} catch (StaleProxyException e1) {
+				e1.printStackTrace();
+			}
 		}
 		
-		//Si se pidio una escritura.
 		if (e.getActionCommand() == "Escribir") {
-			AgenteManager manager = this.getManager();
-			manager.saludar();
-
-			//[TODO] ACA LEVANTAR EL AGENTE QUE HACE EL ESCRIBIR (prioridad maxima).
-//			AgenteLeer agenteLeer = new AgenteLeer(contenedor,filelocal,fileremoto);
-			this.setManager(manager);
-
-		}
-		
-		if (e.getActionCommand() == "Cerrar") {
-			AgenteManager manager = this.getManager();
-			Ventana ventana = manager.getVentana();
-			ventana.setVisible(false);
-			manager.cerrar();
-			//[TODO] ACA LEVANTAR EL AGENTE QUE HACE EL ESCRIBIR (prioridad maxima).
-//			AgenteLeer agenteLeer = new AgenteLeer(contenedor,filelocal,fileremoto);
-
-		}
-		
+			try {
+				manejador.escribir(fileLocal, fileServer, contenedorDestino);
+			} catch (StaleProxyException e1) {
+				e1.printStackTrace();
+			}
+		}		
 	}
 
-	
-	public void setVisible(boolean valorVerdad) {
-		JFrame f = this.getFrame();
-		f.setVisible(valorVerdad);
-		this.setFrame(f);
-	}
-	
-	
 
 	private Component[] getComponentes(ActionEvent e) { 
 		Component component = (Component) e.getSource();
@@ -130,25 +116,8 @@ public class Ventana implements ActionListener{
 		return componentes;
 	}
 	
-
-
-	public AgenteManager getManager() {
-		return manager;
+	public static void main(String[] args) throws UnknownHostException {
+		Ventana v = new Ventana();
 	}
-
-
-	public void setManager(AgenteManager manager) {
-		this.manager = manager;
-	}
-
-
-	public JFrame getFrame() {
-		return frame;
-	}
-
-
-	public void setFrame(JFrame frame) {
-		this.frame = frame;
-	}
-
+	
 }
