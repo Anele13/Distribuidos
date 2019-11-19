@@ -8,8 +8,10 @@ public class Main {
 	public static void main(String args[]) throws IOException  {
 
 		Cliente cliente = new Cliente();
-		System.out.println("SERVER RUNNING");
-		ServidorStub server = new ServidorStub();
-		server.run();
+		//System.out.println("SERVER RUNNING");
+		//ServidorStub server = new ServidorStub();
+		//server.run();
 	}
 }
+
+///home/anele/Escritorio/archivo.txt

@@ -32,7 +32,7 @@ void rfs_1(char *host, char *file_name){
     read_record rfs_read_1_arg;
     int *result_3;
     int rfs_close_1_arg;
-    int fd, n;
+    int fd, n, a;
 
     #ifndef DEBUG
         clnt = clnt_create (host, RFS, RFS_VERS_1, "udp"); if (clnt == NULL) {
@@ -67,11 +67,12 @@ void rfs_1(char *host, char *file_name){
     }
 
     for (n=0; n < result_2->file_data_len; ++n)
-        putchar(result_2->file_data_val[n]);
+        //putchar(result_2->file_data_val[n]);
+	a = 1;
     } while (result_2->file_data_len == 20);
 
 
-    putchar('\n');
+    //putchar('\n');
     result_3 = rfs_close_1(&rfs_close_1_arg, clnt);
     
     if (result_3 == (int *) NULL) {

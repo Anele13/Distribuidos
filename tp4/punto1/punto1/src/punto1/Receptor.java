@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import jade.core.Agent;
 import jade.core.ContainerID;
 import jade.core.behaviours.*;
@@ -29,9 +32,16 @@ public class Receptor extends Agent {
         	
         	
         	public void open() {
+        		
         		try {
-        			if(archivo == null)
-            			archivo = new FileOutputStream(new File(filePath));
+        			if(archivo == null) {
+        				Calendar cal = Calendar.getInstance();
+            	        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            	        System.out.println("Hora de inicio de lectura");
+            	        System.out.println( sdf.format(cal.getTime()) );
+            	        archivo = new FileOutputStream(new File(filePath));
+        			}
+            			
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
@@ -39,9 +49,16 @@ public class Receptor extends Agent {
 
         	
         	public void close() {
+        		
         		try {
-        			if(archivo != null)
-            			archivo.close();
+        			if(archivo != null) {
+        				Calendar cal = Calendar.getInstance();
+            	        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            	        System.out.println("Hora de fin de lectura");
+            	        System.out.println( sdf.format(cal.getTime()) );
+            	        archivo.close();
+        			}
+            			
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

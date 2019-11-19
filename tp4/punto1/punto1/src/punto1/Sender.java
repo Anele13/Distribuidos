@@ -19,7 +19,8 @@ public class Sender extends Agent {
 	String filePath = null;
 	FileInputStream archivo = null;
 	String AgenteReceptor = null;
-	byte[] respuesta = new byte[50];
+	int max = 1000;
+	byte[] respuesta = new byte[max];
 
 	public void setup()	{
 		
@@ -55,11 +56,11 @@ public class Sender extends Agent {
         	
         	
 			public byte[] read() {
-	            byte[] buffer = new byte[50];
+	            byte[] buffer = new byte[max];
 				int cantidad;
 
 				try {
-					cantidad = archivo.read(buffer,0,50);
+					cantidad = archivo.read(buffer,0,max);
 		            if (cantidad == -1) {
 		            	return null;
 		            }

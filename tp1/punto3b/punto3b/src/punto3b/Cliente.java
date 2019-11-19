@@ -52,7 +52,7 @@ public class Cliente  implements ActionListener{
 			
 	             
 
-			int max = 50;
+			int max = 1000;
 			int fd;
 			int cantidadLeida;
 			byte[] buffer = new byte[max];
@@ -86,7 +86,9 @@ public class Cliente  implements ActionListener{
 			}
 			}
 	        System.out.println("Hora de finalizacion lectura");
-	        System.out.println( sdf.format(cal.getTime()) );
+	        Calendar cal2 = Calendar.getInstance();
+	        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss");
+	        System.out.println( sdf2.format(cal2.getTime()) );
 		}
 
 		

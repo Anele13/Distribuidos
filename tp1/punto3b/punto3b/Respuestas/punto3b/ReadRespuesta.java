@@ -2,7 +2,7 @@ package punto3b;
 
 public class ReadRespuesta extends Respuesta {
 
-	byte[] buf = new byte[50];
+	byte[] buf = new byte[1000];
 	int cantidadLeida;
 
 	
