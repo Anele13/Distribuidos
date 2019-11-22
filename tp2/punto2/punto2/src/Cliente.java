@@ -152,7 +152,7 @@ public class Cliente implements ActionListener{
 			
 	             
 
-			int max = 50;
+			int max = 1000;
 			int fd;
 			int cantidadLeida;
 			byte[] buffer = null;
@@ -191,9 +191,10 @@ public class Cliente implements ActionListener{
 				e2.printStackTrace();
 			}
 
-			
+			Calendar cal2 = Calendar.getInstance();
+			SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss");
 	        System.out.println("Hora de finalizacion lectura");
-	        System.out.println( sdf.format(cal.getTime()) );
+	        System.out.println( sdf2.format(cal2.getTime()) );
 		}
 
 		
@@ -241,7 +242,7 @@ public class Cliente implements ActionListener{
 	
 	
     public static void main(String[] args) throws FileNotFoundException, MalformedURLException, RemoteException, NotBoundException {
-        Cliente c = new Cliente(args[0]);
+        Cliente c = new Cliente("localhost");
         Ventana v = new Ventana(c);
     }
     
