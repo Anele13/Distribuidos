@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import jade.core.Agent;
 import jade.core.ContainerID;
 import jade.core.behaviours.*;
@@ -27,34 +30,64 @@ public class Receptor extends Agent {
                 
         addBehaviour(new CyclicBehaviour(this) {
         	
-        	public void crearArchivo() throws FileNotFoundException {
-        		if(archivo == null)
-        			archivo = new FileOutputStream(new File(filePath));
-        	}
-
-        	public void action() {
+        	
+        	public void open() {
+        		
         		try {
-					crearArchivo();
+        			if(archivo == null) {
+        				Calendar cal = Calendar.getInstance();
+            	        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            	        System.out.println("Hora de inicio de lectura");
+            	        System.out.println( sdf.format(cal.getTime()) );
+            	        archivo = new FileOutputStream(new File(filePath));
+        			}
+            			
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
+        	}
+
+        	
+        	public void close() {
+        		
+        		try {
+        			if(archivo != null) {
+        				Calendar cal = Calendar.getInstance();
+            	        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            	        System.out.println("Hora de fin de lectura");
+            	        System.out.println( sdf.format(cal.getTime()) );
+            	        archivo.close();
+        			}
+            			
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+        	}
+        	
+        	
+        	public void write(String mensaje) {
+        		try {
+					archivo.write(mensaje.getBytes());
+					archivo.write("\n".getBytes());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	}
+        	
+        	
+        	public void action() {
+        		open();
 				ACLMessage msg= receive();
 				if (msg!=null) {
-					String mensaje = msg.getContent();
-					if (mensaje.equals("-1")) {
-						doDelete();//Flag fin de archivo
+					if (msg.getContent().equals("-1")) {
+						close();
+						doDelete();
 					}
 					else {
-						try {
-							archivo.write(mensaje.getBytes());
-							archivo.write("\n".getBytes());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						write(msg.getContent());
 					}						
 				}
 		    }
-        	
 		});
 	}
 }

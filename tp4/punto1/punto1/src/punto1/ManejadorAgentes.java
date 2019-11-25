@@ -19,7 +19,7 @@ public 	class ManejadorAgentes {
 		Runtime runtime = Runtime.instance();	
 		Profile profile = new ProfileImpl();
 		profile.setParameter(Profile.CONTAINER_NAME, "ServerLocal");
-		profile.setParameter(Profile.LOCAL_HOST, "192.168.1.20"); //TODO ver si se puede refactorizar esto de harcodear la ip.
+		profile.setParameter(Profile.LOCAL_HOST, "192.168.43.152"); //TODO ver si se puede refactorizar esto de harcodear la ip.
 		container = runtime.createAgentContainer(profile);	
 	}
 

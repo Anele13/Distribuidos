@@ -3,9 +3,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.ContainerID;
@@ -17,7 +17,10 @@ public class Sender extends Agent {
 	
 	String ContainerDestino = null;
 	String filePath = null;
+	FileInputStream archivo = null;
 	String AgenteReceptor = null;
+	int max = 1000;
+	byte[] respuesta = new byte[max];
 
 	public void setup()	{
 		
@@ -31,28 +34,42 @@ public class Sender extends Agent {
         
 		addBehaviour(new SimpleBehaviour(this) {
 			
-			public void leerArchivo(ACLMessage mensaje, String FilePath) {
-				boolean hayErrores = false;
+			
+			public void open() {
+        		try {
+        			if(archivo == null)
+            			archivo = new FileInputStream(new File(filePath));
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
+        	}
+
+        	
+        	public void close() {
+        		try {
+        			if(archivo != null)
+            			archivo.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+        	}
+        	
+        	
+			public byte[] read() {
+	            byte[] buffer = new byte[max];
+				int cantidad;
+
 				try {
-				    BufferedReader in = new BufferedReader(new FileReader(FilePath));
-				    String str;
-				    while ((str = in.readLine()) != null) {
-				    	mensaje.setContent(str);
-						send(mensaje);
-				    }				    	
-				    in.close();
+					cantidad = archivo.read(buffer,0,max);
+		            if (cantidad == -1) {
+		            	return null;
+		            }
+		            return buffer;
+				} catch (FileNotFoundException e) {
+					return null;
 				} catch (IOException e) {
-					hayErrores = true;
-				}
-				
-				if (hayErrores) {
-					mensaje.setContent("Hubo un error en la ejecucion o el archivo no existe.");
-					send(mensaje);
-				}
-				else{
-					mensaje.setContent("-1"); //EOF
-					send(mensaje);
-				}
+					return null;
+				}	
 			}
 			
 			
@@ -60,7 +77,15 @@ public class Sender extends Agent {
 			public void action() {
 				ACLMessage mensaje = new ACLMessage(ACLMessage.INFORM);
 				mensaje.addReceiver(new AID(AgenteReceptor,AID.ISGUID));
-				leerArchivo(mensaje, filePath);
+				
+				open();	
+				while ((respuesta = read()) != null) {
+					mensaje.setContent(new String(respuesta).trim());
+					send(mensaje);					
+				}
+				mensaje.setContent("-1");
+				send(mensaje);
+				close();
 			}
 			
 			

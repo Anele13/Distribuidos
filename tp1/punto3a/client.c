@@ -50,10 +50,11 @@ void rfs_1(char *host, char *file_name){
         }
     
     for (n=0; n < result_2->file_data_len; ++n)
-        putchar(result_2->file_data_val[n]);
+        //putchar(result_2->file_data_val[n]);
+	int a = 1;
     } while (result_2->file_data_len == 20);
 
-    putchar('\n');
+    //putchar('\n');
     result_3 = rfs_close_1(&rfs_close_1_arg, clnt);
     
     if (result_3 == (int *) NULL) {
