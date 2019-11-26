@@ -1,15 +1,82 @@
-<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
-<script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous'></script>
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>
+
+<link rel="stylesheet" href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' crossorigin='anonymous'>
+<script src='https://code.jquery.com/jquery-3.3.1.slim.min.js' crossorigin='anonymous'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' crossorigin='anonymous'></script>
+<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' crossorigin='anonymous'></script>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css' type='text/css' rel='stylesheet'>
 <script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>"
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+
+<!-- estilos del chat-->
+<link rel="stylesheet" href='estilos-chat.css'>
 
 
-<html>
-        <button class="btn btn-info" onclick="enviarFinSesion()"> Fin de la Sesion</button>
+
+    <html>
         <meta charset="utf-8">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+    
+        <div class="row pull-right">
+            <button class="btn btn-info" onclick="enviarFinSesion()"> Fin de la Sesion</button>
+        </div>
+
+        <div class="row">
+            
+            <div class="col-md-2">
+                <div class="list-group banner-usuarios" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active" data-toggle="list" href="#nav-profile" role="tab" aria-controls="home">TODOS</a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <nav>
+                    <div class="nav nav-tabs nav-conversaciones" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">TODOS</a>
+                        <a class="nav-item nav-link" data-toggle="tab" href="#mi_div" role="tab" aria-controls="mi_div" >otrossss</a>
+
+                    </div>
+                </nav>
+                
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home">...</div>
+                    <div class="tab-pane fade show" id="mi_div">HOLAC POS</div>
+                        <!--
+                        <div class="mesgs">
+                            <div class="msg_history">
+                                <div class="incoming_msg">
+                                <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                                <div class="received_msg">
+                                    <div class="received_withd_msg">
+                                    <p>Test which is a new approach to have all
+                                        solutions</p>
+                                    <span class="time_date"> 11:01 AM    |    June 9</span></div>
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="type_msg">
+                                <div class="input_msg_write">
+                                    <input type="text" class="write_msg" placeholder="Type a message"/>
+                                    <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+        
+        
+                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         <script type="text/javascript" languaje="javascript">
 
@@ -45,6 +112,9 @@
                 client.subscribe("usuarios_activos");
                 client.subscribe("usuarios_inactivos");
 
+                //suscripcion a topico para cuando me llega una solicitud a unirme a algun chat
+                client.subscribe(clienteId+"/notificaciones")
+
                 setTimeout(function(){
                     unirmeAUsuariosEnVivo();
                 },3000);
@@ -69,6 +139,7 @@
                             usuarios_activos = usuarios_activos + element + '-';
                         }
                     });
+                    crearBannerNuevosUsuarios(usuarios_activos);
                     console.log("luego de login usuarios activos tiene: "+usuarios_activos);
                 }
 
@@ -85,7 +156,19 @@
                 if (message.destinationName == 'chat_general'){
                     console.log("Mensaje para todos los usuarios del chart general "+ message.payloadString)
                 }
+
+                if (message.destinationName == clienteId+"/notificaciones"){
+                    //si alguien quiere chatear conmigo entonces automaticamente me uno al canal que recibo desde el
+                    //y abro una nueva solapa de chat con el nombre del usuario que viene 
+                    //y me suscribo a la la nueva sala de chat
+                    stringConeccion = message.payloadString.split(":");
+                    usuarioQueMeQuiereHablar = stringConeccion[0];
+                    topicoRandom = stringConeccion[1];
+                    client.subscribe(topicoRandom) //tambien me suscribo yo al chat
+                    crearNuevaVentanaDeConversacion(usuarioQueMeQuiereHablar);  //iniciar una nueva ventana en algun lado con el id del topico
+                }
             }
+
 
             function unirmeAUsuariosEnVivo(){
                 message = new Paho.MQTT.Message(usuarios_activos);
@@ -94,11 +177,43 @@
                 client.send(message);
             }
 
+
             function enviarFinSesion(){
                 message = new Paho.MQTT.Message(clienteId);
                 //message.retained = true;
                 message.destinationName = "usuarios_inactivos";
                 client.send(message);
+            }
+
+
+            function conversarConCliente(usuarioConElqueQuieroChatear){
+                //debe crear un nuevo topico (puede ser un numero aleatorio) y se lo envia al cliente con el que quiere chatear
+                //mas precisamente a usuarioConElqueQuieroChatear/notificaciones
+
+                //usuarioConElqueQuieroChatear = "Anele" //TODO recibir de algun lado este parametro
+                topicoRandom = "123456789"
+                topico = clienteId+":"+topicoRandom; //el mensaje es ClienteQueIniciaChat:n° random de chat
+                message = new Paho.MQTT.Message(topico);
+                message.destinationName = usuarioConElqueQuieroChatear+"/notificaciones";
+                client.send(message);    
+                client.subscribe(topicoRandom) //tambien me suscribo yo al chat
+                crearNuevaVentanaDeConversacion(usuarioConElqueQuieroChatear);  //iniciar una nueva ventana en algun lado con el id del topico
+            }
+
+            function crearNuevaVentanaDeConversacion(nombreUsuario){
+                $('.nav-conversaciones').append("<a class='nav-item nav-link' id='"+nombreUsuario+
+                                                "' data-toggle='tab' href='"+nombreUsuario+
+                                                "' role='tab' aria-controls='"+nombreUsuario+
+                                                "'>"+nombreUsuario+"</a>"+
+                                                "")
+            }
+
+            function crearBannerNuevosUsuarios(usuarios_activos){
+                usuarios_activos.split('-').forEach(element => {
+                    if (!$(".banner-usuarios").html().includes(element)){
+                        $(".banner-usuarios").append("<a class='list-group-item list-group-item-action'data-toggle='list' href='#' onclick='conversarConCliente(this.id)' role='tab' aria-controls='home' id="+element+">"+ element+"</a>");
+                    }
+                });
             }
                     
         </script>
