@@ -4,7 +4,7 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' crossorigin='anonymous'></script>
 <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' crossorigin='anonymous'></script>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css' type='text/css' rel='stylesheet'>
-<script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>"
+<script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
 
 <!-- estilos del chat-->
@@ -32,14 +32,12 @@
                     <div class="nav nav-tabs nav-conversaciones" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">TODOS</a>
                         <a class="nav-item nav-link" data-toggle="tab" href="#mi_div" role="tab" aria-controls="mi_div" >otrossss</a>
-
                     </div>
                 </nav>
                 
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-home">...</div>
-                    <div class="tab-pane fade show" id="mi_div">HOLAC POS</div>
-                        <!--
+                    <div class="tab-pane fade show active" id="nav-home">
+
                         <div class="mesgs">
                             <div class="msg_history">
                                 <div class="incoming_msg">
@@ -60,18 +58,15 @@
                                 </div>
                             </div>
                         </div>
+
+                        
                     </div>
-                    -->
+                    <div class="tab-pane fade show" id="mi_div">HOLAC POS</div>
                 </div>
             </div>
         
         
                 
-        
-        
-        
-        
-        
         
         
         
@@ -201,11 +196,11 @@
             }
 
             function crearNuevaVentanaDeConversacion(nombreUsuario){
-                $('.nav-conversaciones').append("<a class='nav-item nav-link' id='"+nombreUsuario+
-                                                "' data-toggle='tab' href='"+nombreUsuario+
+                $('.nav-conversaciones').append("<a class='nav-item nav-link' data-toggle='tab' href='"+nombreUsuario+
                                                 "' role='tab' aria-controls='"+nombreUsuario+
                                                 "'>"+nombreUsuario+"</a>"+
                                                 "")
+                $('#nav-tabContent').append("<div class='tab-pane fade show' id='"+nombreUsuario+"'>Este es un div para"+nombreUsuario+"</div>")
             }
 
             function crearBannerNuevosUsuarios(usuarios_activos){
