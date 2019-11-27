@@ -23,45 +23,35 @@
             
             <div class="col-md-2">
                 <div class="list-group banner-usuarios" id="list-tab" role="tablist">
-                    <a class="list-group-item list-group-item-action active" data-toggle="list" href="#nav-profile" role="tab" aria-controls="home">TODOS</a>
+                    <a class="list-group-item list-group-item-action active" data-toggle="list" href="#chat_general" role="tab" aria-controls="home">Chat General</a>
                 </div>
             </div>
 
             <div class="col-md-9">
                 <nav>
                     <div class="nav nav-tabs nav-conversaciones" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">TODOS</a>
-                        <a class="nav-item nav-link" data-toggle="tab" href="#mi_div" role="tab" aria-controls="mi_div" >otrossss</a>
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#_chat_general" role="tab" aria-controls="_chat_general" aria-selected="true">Chat General</a>
                     </div>
                 </nav>
                 
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-home">
+                    <div class="tab-pane fade show active" id="_chat_general">
 
                         <div class="mesgs">
-                            <div class="msg_history">
-                                <div class="incoming_msg">
-                                <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                                <div class="received_msg">
-                                    <div class="received_withd_msg">
-                                    <p>Test which is a new approach to have all
-                                        solutions</p>
-                                    <span class="time_date"> 11:01 AM    |    June 9</span></div>
-                                </div>
-                                </div>
+                            <div class="msg_history_chat_general" style='height: 516px; overflow-y: auto;'>
                             </div>
 
                             <div class="type_msg">
                                 <div class="input_msg_write">
-                                    <input type="text" class="write_msg" placeholder="Type a message"/>
-                                    <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                    <input id="chat_general" type="text" class="write_msg" placeholder="Type a message"/>
+                                    <button class="msg_send_btn" type="button" onclick="enviarMensaje(this);"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
                                 </div>
                             </div>
                         </div>
 
                         
                     </div>
-                    <div class="tab-pane fade show" id="mi_div">HOLAC POS</div>
+
                 </div>
             </div>
         
@@ -76,13 +66,14 @@
         <script type="text/javascript" languaje="javascript">
 
 
-            var clienteId = "Pepe";
+            var clienteId = "Anele";
             var usuarios_activos = clienteId+"-";
+            var conversaciones_activas = [];
 
             //Creo el mensaje que se va a enviar en caso de desconeccion abrupta
             var messageTestament = new Paho.MQTT.Message("Soy en usuario: "+clienteId + " y me estoy muriendo!");
             messageTestament.destinationName = "usuarios_inactivos";
-            messageTestament.retained = true;
+            messageTestament.retained = false;
 
 
             // Create a client instance
@@ -103,7 +94,7 @@
             // called when the client connects
             function onConnect() {
                 // Once a connection has been made, make a subscription and send a message.
-                client.subscribe("chat_general");
+                client.subscribe("conversaciones/#");
                 client.subscribe("usuarios_activos");
                 client.subscribe("usuarios_inactivos");
 
@@ -130,11 +121,12 @@
                 //topico de usuarios en vivo
                 if (message.destinationName == 'usuarios_activos'){
                     message.payloadString.split('-').forEach(element => {
-                        if(!usuarios_activos.includes(element)){
+                        if(!usuarios_activos.includes(element) && element != clienteId){
                             usuarios_activos = usuarios_activos + element + '-';
+                            crearBannerNuevosUsuarios(element);
                         }
                     });
-                    crearBannerNuevosUsuarios(usuarios_activos);
+                    
                     console.log("luego de login usuarios activos tiene: "+usuarios_activos);
                 }
 
@@ -148,9 +140,6 @@
                     console.log("luego de borrar usuarios activos tiene "+usuarios_activos)
                 }
 
-                if (message.destinationName == 'chat_general'){
-                    console.log("Mensaje para todos los usuarios del chart general "+ message.payloadString)
-                }
 
                 if (message.destinationName == clienteId+"/notificaciones"){
                     //si alguien quiere chatear conmigo entonces automaticamente me uno al canal que recibo desde el
@@ -159,11 +148,23 @@
                     stringConeccion = message.payloadString.split(":");
                     usuarioQueMeQuiereHablar = stringConeccion[0];
                     topicoRandom = stringConeccion[1];
-                    client.subscribe(topicoRandom) //tambien me suscribo yo al chat
-                    crearNuevaVentanaDeConversacion(usuarioQueMeQuiereHablar);  //iniciar una nueva ventana en algun lado con el id del topico
+                    alert("-----------");
+                    alert(topicoRandom);
+                    client.subscribe("conversaciones/"+topicoRandom) //tambien me suscribo yo al chat
+                    crearNuevaVentanaDeConversacion(usuarioQueMeQuiereHablar, topicoRandom);  //iniciar una nueva ventana en algun lado con el id del topico
+                    updateListaConversacionesIniciadas(usuarioQueMeQuiereHablar, topicoRandom);
                 }
+
+
+                if (message.destinationName.includes('conversaciones')){
+                    topico = message.destinationName.split('/')[1];
+                    console.log(topico);
+                    appendNuevoMensaje(topico, message.payloadString);
+                }
+
             }
 
+            
 
             function unirmeAUsuariosEnVivo(){
                 message = new Paho.MQTT.Message(usuarios_activos);
@@ -182,34 +183,105 @@
 
 
             function conversarConCliente(usuarioConElqueQuieroChatear){
+                console.log("----------me llega--------------")
                 //debe crear un nuevo topico (puede ser un numero aleatorio) y se lo envia al cliente con el que quiere chatear
                 //mas precisamente a usuarioConElqueQuieroChatear/notificaciones
 
                 //usuarioConElqueQuieroChatear = "Anele" //TODO recibir de algun lado este parametro
-                topicoRandom = "123456789"
-                topico = clienteId+":"+topicoRandom; //el mensaje es ClienteQueIniciaChat:n° random de chat
-                message = new Paho.MQTT.Message(topico);
+                random = Math.floor(Math.random() * 101).toString(); //te da un numero random entre 0 y 101
+                topicoRandom = random;
+                msg = clienteId+":"+topicoRandom; //el mensaje es ClienteQueIniciaChat:n°random de chat
+                message = new Paho.MQTT.Message(msg);
                 message.destinationName = usuarioConElqueQuieroChatear+"/notificaciones";
                 client.send(message);    
                 client.subscribe(topicoRandom) //tambien me suscribo yo al chat
-                crearNuevaVentanaDeConversacion(usuarioConElqueQuieroChatear);  //iniciar una nueva ventana en algun lado con el id del topico
+                crearNuevaVentanaDeConversacion(usuarioConElqueQuieroChatear, random);  //iniciar una nueva ventana en algun lado con el id del topico
+                updateListaConversacionesIniciadas(usuarioConElqueQuieroChatear, random);
+
             }
 
-            function crearNuevaVentanaDeConversacion(nombreUsuario){
-                $('.nav-conversaciones').append("<a class='nav-item nav-link' data-toggle='tab' href='"+nombreUsuario+
-                                                "' role='tab' aria-controls='"+nombreUsuario+
-                                                "'>"+nombreUsuario+"</a>"+
-                                                "")
-                $('#nav-tabContent').append("<div class='tab-pane fade show' id='"+nombreUsuario+"'>Este es un div para"+nombreUsuario+"</div>")
+            //<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">TODOS</a>
+
+
+            function crearNuevaVentanaDeConversacion(nombreUsuario, topico){
+                
+                //TODO si ya esta abierta una conversacion que la reutilice.
+
+                $('.nav-conversaciones').append("<a class='nav-item nav-link' data-toggle='tab' href='#_"+topico+
+                                                "' role='tab' aria-controls='_"+topico+
+                                                "'>"+nombreUsuario+"</a>");
+
+                $('#nav-tabContent').append("<div class='tab-pane fade show' id='_"+topico+"'>"+
+                                                "<div class='mesgs'>\
+                                                    <div class='msg_history_"+topico+"' style='height: 516px; overflow-y: auto;'>\
+                                                    </div>\
+                                                    <div class='type_msg' style='background-color: white;'>\
+                                                        <div class='input_msg_write'>\
+                                                            <input id='"+topico+"' type='text' class='write_msg' placeholder='Type a message' />\
+                                                            <button class='msg_send_btn' type='button' onclick='enviarMensaje(this);'><i class='fa fa-paper-plane-o' aria-hidden='true'></i></button>\
+                                                        </div>\
+                                                    </div>\
+                                                </div>\
+                                            </div>")
             }
 
-            function crearBannerNuevosUsuarios(usuarios_activos){
+
+
+            function crearBannerNuevosUsuarios(usuario){
+                /*
                 usuarios_activos.split('-').forEach(element => {
                     if (!$(".banner-usuarios").html().includes(element)){
                         $(".banner-usuarios").append("<a class='list-group-item list-group-item-action'data-toggle='list' href='#' onclick='conversarConCliente(this.id)' role='tab' aria-controls='home' id="+element+">"+ element+"</a>");
                     }
                 });
+                */
+                if (!$(".banner-usuarios").html().includes(usuario)){
+                    $(".banner-usuarios").append("<a class='list-group-item list-group-item-action'data-toggle='list' href='#' onclick='conversarConCliente(this.id)' role='tab' aria-controls='home' id="+usuario+">"+ usuario+"</a>");
+                }
             }
-                    
+            
+
+            function updateListaConversacionesIniciadas(username, id_topico){
+                // TODO: primero buscar antes de insertar
+                conversaciones_activas.push({
+                    key : username,
+                    value: id_topico
+                })
+            }
+
+
+            function enviarMensaje(boton){
+                topico = $(boton).prev()[0].id; 
+                mensaje = clienteId+":"+ $(boton).prev()[0].value;
+                $($(boton).prev()[0]).val('');
+                //appendNuevoMensaje(topico, clienteId) //NO VA ACA, VA EN RECIBIR
+                message = new Paho.MQTT.Message(mensaje);
+                alert(topico);
+                message.destinationName = "conversaciones/"+topico;
+                client.send(message);
+            }
+
+
+            function appendNuevoMensaje(topico, mensaje){
+                usuarioQueEnviaMsg = mensaje.split(":")[0];
+                msg = mensaje.split(":")[1];
+                if (usuarioQueEnviaMsg == clienteId){
+                    $(".msg_history_"+topico).append("<div class='outgoing_msg'>\
+                                                        <div class='sent_msg'>\
+                                                            <p>'"+msg+"'</p>\
+                                                        </div>");
+                }
+                else{
+                    $(".msg_history_"+topico).append("<div class='incoming_msg'>\
+                                                        <div class='incoming_msg_img'>\
+                                                        <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>\
+                                                        <div class='received_msg'>\
+                                                            <div class='received_withd_msg'>\
+                                                            <p>'"+msg+"'</p>\
+                                                            <span class='time_date'></span></div>\
+                                                        </div>\
+                                                        </div>");
+                }
+            }
         </script>
 </html>
