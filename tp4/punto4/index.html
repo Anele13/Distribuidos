@@ -14,46 +14,67 @@
 
     <html>
         <meta charset="utf-8">
-    
-        <div class="row pull-right">
-            <button class="btn btn-info" onclick="enviarFinSesion()"> Fin de la Sesion</button>
+        <div class = "ventana-1">
+            <body style='background-color: #f5f5f5'>
+                <div class='login-form'>
+                    <h2>Antes de entrar ..</h2>
+                    <form id="form_login" method='POST'>
+                        <div class='text-center'>
+                            <i class='fa fa-user' style='font-size:100px;' aria-hidden='true'></i>
+                        </div>
+                        <br>
+                        <div class='form-group'>
+                            <input type='text' class='form-control' name='username' id='username' maxlength='70' pattern='^[A-Za-z0-9]*' placeholder='Nombre de usuario (nick)' required>
+                            <br>
+                            <input type='text' class='form-control' name='host' id='host' value="localhost" placeholder='Elija un host)'>
+                            <br>
+                            <input type='text' class='form-control' name='port' id='port' value="1884" placeholder='Elija un puerto'>
+                        </div>
+                        <br>
+                        <div class='form-group'>
+                            <button type='submit' class='btn btn-primary btn-block'>Ingresar</button>
+                        </div>
+                    </form>
+                </div>\
+            </body>
         </div>
 
-        <div class="row">
-            
-            <div class="col-md-2">
-                <div class="list-group banner-usuarios" id="list-tab" role="tablist">
-                    <a class="list-group-item list-group-item-action active" data-toggle="list" href="#chat_general" role="tab" aria-controls="home">Chat General</a>
-                </div>
+        <div class="ventana-2" style="display: none;">
+            <div class="row pull-right">
+                <button class="btn btn-info" onclick="enviarFinSesion()"> Fin de la Sesion</button>
             </div>
-
-            <div class="col-md-9">
-                <nav>
-                    <div class="nav nav-tabs nav-conversaciones" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#_chat_general" role="tab" aria-controls="_chat_general" aria-selected="true">Chat General</a>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="list-group banner-usuarios" id="list-tab" role="tablist">
+                        <a class="list-group-item list-group-item-action active" data-toggle="list" href="#chat_general" role="tab" aria-controls="home">Chat General</a>
                     </div>
-                </nav>
-                
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="_chat_general">
-
-                        <div class="mesgs">
-                            <div class="msg_history_chat_general" style='height: 516px; overflow-y: auto;'>
-                            </div>
-
-                            <div class="type_msg">
-                                <div class="input_msg_write">
-                                    <input id="chat_general" type="text" class="write_msg" placeholder="Type a message"/>
-                                    <button class="msg_send_btn" type="button" onclick="enviarMensaje(this);"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                </div>
+                <div class="col-md-9">
+                    <nav>
+                        <div class="nav nav-tabs nav-conversaciones" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#_chat_general" role="tab" aria-controls="_chat_general" aria-selected="true">Chat General</a>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="_chat_general">
+                            <div class="mesgs">
+                                <div class="msg_history_chat_general" style='height: 516px; overflow-y: auto;'>
+                                </div>
+                                <div class="type_msg">
+                                    <div class="input_msg_write">
+                                        <input id="chat_general" type="text" class="write_msg" placeholder="Type a message"/>
+                                        <button class="msg_send_btn" type="button" onclick="enviarMensaje(this);"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        
                     </div>
-
                 </div>
             </div>
+        </div>
+
+
+        
         
         
                 
@@ -64,31 +85,22 @@
         
         
         <script type="text/javascript" languaje="javascript">
-
-
-            var clienteId = "Anele";
-            var usuarios_activos = clienteId+"-";
+            var clienteId = "";
+            var usuarios_activos = "";
             var conversaciones_activas = [];
-
-            //Creo el mensaje que se va a enviar en caso de desconeccion abrupta
             var messageTestament = new Paho.MQTT.Message("Soy en usuario: "+clienteId + " y me estoy muriendo!");
             messageTestament.destinationName = "usuarios_inactivos";
             messageTestament.retained = false;
 
-
-            // Create a client instance
-            client = new Paho.MQTT.Client("localhost", Number("1884"), clienteId);
-
-            // set callback handlers
-            client.onConnectionLost = onConnectionLost;
-            client.onMessageArrived = onMessageArrived;
-
-            // connect the client
-            client.connect({onSuccess:onConnect});
-
-
-
-
+            
+            function login(username, host,port){
+                clienteId = username;
+                usuarios_activos = clienteId+"-";
+                client = new Paho.MQTT.Client(host, Number(port), clienteId);
+                client.onConnectionLost = onConnectionLost;
+                client.onMessageArrived = onMessageArrived;
+                client.connect({onSuccess:onConnect});
+            }
 
 
             // called when the client connects
@@ -97,16 +109,13 @@
                 client.subscribe("conversaciones/#");
                 client.subscribe("usuarios_activos");
                 client.subscribe("usuarios_inactivos");
-
                 //suscripcion a topico para cuando me llega una solicitud a unirme a algun chat
                 client.subscribe(clienteId+"/notificaciones")
-
                 setTimeout(function(){
                     unirmeAUsuariosEnVivo();
                 },3000);
-
-                
             }
+
 
             // called when the client loses its connection
             function onConnectionLost(responseObject) {
@@ -200,7 +209,6 @@
 
             }
 
-            //<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">TODOS</a>
 
 
             function crearNuevaVentanaDeConversacion(nombreUsuario, topico){
@@ -283,5 +291,17 @@
                                                         </div>");
                 }
             }
+
+            $("#form_login").on("submit", function(){
+                $('.ventana-1').toggle();
+                $('.ventana-2').toggle();
+                username = $('#username').val();
+                host = $('#host').val();
+                port = $('#port').val();  
+                login(username, host, port);
+                return false;
+            })
+
+
         </script>
 </html>
