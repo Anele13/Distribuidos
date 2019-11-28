@@ -37,7 +37,8 @@ public class AgenteRecorredor extends Agent
 	private ArrayList containers = new ArrayList(); // Obtiene una Lista de los Contenedores registrados en JADE.
 	private int cantidad_maxima_contenedores = 0;
 	private int cant_contenedores = 0;	
-	 
+	
+	
 //**********************************************************************************************************
 	
 	//ContainerID destino = null;
@@ -49,14 +50,18 @@ public class AgenteRecorredor extends Agent
 	public void setup()
 	{
 		System.out.println("Se crea al agente --> " + getName()+"\n");
-				
+		
 		// Registramos el lenguaje y ontologia para la movilidad del agente.
 		getContentManager().registerLanguage(new SLCodec());
-	    getContentManager().registerOntology(MobilityOntology.getInstance());
+		getContentManager().registerOntology(MobilityOntology.getInstance());
 		
 	    origen = here();
-		System.out.println("Origen --> " + origen.getName()+"\n");		
-				
+		System.out.println("Origen --> " + origen.getName()+"\n");
+		String[] columnas = {"Hora de arribo","Carga de procesamiento","IP","Sistema Operativo", "Versión SO", "Arquitectura SO","Cantidad de núcleos","Tamaño de memoria","Nombre de Plataforma Local","Vendor de Plataforma Local","Versión de Plataforma Local"};	
+		verContainers();
+		cantidad_maxima_contenedores = containers.size();
+		String[][] datos = new String[cantidad_maxima_contenedores][columnas.length];
+
 		// registra el comportamiento deseado del agente
 		addBehaviour( 
 			new CyclicBehaviour(this)
@@ -64,88 +69,39 @@ public class AgenteRecorredor extends Agent
 				public void action() 
 				{										
 					if (_state == 0)
-					{												
-							verContainers();
-							cantidad_maxima_contenedores = containers.size();
-							cant_contenedores = 0;
-
-							if (cantidad_maxima_contenedores != 0)
-								_state = 1;
-							else
-								_state = 2;  
+					{		
+						cant_contenedores = 0;
+						if (cantidad_maxima_contenedores != 0)
+							_state = 1;
+						else
+							_state = 2;  
 					}
-					contenedor_actual= here();
-					System.out.println("TEST ---------------- CONTENEDOR ACTUAL = "+contenedor_actual.getName());
-					
-					System.out.println("TEST ---------------- ESTADO ="+_state);
+//					contenedor_actual= here();
 					switch(_state)
 					{
 						case 1:
 							// ME MUDO A LA SIGUIENTE MAQUINA  
-							System.out.println("Contenedor actual: "+cant_contenedores);
-							System.out.println("Cantidad Máxima de contenedores: "+cantidad_maxima_contenedores);
-							//[TODO]FILTRAR EL MAIN CONTAINER DE LA  LISTA
 							if (cant_contenedores < cantidad_maxima_contenedores) {
 								destino = (Location)containers.get(cant_contenedores);
 								++cant_contenedores;
-							
 								System.out.println("Estado 1 Comienza la migracion del agente al destino --> " + destino.getName()+"\n");
 								try 
 								{
-									System.out.println("TEST ----------------  me muevo a destino");
 									doMove(destino);
-									
-									try
-								    {
-								    	System.out.println("Esperando 8 segundos ...\n");
-								        Thread.sleep(8000);
-								    }
-								    catch(InterruptedException ex)
-								    {
-								        Thread.currentThread().interrupt();
-								    }
-									
-									
-									System.out.println("TEST ---------------- CONTENEDOR ACTUAL = "+contenedor_actual.getName());
-									System.out.println("Despues de doMove en CyclicBehaviour de Estado 1 --> " + destino.getName()+"\n");
-									System.out.println("TEST ---------------- Ya migre. Relevando información ...\n\n");
-									
-									//Mostramos info que requiere el punto:
-									//La Hora.
 									DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 									Date date = new Date();
-									System.out.println("Hora actual: " + dateFormat.format(date));
-									
-									//La carga de procesamiento.
-								    OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-								    System.out.println("Carga de procesamiento: "+bean.getSystemLoadAverage());
-								    
-//								    //La IP.
+									OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 								    try 
 								    {
 								    	String thisIp = InetAddress.getLocalHost().getHostAddress();
-								    	System.out.println("IP:"+thisIp);
+									    RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();									    
+									    String[] aux = {dateFormat.format(date),Double.toString(bean.getSystemLoadAverage()),thisIp,bean.getName(),bean.getVersion(),bean.getArch(),Integer.toString(bean.getAvailableProcessors()),Long.toString(bean.getTotalPhysicalMemorySize()),runtimeBean.getVmName(),runtimeBean.getVmVendor(),runtimeBean.getVmVersion()};
+									    datos[auxiliar]=aux;
 								    }
 								    catch(Exception e) 
 								    {
 								    	e.printStackTrace();
 								    }
-								    
-								    // Info adicional que nos interesa mostrar.
-								    System.out.println("Sistema Operativo: ");
-								    System.out.println("--> Tipo: "+bean.getName());
-								    System.out.println("--> Versión: "+bean.getVersion());
-								    System.out.println("--> Arquitectura: "+bean.getArch());
-								    System.out.println("Hardware: ");
-								    System.out.println("--> Cantidad de núcleos: "+bean.getAvailableProcessors());
-								    System.out.println("--> Tamaño de memoria: "+bean.getTotalPhysicalMemorySize()+" bytes.");  
-								    RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();
-								    System.out.println("Plataforma local:");
-								    System.out.println("--> Nombre : "+runtimeBean.getVmName());
-								    System.out.println("--> Vendor : "+runtimeBean.getVmVendor());
-								    System.out.println("--> Versión : "+runtimeBean.getVmVersion());
-								    
-								    //Espera del tiempo solicitado.
 								    try
 								    {
 								    	System.out.println("Esperando 10 segundos ...\n");
@@ -159,28 +115,25 @@ public class AgenteRecorredor extends Agent
 								} 
 								catch (Exception e) 
 								{
-									System.out.println("fallo al moverse \n");
+									System.out.println("ERROR !!!! -------- fallo al moverse \n");
 									e.getMessage();
 								}
+								auxiliar ++;
 								break;
 							}
 							else
 							{
 								//[TODO] Migro al origen e imprimo resultados.
 								_state = 2;
+								System.out.println("ME MUEVO AL ORIGEN");
+								doMove(origen);
+								auxiliar ++;
 								break;
 							}
 						case 2:	
-							System.out.println("TEST ---------------- EMPIEZA EL CASO 2 +++++++++++++++");
-							System.out.println("Estado 2 Comienza la auto eliminacion del agente en origen --> " + getName()+"\n");
-//							System.out.println("TEST ---------------- COMIENZA EL TRY");
 							try 
 							{
-//								System.out.println("TEST ---------------- REALIZO EL WAIT=");
-//								wait(1000);
-								System.out.println("TEST ---------------- Voy a hacer el doDELETE");
 								doDelete();
-								System.out.println("TEST ---------------- Hice el doDELETE");
 								System.out.println("Despues de la auto eliminacion del agente Estado 2 --> " + getName() +"\n");
 							} 
 							catch (Exception e) 
@@ -188,11 +141,13 @@ public class AgenteRecorredor extends Agent
 								System.out.println("fallo al moverse al Container-1 \n");
 								e.getMessage();
 							}
+							//Imprimo la tabla al finalizar.
+							Tabla t = new Tabla(columnas, datos);
 							break; 
-																					
 					}
 				}
-				private Location contenedor_actual=null;
+				int auxiliar =0;
+//				private Location contenedor_actual=null;
 				private int _state = 0; // variable de maquina de estados del agente
 			}
 		);
@@ -254,6 +209,36 @@ public class AgenteRecorredor extends Agent
 	    {  ex.printStackTrace();	}
 	}	
 	
+	
+	public void eliminarMainContainer(String id) {
+		System.out.println("EN ELIMINAR MAIN CONTAINER");
+		System.out.println("CONTAINERS : "+containers);
+
+		for (int i=0; i<containers.size(); i++) 
+		{ 
+			
+		    Location container = (Location) containers.get(i);
+		    System.out.println("nombre = "+container.getName());
+		    System.out.println("PARAMETRORECIBIDO ID = "+id);
+		    System.out.println("ID DEL CONTAINER = "+container.getID());
+		    if (id=="Main-Container@192.168.0.103") {
+		    	System.out.println("ES ESTE EL CONTENDOR !!!!");
+		    	containers.remove(i);
+		    }
+		    if (id==container.getID()) {
+		    	System.out.println("ES ESTE EL CONTENDOR !!!!");
+		    	containers.remove(i);
+		    }
+		    if (container.getName()=="Main-Container") {
+		    	System.out.println("ES ESTE EL CONTENDOR !!!!");
+		    	containers.remove(i);
+		    }
+		}
+		System.out.println("CONTAINERS : "+containers);
+
+		System.out.println("TERMINANDO ELIMINAR MAIN CONTAINER");
+		
+	}
 	protected void verContainers()
 	{
 	    //ACTUALIZAR
