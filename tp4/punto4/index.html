@@ -269,7 +269,7 @@
 
             function existeConversacion(topico){
                 lista_topicos_abiertos = $('.nav-item').map(function(){return $(this).attr("href");}).get();
-                return lista_topicos_abiertos.includes(topico);
+                return lista_topicos_abiertos.includes("#_"+topico);
             }
             
             function cerrarConversacionesActivas(usuarioChateando){
