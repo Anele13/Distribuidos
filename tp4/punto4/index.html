@@ -134,6 +134,8 @@
                     usuarioChateando = message.payloadString
                     cerrarConversacionesActivas(usuarioChateando)
                     //TODO opcionalmente sacar al usuario de mi variable usuarios_activos
+                    usuarios_activos = usuarios_activos.replace(usuarioChateando+'-','');
+
                 }
 
 
